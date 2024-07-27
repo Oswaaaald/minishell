@@ -1,0 +1,11 @@
+4
+Makefile
+cat
+echo
+main.c
+main.o
+minishell
+minishell.h
+temp.txt
+test.sh
+yup

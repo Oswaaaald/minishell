@@ -20,6 +20,8 @@
 #include "fcntl.h"
 #include "readline/readline.h"
 #include "readline/history.h"
+#include "signal.h"
+#include "dirent.h"
 
 #define C_PIPE 1
 #define C_IN 2
@@ -39,9 +41,11 @@ typedef struct s_cmd {
 //All the commabds in the command primt plus extra data
 typedef struct s_cmdli {
     t_cmd   **cmds;
+    pid_t   lastPid;
 }   t_cmdli;
 
 //The data that is used to run the shell
 typedef struct s_prog {
     char    lastExit;
+    char    cwd[256];
 }   t_prog;
