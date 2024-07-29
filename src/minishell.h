@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/17 10:58:13 by codespace        ###   ########.fr       */
+/*   Updated: 2024/07/29 12:25:54 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,43 @@
 #include "readline/history.h"
 #include "signal.h"
 #include "dirent.h"
+#include "../libft/libft.h"
 
 #define C_PIPE 1
 #define C_IN 2
 #define C_OUT 4
 
+extern char **environ;
+
 //A command that is in a promt line
 typedef struct s_cmd {
-    char    *path;
-    char    **argv;
-    char    **env;
-    char    *input;
-    char    *output;
-    char    *limmiter;
-    int     outappend;
+	char    *path;
+	char    **argv;
+	char    **env;
+	char    *input;
+	char    *output;
+	char    *limmiter;
+	int     outappend;
 }   t_cmd;
 
 //All the commabds in the command primt plus extra data
 typedef struct s_cmdli {
-    t_cmd   **cmds;
-    pid_t   lastPid;
+	t_cmd   **cmds;
+	pid_t   lastPid;
 }   t_cmdli;
 
 //The data that is used to run the shell
 typedef struct s_prog {
-    char    lastExit;
-    char    cwd[256];
+	char    lastExit;
+	char    cwd[256];
+	int     *envmod;
 }   t_prog;
+
+
+//Mini Commands
+void    minicd(t_prog *prog, char **args);
+void    miniecho(char **args);
+void    minipwd();
+
+//Parsing
+char    *parsepath(char *path);

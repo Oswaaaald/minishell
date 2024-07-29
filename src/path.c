@@ -1,4 +1,16 @@
-#include "src/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
+/*   Updated: 2024/07/29 11:23:41 by fghysbre         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 t_list  *arrtolst(char **arr)
 {
@@ -128,7 +140,7 @@ char    *pathExpander(char *path)
 	return (ft_strjoin(path, ""));
 }
 
-char    *parsePath(char *path)
+char    *parsepath(char *path)
 {
     path = pathExpander(path);
     char    **paths = ft_split(path, '/');
@@ -155,12 +167,4 @@ char    *parsePath(char *path)
             tmp = tmp->next;
     }
     return (lstjoin(pathlst));
-}
-
-int main(int argc, char **argv) {
-    if (argc != 2)
-        return 1;
-    char    *s = parsePath(argv[1]);
-    printf("%s\n", s);
-    free(s);
 }

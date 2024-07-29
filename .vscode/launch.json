@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug C Program",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out", // Path to your executable
+            "args": [], // Arguments to pass to your program (if any)
+            "stopAtEntry": false, // Change to true if you want to stop at the entry point of your program
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false, // Change to true if you prefer an external console
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb", // Adjust if gdb is located elsewhere
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
