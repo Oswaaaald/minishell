@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 13:51:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2023/10/27 13:17:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:31:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	int		i;
-	char	*crash;
 
 	i = -1;
 	if (!dst || !src)
-		crash = "seg fault";
+		return (-1);
 	if ((int)dstsize == -1)
 		dstsize = ft_strlen(src) + 1;
 	else if ((int)dstsize < 1)

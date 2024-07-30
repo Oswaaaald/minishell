@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2023/11/14 17:23:01 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:30:18 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdint.h>
 
 int					ft_atoi(const char *str);
 void				*ft_calloc(size_t count, size_t size);
