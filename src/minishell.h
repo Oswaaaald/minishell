@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/29 12:25:54 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:03:56 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_prog {
 void    minicd(t_prog *prog, char **args);
 void    miniecho(char **args);
 void    minipwd();
+int		miniexport(char **args);
 
 //Parsing
 char    *parsepath(char *path);

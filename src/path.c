@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/07/29 11:23:41 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:38:24 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,10 @@ char    *pathExpander(char *path)
 {
 	char	*home;
 	char 	*ret;
-	if (path[0] == '~' && (path[1] == '/' || !path[1]))
+    
+    if (!path)
+        path = "~";
+    if (path[0] == '~' && (path[1] == '/' || !path[1]))
 	{
 		home = getenv("HOME");
 		ret = ft_strjoin(home, path + 1);

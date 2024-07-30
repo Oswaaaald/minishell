@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/29 13:10:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:05:58 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,14 +151,9 @@ int main(int argc, char **argv, char **envp)
 	if (!argc && !argv && !envp)
 		return (1);
 	initenv(&prog);
-	char *temp[3] = {"cd", "~/test2/", NULL};
-	minicd(&prog, temp);
-	minipwd();
-	temp[1] = "-";
-	minicd(&prog, temp);
-	minipwd();
-	minicd(&prog, temp);
-	minipwd();
+	char *temp[] = {"export", NULL};
+	miniexport(temp);
+	//minipwd();
 	/* cmdli = malloc(sizeof(t_cmdli* ) * 3);
 	cmdli[0] = malloc(sizeof(t_cmdli));
 	cmdli[0]->cmds = malloc(sizeof(t_cmd *) * 4);

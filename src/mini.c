@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/07/29 13:10:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:05:36 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,13 @@ void	minicd(t_prog *prog, char **args)
 {
 	char	*buff;
 
-	if (args[2] != NULL)
+	if ((args[2] && ft_strncmp(args[1], "--", -1)) || (!ft_strncmp(args[1], "--", -1) && args[3]))
 	{
 		write(STDERR_FILENO, "mishell: cd: too many arguments\n", 33);
 		return ;
 	}
-	else if (args[1] == NULL)
-		buff = parsepath("~");
+	else if (args[1] && !ft_strncmp(args[1], "--", -1))
+		buff = parsepath(args[2]);
 	else
 		buff = parsepath(args[1]);
     if (!ft_strncmp(buff, "/-", - 1))
@@ -88,8 +88,6 @@ void	minicd(t_prog *prog, char **args)
 		cdback(prog);
 		return ;
 	}
-	/* else if (ft_strncmp(args[1], "--", -1))
-		return ; */
 	if (chdir(buff) == -1 && errno == ENOENT)
 		perror("mishell: cd");
     ft_setenv(prog, strjoin("OLDPWD=", getenv("PWD")));
@@ -124,4 +122,20 @@ void    minipwd()
     cwd = getenv("PWD");
     write(STDOUT_FILENO, cwd, strlen(cwd));
     write(STDOUT_FILENO, "\n", 1);
+}
+
+void	expshowall()
+{
+	int	i;
+
+	i = -1;
+	while (environ[++i])
+		printf("declare -x %s\n", environ[i]);
+}
+
+int	miniexport(char **args)
+{
+	if (!args[1])
+		return (expshowall(), 0);
+	return (0);
 }
