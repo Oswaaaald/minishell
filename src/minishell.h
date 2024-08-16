@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/30 17:03:56 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/08/13 16:10:40 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,23 @@ typedef struct s_cmdli {
 //The data that is used to run the shell
 typedef struct s_prog {
 	char    lastExit;
-	char    cwd[256];
-	int     *envmod;
+	char    *cwd;
+	char	**minienv;
 }   t_prog;
 
 
 //Mini Commands
-void    minicd(t_prog *prog, char **args);
-void    miniecho(char **args);
-void    minipwd();
-int		miniexport(char **args);
+int		minicd(t_prog *prog, char **args);
+int		miniecho(char **args);
+int		minipwd(t_prog *prog);
+int		miniexport(t_prog *prog, char **args);
+int		miniunset(t_prog *prog, char **args);
+int		minienv(t_prog *prog, char **args);
 
 //Parsing
-char    *parsepath(char *path);
+char    *parsepath(t_prog *prog, char *path);
+
+//Utils
+char	**strarrdup(char **arr);
+void    ft_setenv(t_prog *prog, char *var);
+char	*ft_getenv(t_prog *prog, char *s);

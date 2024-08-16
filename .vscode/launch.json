@@ -5,7 +5,7 @@
             "name": "Debug C Program",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/a.out", // Path to your executable
+            "program": "${workspaceFolder}/minishell", // Path to your executable
             "args": [], // Arguments to pass to your program (if any)
             "stopAtEntry": false, // Change to true if you want to stop at the entry point of your program
             "cwd": "${workspaceFolder}",

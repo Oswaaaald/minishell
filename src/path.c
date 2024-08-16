@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/07/30 12:38:24 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/08/01 12:29:18 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void    lstpop(t_list **list, t_list *elem)
     ft_lstdelone(elem, free);
 }
 
-char    *pathExpander(char *path)
+char    *pathExpander(t_prog *prog, char *path)
 {
 	char	*home;
 	char 	*ret;
@@ -130,22 +130,22 @@ char    *pathExpander(char *path)
         path = "~";
     if (path[0] == '~' && (path[1] == '/' || !path[1]))
 	{
-		home = getenv("HOME");
+		home = ft_getenv(prog, "HOME");
 		ret = ft_strjoin(home, path + 1);
 		return (ret);
 	}
     else if (path[0] == '.')
     {
-        home = getenv("PWD");
+        home = ft_getenv(prog, "PWD");
         ret = strcjoin(home, path, '/');
         return (ret);
     }
 	return (ft_strjoin(path, ""));
 }
 
-char    *parsepath(char *path)
+char    *parsepath(t_prog *prog, char *path)
 {
-    path = pathExpander(path);
+    path = pathExpander(prog, path);
     char    **paths = ft_split(path, '/');
     t_list  *pathlst = arrtolst(paths);
     t_list  *tmp = pathlst;
@@ -169,5 +169,6 @@ char    *parsepath(char *path)
         else
             tmp = tmp->next;
     }
+    free(path);
     return (lstjoin(pathlst));
 }
