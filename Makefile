@@ -1,4 +1,4 @@
-SRC = src/main.c src/mini.c src/path.c
+SRC = src/main.c src/mini.c src/path.c src/tokenizer.c
 
 TEST = test.c
 

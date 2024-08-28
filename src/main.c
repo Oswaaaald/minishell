@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by codespace         #+#    #+#             */
-/*   Updated: 2024/08/13 16:12:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/08/19 14:16:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,15 +161,16 @@ int main(int argc, char **argv, char **envp)
 	t_prog	prog;
 	/* t_cmdli **cmdli;
 	int		status; */
+	char	*buff;
 
 	if (!argc && !argv && !envp)
 		return (1);
 	initprog(&prog);
-	char *temp[] = {"env", NULL};
-	//char *temp2[] = {"unset", "SHELL", "BULLSHIT", "PWD", "PATH", NULL};
-	//miniunset(&prog, temp2);
-	minienv(&prog, temp);
-	//minipwd();
+	while (1)
+	{
+		buff = readline("test > ");
+		tokenize(&prog, buff);
+	}
 	/* cmdli = malloc(sizeof(t_cmdli* ) * 3);
 	cmdli[0] = malloc(sizeof(t_cmdli));
 	cmdli[0]->cmds = malloc(sizeof(t_cmd *) * 4);

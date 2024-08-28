@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by codespace         #+#    #+#             */
-/*   Updated: 2024/08/13 16:10:40 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:01:17 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,10 @@ int		miniunset(t_prog *prog, char **args);
 int		minienv(t_prog *prog, char **args);
 
 //Parsing
-char    *parsepath(t_prog *prog, char *path);
+char	*parsepath(t_prog *prog, char *path);
+void	tokenize(t_prog *prog, char *line);
 
 //Utils
 char	**strarrdup(char **arr);
-void    ft_setenv(t_prog *prog, char *var);
+void	ft_setenv(t_prog *prog, char *var);
 char	*ft_getenv(t_prog *prog, char *s);

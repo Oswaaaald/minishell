@@ -2,7 +2,6 @@
 #include "stdlib.h"
 
 int main() {
-    putenv("TEMP");
-    char    *buff = getenv("TEMP");
-    printf("%s\n", buff);
+	int	i = 0;
+    printf("%d\n", !i);
 }
