@@ -1,6 +1,7 @@
 #include "src/minishell.h"
+#include "stdlib.h"
 
 int main() {
-    char    *buff = getenv("PWD");
-    printf("%s\n", buff);
+	int	i = 0;
+    printf("%d\n", !i);
 }

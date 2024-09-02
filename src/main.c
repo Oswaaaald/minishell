@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/30 17:05:58 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/08/19 14:16:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,21 +125,35 @@ void	cmdBuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 	if (cmd->input)
 		dup2(fd[0], STDIN_FILENO);
 	if (!strcmp(cmd->argv[0], "echo"))
-		miniecho(cmd->argv);
+		prog->lastExit = miniecho(cmd->argv);
 	else if(!strcmp(cmd->argv[0], "cd"))
-		minicd(prog, cmd->argv);
+		prog->lastExit = minicd(prog, cmd->argv);
 	else if(!strcmp(cmd->argv[0], "pwd"))
-		minipwd();
+		prog->lastExit = minipwd(prog);
 }
 
-void	initenv(t_prog *prog)
+char	**strarrdup(char **arr)
 {
-	int i;
+	int		i;
+	char	**res;
 
-	i = 0;
-	while (environ[i])
-		i++;
-	prog->envmod = ft_calloc(i, sizeof(int));
+	i = -1;
+	while (arr[++i])
+		;
+	res = malloc((i + 1) * sizeof(char *));
+	i = -1;
+	while (arr[++i])
+		res[i] = ft_strdup(arr[i]);
+	res[i] = NULL;
+	return (res);
+}
+
+void	initprog(t_prog *prog)
+{
+	prog->minienv = strarrdup(environ);
+	prog->cwd = ft_strdup(ft_getenv(prog, "PWD"));
+	if (!prog->cwd)
+		prog->cwd = getcwd(NULL, 0);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -147,13 +161,16 @@ int main(int argc, char **argv, char **envp)
 	t_prog	prog;
 	/* t_cmdli **cmdli;
 	int		status; */
+	char	*buff;
 
 	if (!argc && !argv && !envp)
 		return (1);
-	initenv(&prog);
-	char *temp[] = {"export", NULL};
-	miniexport(temp);
-	//minipwd();
+	initprog(&prog);
+	while (1)
+	{
+		buff = readline("test > ");
+		tokenize(&prog, buff);
+	}
 	/* cmdli = malloc(sizeof(t_cmdli* ) * 3);
 	cmdli[0] = malloc(sizeof(t_cmdli));
 	cmdli[0]->cmds = malloc(sizeof(t_cmd *) * 4);
