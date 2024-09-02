@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/02 23:46:39 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/03 00:00:54 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	lstpop(t_list **list, t_list *elem)
 	ft_lstdelone(elem, free);
 }
 
-char	*pathExpander(t_prog *prog, char *path)
+char	*pathexpander(t_prog *prog, char *path)
 {
 	char	*home;
 	char	*ret;
@@ -151,7 +151,7 @@ char	*parsepath(t_prog *prog, char *path)
 	t_list	*tmp;
 	t_list	*buf;
 
-	path = pathExpander(prog, path);
+	path = pathexpander(prog, path);
 	paths = ft_split(path, '/');
 	pathlst = arrtolst(paths);
 	tmp = pathlst;

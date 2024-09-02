@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/02 23:49:27 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/03 00:02:25 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	closefd(int fd[2])
 	close(fd[1]);
 }
 
-void	setStatus(t_prog *prog, int status)
+void	setstatus(t_prog *prog, int status)
 {
 	if (WIFEXITED(status))
 		prog->lastExit = WEXITSTATUS(status);
@@ -115,7 +115,7 @@ int	cmd(t_cmdli *cmdli, int i)
 	return (1);
 }
 
-void	cmdBuiltin(t_prog *prog, t_cmdli *cmdli, int i)
+void	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 {
 	int		*fd;
 	t_cmd	*cmd;
@@ -196,7 +196,7 @@ int	main(int argc, char **argv, char **envp)
 		if (cmdli[i]->cmds[1] == NULL
 			&& !strcmp(cmdli[i]->cmds[0]->path, "builtin"))
 		{
-			cmdBuiltin(cmdli[i], 0);
+			cmdbuiltin(cmdli[i], 0);
 			continue;
 		}
 		for (int j = 0; cmdli[i]->cmds[j]; j++) {
@@ -205,7 +205,7 @@ int	main(int argc, char **argv, char **envp)
 		for (int j = 0; cmdli[i]->cmds[j]; j++) {
 			pid_t pid = wait(&status);
 			if (pid == cmdli[i]->lastPid)
-				setStatus(&prog, status);
+				setstatus(&prog, status);
 			printf("status: %d (%d ?= %d)\n", status, pid, cmdli[i]->lastPid);
 		}
 		dup2(STDIN_FILENO, STDIN_FILENO);
