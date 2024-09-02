@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by codespace         #+#    #+#             */
-/*   Updated: 2024/08/19 14:16:28 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/02 23:49:27 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	closefd(int fd[2])
 {
-		close(fd[0]);
-		close(fd[1]);
+	close(fd[0]);
+	close(fd[1]);
 }
 
 void	setStatus(t_prog *prog, int status)
@@ -33,10 +33,10 @@ int	writeheredoc(char *lim)
 	int		fd[2];
 
 	if (pipe(fd) == -1)
-		return 0;
+		return (0);
 	pid = fork();
 	if (pid == -1)
-		return 0;
+		return (0);
 	if (pid == 0)
 	{
 		close(fd[0]);
@@ -55,12 +55,13 @@ int	writeheredoc(char *lim)
 	close(fd[1]);
 	wait(0);
 	dup2(fd[0], STDIN_FILENO);
-	return 1;
+	return (1);
 }
 
-int	*openfd(t_cmd *cmd) {
+int	*openfd(t_cmd *cmd)
+{
 	int	*fd;
-	
+
 	fd = malloc(sizeof(int) * 2);
 	if (pipe(fd) == -1)
 		return (NULL);
@@ -84,11 +85,12 @@ int	*openfd(t_cmd *cmd) {
 	return (fd);
 }
 
-int cmd(t_cmdli *cmdli, int i) {
+int	cmd(t_cmdli *cmdli, int i)
+{
 	int		*fd;
 	pid_t	pid;
 	t_cmd	*cmd;
-	
+
 	cmd = cmdli->cmds[i];
 	fd = openfd(cmd);
 	if (!fd)
@@ -126,9 +128,9 @@ void	cmdBuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 		dup2(fd[0], STDIN_FILENO);
 	if (!strcmp(cmd->argv[0], "echo"))
 		prog->lastExit = miniecho(cmd->argv);
-	else if(!strcmp(cmd->argv[0], "cd"))
+	else if (!strcmp(cmd->argv[0], "cd"))
 		prog->lastExit = minicd(prog, cmd->argv);
-	else if(!strcmp(cmd->argv[0], "pwd"))
+	else if (!strcmp(cmd->argv[0], "pwd"))
 		prog->lastExit = minipwd(prog);
 }
 
@@ -156,13 +158,12 @@ void	initprog(t_prog *prog)
 		prog->cwd = getcwd(NULL, 0);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_prog	prog;
+	char	*buff;
 	/* t_cmdli **cmdli;
 	int		status; */
-	char	*buff;
-
 	if (!argc && !argv && !envp)
 		return (1);
 	initprog(&prog);
@@ -191,9 +192,9 @@ int main(int argc, char **argv, char **envp)
 	cmdli[0]->cmds[0]->outappend = 0;
 	cmdli[0]->cmds[1] = NULL;
 	cmdli[1] = NULL; */
-
 	/* for (int i = 0; cmdli[i]; i++) {
-		if (cmdli[i]->cmds[1] == NULL && !strcmp(cmdli[i]->cmds[0]->path, "builtin"))
+		if (cmdli[i]->cmds[1] == NULL
+			&& !strcmp(cmdli[i]->cmds[0]->path, "builtin"))
 		{
 			cmdBuiltin(cmdli[i], 0);
 			continue;

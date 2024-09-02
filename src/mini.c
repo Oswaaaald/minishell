@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/08/13 16:11:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/02 23:35:45 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,17 @@ void	ft_addenv(t_prog *prog, char *var)
 	prog->minienv = res;
 }
 
-void    ft_setenv(t_prog *prog, char *var)
+void	ft_setenv(t_prog *prog, char *var)
 {
-    int i;
-    int eq;
+	int	i;
+	int	eq;
 
-    eq = -1;
-    while (var[++eq])
-    {
-        if (var[eq] == '=')
-            break ;
-    }
+	eq = -1;
+	while (var[++eq])
+	{
+		if (var[eq] == '=')
+			break ;
+	}
 	i = -1;
 	while (prog->minienv[++i])
 	{
@@ -76,9 +76,9 @@ void    ft_setenv(t_prog *prog, char *var)
 	ft_addenv(prog, var);
 }
 
-void    cdback(t_prog *prog)
+void	cdback(t_prog *prog)
 {
-    char	*buff;
+	char	*buff;
 
 	buff = ft_strdup(ft_getenv(prog, "PWD"));
 	if (chdir(ft_getenv(prog, "OLDPWD")) == -1)
@@ -94,7 +94,8 @@ int	minicd(t_prog *prog, char **args)
 {
 	char	*buff;
 
-	if ((args[2] && ft_strncmp(args[1], "--", -1)) || (!ft_strncmp(args[1], "--", -1) && args[3]))
+	if ((args[2] && ft_strncmp(args[1], "--", -1))
+		|| (!ft_strncmp(args[1], "--", -1) && args[3]))
 	{
 		write(STDERR_FILENO, "mishell: cd: too many arguments\n", 33);
 		return (1);
@@ -103,15 +104,15 @@ int	minicd(t_prog *prog, char **args)
 		buff = parsepath(prog, args[2]);
 	else
 		buff = parsepath(prog, args[1]);
-    if (!ft_strncmp(buff, "/-", - 1))
+	if (!ft_strncmp(buff, "/-", -1))
 	{
 		cdback(prog);
 		return (0);
 	}
 	if (chdir(buff) == -1 && errno == ENOENT)
 		perror("mishell: cd");
-    ft_setenv(prog, strjoin("OLDPWD=", ft_getenv(prog, "PWD")));
-    ft_setenv(prog, strjoin("PWD=", buff));
+	ft_setenv(prog, strjoin("OLDPWD=", ft_getenv(prog, "PWD")));
+	ft_setenv(prog, strjoin("PWD=", buff));
 	free(prog->cwd);
 	prog->cwd = buff;
 	return (0);
@@ -122,19 +123,19 @@ int	minicd(t_prog *prog, char **args)
 int	miniecho(char **args)
 {
 	int	i;
-    int flagn;
+	int	flagn;
 
 	i = 0;
-    flagn = 0;
+	flagn = 0;
 	while (!strcmp(args[++i], "-n"))
-        flagn = 1;
-    i--;
-    while (args[++i])
-    {
-        write(STDOUT_FILENO, args[i], strlen(args[i]));
-        if (args[i + 1])
-            write(STDOUT_FILENO, " ", 1);
-    }
+		flagn = 1;
+	i--;
+	while (args[++i])
+	{
+		write(STDOUT_FILENO, args[i], strlen(args[i]));
+		if (args[i + 1])
+			write(STDOUT_FILENO, " ", 1);
+	}
 	if (!flagn)
 		write(STDOUT_FILENO, "\n", 1);
 	return (0);
@@ -164,10 +165,10 @@ char	*ft_getenv(t_prog *prog, char *s)
 	return (NULL);
 }
 
-int    minipwd(t_prog *prog)
+int	minipwd(t_prog *prog)
 {
-    write(STDOUT_FILENO, prog->cwd, strlen(prog->cwd));
-    write(STDOUT_FILENO, "\n", 1);
+	write(STDOUT_FILENO, prog->cwd, strlen(prog->cwd));
+	write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
 
@@ -176,10 +177,10 @@ int    minipwd(t_prog *prog)
 void	swap(char **s1, char **s2)
 {
 	char	*temp;
-	
+
 	temp = *s1;
 	*s1 = *s2;
-	*s2 = temp;	
+	*s2 = temp;
 }
 
 char	**strarrsort(char **arr)
@@ -259,6 +260,7 @@ int	miniexport(t_prog *prog, char **args)
 {
 	int	i;
 	int	togg;
+
 	if (!args[1])
 		return (expshowall(prog), 0);
 	i = 0;
@@ -268,7 +270,8 @@ int	miniexport(t_prog *prog, char **args)
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
 			i++;
 		if (i == 1 && args[i][0] == '-')
-			return(printf("mishell: export: -%c: invalid option\n", args[i][1]), 2);
+			return (printf("mishell: export: -%c: invalid option\n"
+					args[i][1]), 2);
 		else if (!nameisvalid(args[i]))
 			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
 		else
@@ -289,7 +292,7 @@ void	ft_remenv(t_prog *prog, char *s)
 	int		i;
 	char	*buff;
 	int		tog;
-	
+
 	i = -1;
 	tog = 0;
 	while (prog->minienv[++i])
@@ -333,9 +336,9 @@ int	miniunset(t_prog *prog, char **args)
 int	minienv(t_prog *prog, char **args)
 {
 	int	i;
-	
+
 	if (args[1])
-		return(printf("mishell: env: too many arguments"), 1);
+		return (printf("mishell: env: too many arguments"), 1);
 	i = -1;
 	while (prog->minienv[++i])
 		printf("%s\n", prog->minienv[i]);
