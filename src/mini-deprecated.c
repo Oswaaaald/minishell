@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/03 00:04:39 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/04 14:43:11 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //	CD
 
-char	*strjoin(char *s1, char *s2)
+/* char	*strjoin(char *s1, char *s2)
 {
 	char	*ret;
 	int		i;
@@ -32,48 +32,6 @@ char	*strjoin(char *s1, char *s2)
 		ret[i] = s2[j];
 	ret[i + 1] = '\0';
 	return (ret);
-}
-
-void	ft_addenv(t_prog *prog, char *var)
-{
-	int		i;
-	char	**res;
-
-	i = -1;
-	while (prog->minienv[++i])
-		;
-	res = malloc(sizeof(char **) * (i + 2));
-	i = -1;
-	while (prog->minienv[++i])
-		res[i] = prog->minienv[i];
-	res[i] = var;
-	res[++i] = NULL;
-	free(prog->minienv);
-	prog->minienv = res;
-}
-
-void	ft_setenv(t_prog *prog, char *var)
-{
-	int	i;
-	int	eq;
-
-	eq = -1;
-	while (var[++eq])
-	{
-		if (var[eq] == '=')
-			break ;
-	}
-	i = -1;
-	while (prog->minienv[++i])
-	{
-		if (!ft_strncmp(prog->minienv[i], var, eq))
-		{
-			free(prog->minienv[i]);
-			prog->minienv[i] = var;
-			return ;
-		}
-	}
-	ft_addenv(prog, var);
 }
 
 void	cdback(t_prog *prog)
@@ -116,11 +74,11 @@ int	minicd(t_prog *prog, char **args)
 	free(prog->cwd);
 	prog->cwd = buff;
 	return (0);
-}
+} */
 
 //	Echo
 
-int	miniecho(char **args)
+/* int	miniecho(char **args)
 {
 	int	i;
 	int	flagn;
@@ -139,42 +97,20 @@ int	miniecho(char **args)
 	if (!flagn)
 		write(STDOUT_FILENO, "\n", 1);
 	return (0);
-}
+} */
 
 //	PWD
 
-char	*ft_getenv(t_prog *prog, char *s)
-{
-	int		i;
-	char	*buff;
-	char	*res;
-
-	i = -1;
-	buff = ft_strjoin(s, "=");
-	while (prog->minienv[++i])
-	{
-		if (!ft_strncmp(prog->minienv[i], buff, ft_strlen(buff)))
-			break ;
-	}
-	free (buff);
-	if (!prog->minienv[i])
-		return (NULL);
-	res = ft_strchr(prog->minienv[i], '=');
-	if (res)
-		return (++res);
-	return (NULL);
-}
-
-int	minipwd(t_prog *prog)
+/* int	minipwd(t_prog *prog)
 {
 	write(STDOUT_FILENO, prog->cwd, strlen(prog->cwd));
 	write(STDOUT_FILENO, "\n", 1);
 	return (0);
-}
+} */
 
 //	Export
 
-void	swap(char **s1, char **s2)
+/* void	swap(char **s1, char **s2)
 {
 	char	*temp;
 
@@ -186,13 +122,16 @@ void	swap(char **s1, char **s2)
 char	**strarrsort(char **arr)
 {
 	int	i;
+	char *temp;
 
 	i = 0;
 	while (arr[++i])
 	{
 		if (ft_strncmp(arr[i], arr[i - 1], -1) < 0)
 		{
-			swap(&arr[i], &arr[i - 1]);
+			temp = arr[i];
+			arr[i] = arr[i - 1];
+			arr[i - 1] = temp;
 			i = i - 2;
 		}
 		if (i < 0)
@@ -270,7 +209,7 @@ int	miniexport(t_prog *prog, char **args)
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
 			i++;
 		if (i == 1 && args[i][0] == '-')
-			return (printf("mishell: export: -%c: invalid option\n"
+			return (printf("mishell: export: -%c: invalid option\n",
 					args[i][1]), 2);
 		else if (!nameisvalid(args[i]))
 			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
@@ -282,41 +221,12 @@ int	miniexport(t_prog *prog, char **args)
 		togg = 1;
 	}
 	return (togg);
-}
+} */
 
 // Un-Set
 
-void	ft_remenv(t_prog *prog, char *s)
-{
-	char	**newenv;
-	int		i;
-	char	*buff;
-	int		tog;
 
-	i = -1;
-	tog = 0;
-	while (prog->minienv[++i])
-		;
-	newenv = (char **) malloc(sizeof(char *) * i);
-	i = -1;
-	buff = ft_strjoin(s, "=");
-	while (prog->minienv[++i])
-	{
-		if (!ft_strncmp(prog->minienv[i], buff, ft_strlen(buff)))
-		{
-			free(prog->minienv[i]);
-			tog = 1;
-		}
-		else
-			newenv[i - tog] = prog->minienv[i];
-	}
-	free(prog->minienv);
-	free(buff);
-	newenv[i - tog] = NULL;
-	prog->minienv = newenv;
-}
-
-int	miniunset(t_prog *prog, char **args)
+/* int	miniunset(t_prog *prog, char **args)
 {
 	int	i;
 
@@ -329,11 +239,11 @@ int	miniunset(t_prog *prog, char **args)
 			ft_remenv(prog, args[i]);
 	}
 	return (1);
-}
+} */
 
 //	env
 
-int	minienv(t_prog *prog, char **args)
+/* int	minienv(t_prog *prog, char **args)
 {
 	int	i;
 
@@ -343,4 +253,4 @@ int	minienv(t_prog *prog, char **args)
 	while (prog->minienv[++i])
 		printf("%s\n", prog->minienv[i]);
 	return (1);
-}
+} */
