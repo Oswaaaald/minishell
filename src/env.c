@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 14:41:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:04:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_getenv(t_prog *prog, char *s)
 	return (NULL);
 }
 
-void	ft_addenv(t_prog *prog, char *var)
+int	ft_addenv(t_prog *prog, char *var)
 {
 	int		i;
 	char	**res;
@@ -50,9 +50,10 @@ void	ft_addenv(t_prog *prog, char *var)
 	res[++i] = NULL;
 	free(prog->minienv);
 	prog->minienv = res;
+	return (1);
 }
 
-void	ft_setenv(t_prog *prog, char *var)
+int	ft_setenv(t_prog *prog, char *var)
 {
 	int	i;
 	int	eq;
@@ -70,13 +71,14 @@ void	ft_setenv(t_prog *prog, char *var)
 		{
 			free(prog->minienv[i]);
 			prog->minienv[i] = var;
-			return ;
+			return (1);
 		}
 	}
 	ft_addenv(prog, var);
+	return (1);
 }
 
-void	ft_remenv(t_prog *prog, char *s)
+int	ft_remenv(t_prog *prog, char *s)
 {
 	char	**newenv;
 	int		i;
@@ -104,4 +106,5 @@ void	ft_remenv(t_prog *prog, char *s)
 	free(buff);
 	newenv[i - tog] = NULL;
 	prog->minienv = newenv;
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/03 00:04:40 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/04 17:53:44 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,16 @@ void	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 		prog->lastExit = minipwd(prog);
 }
 
+void	free2d(char **arr)
+{
+	int	i;
+
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
+	free(arr);
+}
+
 char	**strarrdup(char **arr)
 {
 	int		i;
@@ -143,9 +153,15 @@ char	**strarrdup(char **arr)
 	while (arr[++i])
 		;
 	res = malloc((i + 1) * sizeof(char *));
+	if (!res)
+		return (res);
 	i = -1;
 	while (arr[++i])
+	{
 		res[i] = ft_strdup(arr[i]);
+		if (!res[i])
+			return (free2d(res), NULL);
+	}
 	res[i] = NULL;
 	return (res);
 }

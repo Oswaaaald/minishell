@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 14:47:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:04:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ char	*parsepath(t_prog *prog, char *path);
 void	tokenize(t_prog *prog, char *line);
 
 //Utils
+void	free2d(char **arr);
 char	**strarrdup(char **arr);
-void	ft_setenv(t_prog *prog, char *var);
+int		ft_setenv(t_prog *prog, char *var);
 char	*ft_getenv(t_prog *prog, char *s);
-void	ft_remenv(t_prog *prog, char *s);
+int		ft_remenv(t_prog *prog, char *s);

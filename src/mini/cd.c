@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 16:00:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:49:06 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,41 @@ char	*strjoin(char *s1, char *s2)
 	return (ret);
 }
 
-void	cdback(t_prog *prog)
+int	updatepwd(t_prog *prog, char *new, char *old)
+{
+	char	*tmpnew;
+	char	*tmpold;
+
+
+	tmpnew = ft_strjoin("PWD=", new);
+	if (!tmpnew)
+		return (1);
+	if (!ft_setenv(prog, tmpnew))
+		return (free(tmpnew), 1);
+	tmpold = ft_strjoin("OLDPWD=", old);
+	if (!tmpold)
+		return (free(tmpnew), 1);
+	if (!ft_setenv(prog, tmpold))
+		return (free(tmpnew), free(tmpold), 1);
+	return (free(tmpnew), free(tmpold), 0);
+}
+
+int	cdback(t_prog *prog)
 {
 	char	*buff;
 
 	buff = ft_strdup(ft_getenv(prog, "PWD"));
+	if (!buff)
+		return (1);
 	if (chdir(ft_getenv(prog, "OLDPWD")) == -1)
-		perror("mishell: cd");
-	ft_setenv(prog, ft_strjoin("PWD=", ft_getenv(prog, "OLDPWD")));
-	ft_setenv(prog, ft_strjoin("OLDPWD=", buff));
+		return (perror("mishell: cd"), free(buff), 1);
+	if (updatepwd(prog, ft_getenv(prog, "OLDPWD"), buff))
+		return (free(buff), 1);
 	free(prog->cwd);
 	prog->cwd = ft_strdup(ft_getenv(prog, "PWD"));
-	free(buff);
+	if (!prog->cwd)
+		return (free(buff), 1);
+	return (free(buff), 0);
 }
 
 int	minicd(t_prog *prog, char **args)
@@ -60,16 +83,15 @@ int	minicd(t_prog *prog, char **args)
 		buff = parsepath(prog, args[2]);
 	else
 		buff = parsepath(prog, args[1]);
+	if (!buff)
+		return (NULL);
 	if (!ft_strncmp(buff, "/-", -1))
-	{
-		cdback(prog);
-		return (0);
-	}
-	if (chdir(buff) == -1 && errno == ENOENT)
-		perror("mishell: cd");
-	ft_setenv(prog, strjoin("OLDPWD=", ft_getenv(prog, "PWD")));
-	ft_setenv(prog, strjoin("PWD=", buff));
+		return (free(buff), cdback(prog));
+	if (chdir(buff) == -1)
+		return (perror("mishell: cd"), free(buff), 1);
 	free(prog->cwd);
 	prog->cwd = buff;
+	if (updatepwd(prog, buff, ft_getenv(prog, "PWD")))
+		return (free(buff), 1);
 	return (0);
 }
