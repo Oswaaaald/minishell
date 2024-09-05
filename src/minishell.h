@@ -44,6 +44,7 @@ typedef struct s_cmd {
 //All the commabds in the command primt plus extra data
 typedef struct s_cmdli {
 	t_cmd   **cmds;
+	int		nbcmds;
 	pid_t   lastPid;
 }   t_cmdli;
 
@@ -65,7 +66,7 @@ int		minienv(t_prog *prog, char **args);
 
 //Parsing
 char	*parsepath(t_prog *prog, char *path);
-void	tokenize(t_prog *prog, char *line);
+t_cmdli	*tokenize(t_prog *prog, char *line);
 
 //Utils
 void	free2d(char **arr);
