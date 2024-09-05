@@ -159,8 +159,7 @@ void	initprog(t_prog *prog)
 int main(int argc, char **argv, char **envp)
 {
 	t_prog	prog;
-	/* t_cmdli **cmdli;
-	int		status; */
+	t_cmdli **cmdli;
 	char	*buff;
 
 	if (!argc && !argv && !envp)
@@ -169,7 +168,7 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		buff = readline("test > ");
-		tokenize(&prog, buff);
+		cmdli = tokenize(&prog, buff);
 	}
 	/* cmdli = malloc(sizeof(t_cmdli* ) * 3);
 	cmdli[0] = malloc(sizeof(t_cmdli));
