@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/08/19 14:18:24 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/03 00:04:36 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	unfinished(char *line)
 			lastchar = &line[i];
 		}
 	}
-	if (lastchar - startchar <= 2 )
+	if (lastchar - startchar <= 2)
 		return (0);
 	if ((lastchar[0] == '&' && lastchar[-1] == '&') || (lastchar[0] == '|'))
 		return (1);
@@ -112,7 +112,7 @@ void	finish(char **lineptr)
 	tmp = *lineptr;
 	*lineptr = ft_strjoin(tmp, buff);
 	free(tmp);
-	free(buff); 
+	free(buff);
 }
 
 int	nbcmds(char *line)
