@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 18:04:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:22:08 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ char	*parsepath(t_prog *prog, char *path);
 t_cmdli	*tokenize(t_prog *prog, char *line);
 
 //Utils
+int		initprog(t_prog *prog, char **envp);
 void	free2d(char **arr);
 char	**strarrdup(char **arr);
 int		ft_setenv(t_prog *prog, char *var);
 char	*ft_getenv(t_prog *prog, char *s);
 int		ft_remenv(t_prog *prog, char *s);
+int		nameisvalid(char *s);

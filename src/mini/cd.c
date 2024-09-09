@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 17:49:06 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:21:05 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	minicd(t_prog *prog, char **args)
 	else
 		buff = parsepath(prog, args[1]);
 	if (!buff)
-		return (NULL);
+		return (0);
 	if (!ft_strncmp(buff, "/-", -1))
 		return (free(buff), cdback(prog));
 	if (chdir(buff) == -1)
