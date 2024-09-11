@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 14:20:26 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/11 23:37:15 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	updatepwd(t_prog *prog, char *new, char *old)
 		return (free(tmpnew), 1);
 	if (!ft_setenv(prog, tmpold))
 		return (free(tmpnew), free(tmpold), 1);
-	return (free(tmpnew), free(tmpold), 0);
+	return (free(tmpold), 0);
 }
 
 int	cdback(t_prog *prog)
@@ -72,8 +72,8 @@ int	minicd(t_prog *prog, char **args)
 {
 	char	*buff;
 
-	if ((args[2] && ft_strncmp(args[1], "--", -1))
-		|| (!ft_strncmp(args[1], "--", -1) && args[3]))
+	if (args[1] && ((args[2] && ft_strncmp(args[1], "--", -1))
+		|| (!ft_strncmp(args[1], "--", -1) && args[3])))
 	{
 		write(STDERR_FILENO, "mishell: cd: too many arguments\n", 33);
 		return (1);
@@ -91,6 +91,6 @@ int	minicd(t_prog *prog, char **args)
 	free(prog->cwd);
 	prog->cwd = buff;
 	if (updatepwd(prog, buff, ft_getenv(prog, "PWD")))
-		return (free(buff), 1);
+		return (1);
 	return (0);
 }

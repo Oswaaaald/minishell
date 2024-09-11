@@ -15,7 +15,7 @@ BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 all: ${NAME}
 
 .c.o:
-	cc ${CFLAGS} -c -I ./includes/ $< -o ${<:.c=.o}
+	cc ${CFLAGS} -c -g3 -I ./includes/ $< -o ${<:.c=.o}
 
 clean:
 	rm -f ${BONUS_OBJS}
