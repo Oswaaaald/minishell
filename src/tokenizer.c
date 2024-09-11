@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/03 00:04:36 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/11 22:12:56 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	finish(char **lineptr)
 int	nbcmds(char *line)
 {
 	int	i;
-	int ret;
+	int	ret;
 
 	i = -1;
 	ret = 1;
@@ -132,12 +132,12 @@ int	nbcmds(char *line)
 
 char	**arrayaddback(char **currentarr, char *str)
 {
-	char **retarr;
-	int	i;
+	char	**retarr;
+	int		i;
 
 	i = 0;
-		while (currentarr && currentarr[i])
-			i++;
+	while (currentarr && currentarr[i])
+		i++;
 	retarr = (char **) malloc(sizeof(char *) * (i + 2));
 	if (!retarr)
 		return (NULL);
@@ -149,52 +149,83 @@ char	**arrayaddback(char **currentarr, char *str)
 	}
 	retarr[i] = str;
 	retarr[i + 1] = NULL;
+	free(currentarr);
+	return (retarr);
 }
 
 char	*pullarg(char *str, int qu[2], int *i)
 {
-	int	j;
+	int		j;
+	char	*arg;
 
-	j = -1;
-	while (str[*i + ++j])
+	j = 0;
+	while (str[*i + j])
 	{
-		if (ft_strchr("<|>", ))
+		if (str[*i + j] == '"' && !qu[0])
+			qu[1] = !qu[1];
+		else if (str[*i + j] == '\'' && !qu[1])
+			qu[0] = !qu[0];
+		else if (!qu[0] && !qu[1] && ft_strchr("<|>", str[*i + j]))
+			break ;
+		j++;
 	}
+	arg = ft_substr(str, *i, j);
+	*i += j - 1;
+	return (arg);
 }
 
 void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 {
-	int	i;
-	int	qu[2];
+	int		i;
+	int		qu[2];
+	char	*tmp;
+	t_cmd	*current_cmd;
 
-	i = -1;
+	i = 0;
 	qu[0] = 0;
 	qu[1] = 0;
-	while (arg[++i])
+	current_cmd = ret->cmds[*cmdi];
+	while (arg[i])
 	{
 		if (arg[i] == '"' && !qu[0])
 			qu[1] = !qu[1];
 		else if (arg[i] == '\'' && !qu[1])
 			qu[0] = !qu[0];
-		if (!ft_strchr("|<>\"'", arg[i]))
-
+		if (!qu[0] && !qu[1] && arg[i] == '|')
+		{
+			(*cmdi)++;
+			current_cmd = ret->cmds[*cmdi];
+		}
+		else if (!qu[0] && !qu[1] && (arg[i] == '<' || arg[i] == '>'))
+		{
+			tmp = pullarg(arg, qu, &i);
+			if (arg[i - 1] == '<')
+				current_cmd->input = tmp;
+			else
+				current_cmd->output = tmp;
+		}
+		else if (!ft_strchr("|<>", arg[i]))
+		{
+			tmp = pullarg(arg, qu, &i);
+			current_cmd->argv = arrayaddback(current_cmd->argv, tmp);
+		}
+		i++;
 	}
 }
 
 void	getcmds(t_cmdli *ret, char **args)
 {
-	int	i;
-	int	cmdi;
+	int		i;
+	int		cmdi;
 
-	i = -1;
+	i = 0;
 	cmdi = 0;
-	while (args[++i])
+	while (args[i])
 	{
 		arghandle(ret, args[i], &cmdi);
+		i++;
 	}
 }
-
-//splitargs
 
 static int	nwords(char const *s)
 {
@@ -275,7 +306,7 @@ static char	**split_process(char const *s, char **res)
 			ft_strlcpy(res[i], s + a, wordlen(s, a) + 1);
 			a = a + wordlen(s, a) - 1;
 		}
-		nword = (ft_strchr(" \t\n", s[a]) != 0) ;
+		nword = (ft_strchr(" \t\n", s[a]) != 0);
 	}
 	res[++i] = (void *)0;
 	return (res);
@@ -297,14 +328,40 @@ t_cmdli	*actuallytokenize(char *line)
 {
 	t_cmdli	*ret;
 	char	**splitargs;
+	int		i;
 
 	ret = malloc(sizeof(t_cmdli));
 	if (!ret)
-		return (ret);
+		return (NULL);
 	ret->nbcmds = nbcmds(line);
-	ret->cmds = malloc(sizeof(t_cmd) * (ret->nbcmds + 1));
+	ret->cmds = malloc(sizeof(t_cmd *) * (ret->nbcmds + 1));
+	if (!ret->cmds)
+		return (free(ret), NULL);
+	i = 0;
+	while (i < ret->nbcmds)
+	{
+		ret->cmds[i] = malloc(sizeof(t_cmd));
+		if (!ret->cmds[i])
+		{
+			while (i-- > 0)
+				free(ret->cmds[i]);
+			free(ret->cmds);
+			free(ret);
+			return (NULL);
+		}
+		ret->cmds[i]->argv = NULL;
+		ret->cmds[i]->env = NULL;
+		ret->cmds[i]->input = NULL;
+		ret->cmds[i]->output = NULL;
+		ret->cmds[i]->limmiter = NULL;
+		ret->cmds[i]->outappend = 0;
+		i++;
+	}
+	ret->cmds[ret->nbcmds] = NULL;
 	splitargs = splitline(line);
 	getcmds(ret, splitargs);
+	free2d(splitargs);
+	return (ret);
 }
 
 t_cmdli	*tokenize(t_prog *prog, char *line)
@@ -315,9 +372,10 @@ t_cmdli	*tokenize(t_prog *prog, char *line)
 	while (unfinished(line))
 		finish(&line);
 	if (!line)
-		return ;
+		return (NULL);
 	add_history(line);
 	eline = expand(prog, line);
-	ret = actuallytokenize(prog, eline);
-	printf("%s\n", eline);
+	ret = actuallytokenize(eline);
+	free(eline);
+	return (ret);
 }

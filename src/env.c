@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 18:04:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/06 19:16:40 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*ft_getenv(t_prog *prog, char *s)
 
 	i = -1;
 	buff = ft_strjoin(s, "=");
+	if (!buff)
+		return (NULL);
 	while (prog->minienv[++i])
 	{
 		if (!ft_strncmp(prog->minienv[i], buff, ft_strlen(buff)))
@@ -43,6 +45,8 @@ int	ft_addenv(t_prog *prog, char *var)
 	while (prog->minienv[++i])
 		;
 	res = malloc(sizeof(char **) * (i + 2));
+	if (!res)
+		return (0);
 	i = -1;
 	while (prog->minienv[++i])
 		res[i] = prog->minienv[i];
@@ -90,6 +94,8 @@ int	ft_remenv(t_prog *prog, char *s)
 	while (prog->minienv[++i])
 		;
 	newenv = (char **) malloc(sizeof(char *) * i);
+	if (!newenv)
+		return (0);
 	i = -1;
 	buff = ft_strjoin(s, "=");
 	while (prog->minienv[++i])
