@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:36:06 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 16:00:12 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:59:29 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,15 @@ int	miniecho(char **args)
 
 	i = 0;
 	flagn = 0;
-	while (!strcmp(args[++i], "-n"))
+	if (!args[1])
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		return (0);
+	}
+	while (args[++i] && !strcmp(args[i], "-n"))
 		flagn = 1;
+	if (flagn && !args[i])
+		return (1);
 	i--;
 	while (args[++i])
 	{

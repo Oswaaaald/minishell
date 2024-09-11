@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 14:22:19 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/11 22:23:53 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,53 +146,82 @@ void	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 	prog->lastexit = exebuiltin(prog, cmd);
 }
 
+int	checkbuiltin(t_cmd *cmdl)
+{
+	if (!strcmp(cmdl->argv[0], "echo"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "cd"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "pwd"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "env"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "export"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "unset"))
+		return (1);
+	return (0);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_prog	prog;
-	/* t_cmdli **cmdli;
-	int		status; */
+	int		i;
+	t_cmdli	*cmdli;
+	char	*line;
+	int		is_builtin;
+
 	if (!argc && !argv && !envp)
 		return (1);
 	if (!initprog(&prog, envp))
-		return (printf("mishell: Init error"));
-	/* cmdli = malloc(sizeof(t_cmdli* ) * 3);
-	cmdli[0] = malloc(sizeof(t_cmdli));
-	cmdli[0]->cmds = malloc(sizeof(t_cmd *) * 4);
-	cmdli[0]->cmds[0] = malloc(sizeof(t_cmd));
-	cmdli[0]->cmds[0]->path = "builtin";
-	cmdli[0]->cmds[0]->argv = malloc(sizeof(char *) * 6);
-	cmdli[0]->cmds[0]->argv[0] = "cd";
-	cmdli[0]->cmds[0]->argv[1] = "~";
-	cmdli[0]->cmds[0]->argv[2] = NULL;
-	cmdli[0]->cmds[0]->argv[3] = "test";
-	cmdli[0]->cmds[0]->argv[4] = "-n";
-	cmdli[0]->cmds[0]->argv[5] = NULL;
-	cmdli[0]->cmds[0]->env = malloc(sizeof(char *) * 1);
-	cmdli[0]->cmds[0]->env[0] = NULL;
-	cmdli[0]->cmds[0]->input = NULL;
-	cmdli[0]->cmds[0]->output = NULL;
-	cmdli[0]->cmds[0]->limmiter = NULL;
-	cmdli[0]->cmds[0]->outappend = 0;
-	cmdli[0]->cmds[1] = NULL;
-	cmdli[1] = NULL; */
-	/* for (int i = 0; cmdli[i]; i++) {
-		if (cmdli[i]->cmds[1] == NULL
-			&& !strcmp(cmdli[i]->cmds[0]->path, "builtin"))
-		{
-			cmdbuiltin(cmdli[i], 0);
-			continue;
-		}
-		for (int j = 0; cmdli[i]->cmds[j]; j++) {
-			cmd(cmdli[i], j);
-		}
-		for (int j = 0; cmdli[i]->cmds[j]; j++) {
-			pid_t pid = wait(&status);
-			if (pid == cmdli[i]->lastpid)
-				setstatus(&prog, status);
-			printf("status: %d (%d ?= %d)\n", status, pid, cmdli[i]->lastpid);
-		}
-		dup2(STDIN_FILENO, STDIN_FILENO);
-		if (prog.lastexit > 0)
+		return (printf("mishell: Init error\n"));
+	while (1)
+	{
+		line = readline("mishell> ");
+		if (!line)
 			break ;
-	} */
+		if (!*line)
+		{
+			free(line);
+			continue ;
+		}
+		if (!strcmp(line, "exit"))
+		{
+			free(line);
+			return (0);
+		}
+		cmdli = tokenize(&prog, line);
+		free(line);
+		if (!cmdli)
+			return (0);
+		i = 0;
+		while (i < cmdli->nbcmds)
+		{
+			is_builtin = checkbuiltin(cmdli->cmds[i]);
+			if (is_builtin)
+			{
+				cmdli->cmds[i]->path = "BUILTIN";
+				cmdbuiltin(&prog, cmdli, i);
+			}
+			else
+			{
+				// Corriger cette ligne avec le bon path
+				cmdli->cmds[i]->path
+					= parsepath(&prog, cmdli->cmds[i]->argv[0]);
+				if (!cmdli->cmds[i]->path)
+					return (0);
+				if (!cmd(cmdli, i))
+					return (0);
+			}
+			i++;
+		}
+		// Print path
+		printf("PATH: %s\n", cmdli->cmds[0]->path);
+		i = 0;
+		while (i < cmdli->nbcmds)
+			free(cmdli->cmds[i++]);
+		free(cmdli->cmds);
+		free(cmdli);
+	}
+	return (0);
 }

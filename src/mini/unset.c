@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:42:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 14:20:20 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/11 16:06:29 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	miniunset(t_prog *prog, char **args)
 		{
 			if (!ft_remenv(prog, args[i]))
 				printf("Warning: A malloc has failed");
-			continue;
+			continue ;
 		}
 		togg = 1;
 	}
