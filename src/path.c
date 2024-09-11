@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/03 00:04:37 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/06 19:02:18 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,13 @@ char	*strcjoin(char *s1, char *s2, char fil)
 	int		i;
 	int		j;
 
-	ret = malloc(strlen(s1) + strlen(s2) + 2);
 	i = -1;
 	j = -1;
+	if (!s1 || !s2 || !fil)
+		return (NULL);
+	ret = malloc(strlen(s1) + strlen(s2) + 2);
+	if (!ret)
+		return (NULL);
 	while (s1[++i])
 		ret[i] = s1[i];
 	ret[i] = fil;

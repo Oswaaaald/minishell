@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini.c                                             :+:      :+:    :+:   */
+/*   mini-deprecated.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 14:43:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:37:29 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,6 @@ int	miniexport(t_prog *prog, char **args)
 } */
 
 // Un-Set
-
 
 /* int	miniunset(t_prog *prog, char **args)
 {

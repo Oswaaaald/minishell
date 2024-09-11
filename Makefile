@@ -1,4 +1,4 @@
-SRC = src/main.c src/path.c src/tokenizer.c src/env.c ${MINI_SRC}
+SRC = src/main.c src/path.c src/init.c src/tokenizer.c src/env.c ${MINI_SRC}
 
 MINI_SRC = src/mini/cd.c src/mini/echo.c src/mini/env.c src/mini/export.c src/mini/pwd.c src/mini/unset.c
 

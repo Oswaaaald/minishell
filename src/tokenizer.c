@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/03 00:04:36 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/06 18:41:55 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	finish(char **lineptr)
 int	nbcmds(char *line)
 {
 	int	i;
-	int ret;
+	int	ret;
 
 	i = -1;
 	ret = 1;
@@ -132,12 +132,12 @@ int	nbcmds(char *line)
 
 char	**arrayaddback(char **currentarr, char *str)
 {
-	char **retarr;
-	int	i;
+	char	**retarr;
+	int		i;
 
 	i = 0;
-		while (currentarr && currentarr[i])
-			i++;
+	while (currentarr && currentarr[i])
+		i++;
 	retarr = (char **) malloc(sizeof(char *) * (i + 2));
 	if (!retarr)
 		return (NULL);
@@ -159,6 +159,7 @@ char	*pullarg(char *str, int qu[2], int *i)
 	while (str[*i + ++j])
 	{
 		if (ft_strchr("<|>", ))
+			;
 	}
 }
 
@@ -177,7 +178,7 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		else if (arg[i] == '\'' && !qu[1])
 			qu[0] = !qu[0];
 		if (!ft_strchr("|<>\"'", arg[i]))
-
+			;
 	}
 }
 
@@ -195,7 +196,6 @@ void	getcmds(t_cmdli *ret, char **args)
 }
 
 //splitargs
-
 static int	nwords(char const *s)
 {
 	int	count;
@@ -275,7 +275,7 @@ static char	**split_process(char const *s, char **res)
 			ft_strlcpy(res[i], s + a, wordlen(s, a) + 1);
 			a = a + wordlen(s, a) - 1;
 		}
-		nword = (ft_strchr(" \t\n", s[a]) != 0) ;
+		nword = (ft_strchr(" \t\n", s[a]) != 0);
 	}
 	res[++i] = (void *)0;
 	return (res);
