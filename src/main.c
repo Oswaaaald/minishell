@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 23:36:57 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:01:45 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	*openfd(t_cmd *cmd)
 	return (fd);
 }
 
-int	cmd(t_cmdli *cmdli, int i)
+int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 {
 	int		*fd;
 	pid_t	pid;
@@ -107,11 +107,12 @@ int	cmd(t_cmdli *cmdli, int i)
 		else
 			dup2(fd[1], STDOUT_FILENO);
 		close(fd[0]);
-		if (execve(cmd->path, cmd->argv, cmd->env))
-			return (0);
+		if (execve(cmd->path, cmd->argv, prog->minienv))
+			exit(EXIT_FAILURE);
 	}
 	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
+	if (cmdli->cmds[i + 1])
+		dup2(fd[0], STDIN_FILENO);
 	return (1);
 }
 
@@ -163,23 +164,83 @@ int	checkbuiltin(t_cmd *cmdl)
 	return (0);
 }
 
+char    **getpaths(char **env)
+{
+    int        i;
+    char    *pathe;
+    char    **res;
+
+    i = -1;
+    pathe = NULL;
+    while (env[++i])
+    {
+        if (!ft_strncmp("PATH=", env[i], 5))
+            pathe = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
+    }
+    if (!pathe)
+        return (NULL);
+    res = ft_split(pathe, ':');
+    free(pathe);
+    if (!res)
+        return (NULL);
+    return (res);
+}
+
+char    *pather(t_prog *prog, char *cmd)
+{
+    char    *buffer;
+    char    **paths;
+    char    *tmpcmd;
+    int        i;
+
+	if (ft_strchr("/.~", cmd[0]))
+		return (parsepath(prog, cmd));
+    tmpcmd = ft_strjoin("/", cmd);
+    if (!tmpcmd)
+        return (NULL);
+    paths = getpaths(prog->minienv);
+    if (!paths)
+        return (free(tmpcmd), NULL);
+    i = -1;
+    while (paths[++i])
+    {
+        buffer = ft_strjoin(paths[i], tmpcmd);
+        if (!buffer)
+            return (free(tmpcmd), free2d(paths), NULL);
+        if (access(buffer, X_OK) == 0)
+            return (free(tmpcmd), free2d(paths), buffer);
+        free(buffer);
+    }
+    free(tmpcmd);
+    free2d(paths);
+    return (NULL);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_prog	prog;
 	int		i;
 	t_cmdli	*cmdli;
 	char	*line;
-	int		is_builtin;
+	int		stds[2];
 
 	if (!argc && !argv && !envp)
 		return (1);
 	if (!initprog(&prog, envp))
 		return (printf("mishell: Init error\n"));
+	//char temp[10];
 	while (1)
 	{
+		//printf("%ld\n", read(STDIN_FILENO, temp, 10));
+		//perror(strerror(errno));
+		stds[0] = dup(STDIN_FILENO);
+		stds[1] = dup(STDOUT_FILENO);
 		line = readline("mishell> ");
 		if (!line)
+		{
+			perror(strerror(errno));
 			break ;
+		}
 		if (!*line)
 		{
 			free(line);
@@ -197,27 +258,33 @@ int	main(int argc, char **argv, char **envp)
 		i = 0;
 		while (i < cmdli->nbcmds)
 		{
-			is_builtin = checkbuiltin(cmdli->cmds[i]);
-			if (is_builtin)
+			if (checkbuiltin(cmdli->cmds[i]))
 			{
 				cmdli->cmds[i]->path = "BUILTIN";
 				cmdbuiltin(&prog, cmdli, i);
 			}
 			else
 			{
-				// Corriger cette ligne avec le bon path
 				cmdli->cmds[i]->path
-					= parsepath(&prog, cmdli->cmds[i]->argv[0]);
+					= pather(&prog, cmdli->cmds[i]->argv[0]);
 				if (!cmdli->cmds[i]->path)
 					return (0);
-				if (!cmd(cmdli, i))
+				if (!cmd(&prog, cmdli, i))
 					return (0);
 			}
 			i++;
 		}
 		// Print path
-		printf("PATH: %s\n", cmdli->cmds[0]->path);
+		//printf("PATH: %s\n", cmdli->cmds[0]->path);
 		i = 0;
+		for (int j = 0; cmdli->cmds[j]; j++) {
+			int	status;
+			pid_t pid = wait(&status);
+			if (pid == cmdli->lastpid)
+				setstatus(&prog, status);
+		}
+		dup2(stds[0], STDIN_FILENO);
+		dup2(stds[1], STDOUT_FILENO);
 		while (i < cmdli->nbcmds)
 			free(cmdli->cmds[i++]);
 		free(cmdli->cmds);

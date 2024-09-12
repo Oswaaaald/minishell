@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 22:12:56 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/12 17:48:17 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,22 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 	str[i] = '$';
 	while (str[++i])
 	{
+		if (str[i] == '?' && si == i - 1)
+		{
+			i++;
+			break;
+		}
 		if ((i == si + 1 && !(ft_isalpha(str[i]) || str[i] == '_'))
 			|| (i > 0 && !(ft_isalnum(str[i]) || str[i] == '_')))
-			break ;
+		{
+			if (si == i - 1)
+			{
+				tmp = *buff;
+				*buff = ft_strjoin(*buff, "$");
+				free(tmp);
+				return (i - 1);
+			}
+		}
 	}
 	c = str[i];
 	str[i] = '\0';
@@ -77,11 +90,13 @@ int	unfinished(char *line)
 	char	*lastchar;
 	char	*startchar;
 	int		i;
+	int		qu[2];
 
 	i = -1;
 	if (!line)
 		return (0);
 	startchar = NULL;
+	ft_memset(qu, 0, sizeof(int) * 2);
 	while (line[++i])
 	{
 		if (ft_isprint(line[i]) && !(line[i] == ' ') && !(line[i] == '	'))
@@ -90,10 +105,16 @@ int	unfinished(char *line)
 				startchar = &line[i];
 			lastchar = &line[i];
 		}
+		if (line[i] == '"' && !qu[0])
+			qu[1] = !qu[1];
+		if (line[i] == '\'' && !qu[1])
+			qu[0] = !qu[0];
 	}
+	if (qu[0] || qu[1])
+		return (1);
 	if (lastchar - startchar <= 2)
 		return (0);
-	if ((lastchar[0] == '&' && lastchar[-1] == '&') || (lastchar[0] == '|'))
+	if ((lastchar[0] == '|'))
 		return (1);
 	return (0);
 }

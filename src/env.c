@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/06 19:16:40 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/12 17:10:59 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*ft_getenv(t_prog *prog, char *s)
 	char	*res;
 
 	i = -1;
+	if (s[0] == '?' && s[1] == 0)
+		return (ft_itoa(prog->lastexit));
 	buff = ft_strjoin(s, "=");
 	if (!buff)
 		return (NULL);
