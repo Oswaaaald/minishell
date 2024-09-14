@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 18:04:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:40:09 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,6 +376,7 @@ t_cmdli	*actuallytokenize(t_prog *prog, char *line)
 		ret->cmds[i]->output = NULL;
 		ret->cmds[i]->limmiter = NULL;
 		ret->cmds[i]->outappend = 0;
+		ft_memset(ret->cmds[i]->fd, 0, sizeof(int) * 2);
 		i++;
 	}
 	ret->cmds[ret->nbcmds] = NULL;

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:28:03 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:40:05 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_cmd
 	char	*input;
 	char	*output;
 	char	*limmiter;
+	int		fd[2];
 	int		outappend;
 }	t_cmd;
 

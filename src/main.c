@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 18:22:05 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:47:29 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,19 @@ int	writeheredoc(t_prog *prog, char *lim)
 	return (1);
 }
 
-int	*openfd(t_prog *prog, t_cmd *cmd)
+int	openfd(t_cmd *cmd)
 {
 	int	*fd;
 
-	fd = ft_malloc(prog, sizeof(int) * 2);
+	fd = cmd->fd;
 	if (pipe(fd) == -1)
-		return (NULL);
+		return (0);
 	if (cmd->input)
 	{
 		close(fd[0]);
 		fd[0] = open(cmd->input, O_RDONLY, 0777);
 		if (fd[0] == -1)
-			return (closefd(fd), NULL);
+			return (closefd(fd), 0);
 	}
 	if (cmd->output)
 	{
@@ -81,20 +81,18 @@ int	*openfd(t_prog *prog, t_cmd *cmd)
 		else
 			fd[1] = open(cmd->output, O_RDWR | O_CREAT | O_TRUNC, 0777);
 		if (fd[1] == -1)
-			return (closefd(fd), NULL);
+			return (closefd(fd), 0);
 	}
-	return (fd);
+	return (1);
 }
 
 int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 {
-	int		*fd;
 	pid_t	pid;
 	t_cmd	*cmd;
 
 	cmd = cmdli->cmds[i];
-	fd = openfd(prog, cmd);
-	if (!fd)
+	if (!openfd(cmd))
 		return (0);
 	if (cmd->limmiter)
 		writeheredoc(prog, cmd->limmiter);
@@ -103,17 +101,16 @@ int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 		cmdli->lastpid = pid;
 	if (!pid)
 	{
-		if (!cmdli->cmds[i + 1] && !cmd->output)
-			dup2(STDOUT_FILENO, STDOUT_FILENO);
-		else
-			dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
+		if (cmdli->cmds[i + 1] || cmd->output)
+			dup2(cmd->fd[1], STDOUT_FILENO);
+		close(cmd->fd[0]);
+		close(cmd->fd[1]);
 		if (execve(cmd->path, cmd->argv, prog->minienv))
 			exit(EXIT_FAILURE);
 	}
-	close(fd[1]);
+	close(cmd->fd[1]);
 	if (cmdli->cmds[i + 1])
-		dup2(fd[0], STDIN_FILENO);
+		dup2(cmd->fd[0], STDIN_FILENO);
 	return (1);
 }
 
@@ -136,15 +133,16 @@ int	exebuiltin(t_prog *prog, t_cmd *cmd)
 
 void	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 {
-	int		*fd;
 	t_cmd	*cmd;
 
 	cmd = cmdli->cmds[i];
-	fd = openfd(prog, cmd);
+	
+	if (!openfd(cmd))
+		return ;
 	if (cmd->output)
-		dup2(fd[1], STDOUT_FILENO);
+		dup2(cmd->fd[1], STDOUT_FILENO);
 	if (cmd->input)
-		dup2(fd[0], STDIN_FILENO);
+		dup2(cmd->fd[0], STDIN_FILENO);
 	prog->lastexit = exebuiltin(prog, cmd);
 }
 
@@ -231,6 +229,37 @@ void	freeprog(t_prog *prog)
 		free(crnt);
 		crnt = tmp;
 	}
+	rl_clear_history();
+}
+
+char *ft_readline(t_prog *prog)
+{
+	char	*home;
+	char	*buff;
+	char	*ret;
+	
+	home = ft_getenv(prog, "HOME");
+	buff = NULL;
+	if (home && !ft_strncmp(home, prog->cwd, ft_strlen(home)))
+	{
+		home = ft_strjoin(prog, "~", prog->cwd + ft_strlen(home));
+		if (!home)
+			return (NULL);
+		buff = ft_strjoin(prog, "mishell:", home);
+		ft_free(prog, home);
+	}
+	else
+		buff = ft_strjoin(prog, "mishell:", prog->cwd);
+	if (!buff)
+		return (NULL);
+	home = ft_strjoin(prog, buff, "$ ");
+	ft_free(prog, buff);
+	if (!home)
+		return (NULL);
+	ret = readline(home);
+	ft_malloc_add_ptr(prog, ret);
+	ft_free(prog, home);
+	return(ret);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -252,8 +281,7 @@ int	main(int argc, char **argv, char **envp)
 		//perror(strerror(errno));
 		stds[0] = dup(STDIN_FILENO);
 		stds[1] = dup(STDOUT_FILENO);
-		line = readline("mishell> ");
-		ft_malloc_add_ptr(&prog, line);
+		line = ft_readline(&prog);
 		if (!line)
 		{
 			perror(strerror(errno));
@@ -301,8 +329,12 @@ int	main(int argc, char **argv, char **envp)
 			if (pid == cmdli->lastpid)
 				setstatus(&prog, status);
 		}
+		for (int j = 0; cmdli->cmds[j]; j++)
+			close(cmdli->cmds[j]->fd[0]);
 		dup2(stds[0], STDIN_FILENO);
 		dup2(stds[1], STDOUT_FILENO);
+		close(stds[0]);
+		close(stds[1]);
 		while (i < cmdli->nbcmds)
 			ft_free(&prog, cmdli->cmds[i++]);
 		ft_free(&prog, cmdli->cmds);
