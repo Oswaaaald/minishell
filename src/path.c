@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 21:24:25 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:23:55 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*arrtolst(char **arr)
+t_list	*arrtolst(t_prog *prog, char **arr)
 {
 	int		i;
 	t_list	*tmp;
@@ -27,11 +27,11 @@ t_list	*arrtolst(char **arr)
 			return (NULL);
 		ft_lstadd_back(&final, tmp);
 	}
-	free(arr);
+	ft_free(prog, arr);
 	return (final);
 }
 
-char	*strcjoin(char *s1, char *s2, char fil)
+char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil)
 {
 	char	*ret;
 	int		i;
@@ -41,7 +41,7 @@ char	*strcjoin(char *s1, char *s2, char fil)
 	j = -1;
 	if (!s1 || !s2 || !fil)
 		return (NULL);
-	ret = malloc(strlen(s1) + strlen(s2) + 2);
+	ret = ft_malloc(prog, strlen(s1) + strlen(s2) + 2);
 	if (!ret)
 		return (NULL);
 	while (s1[++i])
@@ -53,7 +53,7 @@ char	*strcjoin(char *s1, char *s2, char fil)
 	return (ret);
 }
 
-char	*pathjoin(char *s1, char *s2, int last)
+char	*pathjoin(t_prog *prog, char *s1, char *s2, int last)
 {
 	char	*ret;
 	int		i;
@@ -61,7 +61,7 @@ char	*pathjoin(char *s1, char *s2, int last)
 
 	if (s1 == NULL)
 		s1 = "/";
-	ret = malloc(strlen(s1) + strlen(s2) + 1 + (last == 0));
+	ret = ft_malloc(prog, strlen(s1) + strlen(s2) + 1 + (last == 0));
 	i = -1;
 	j = -1;
 	while (s1[++i])
@@ -78,7 +78,7 @@ char	*pathjoin(char *s1, char *s2, int last)
 	return (ret);
 }
 
-char	*lstjoin(t_list *lst)
+char	*lstjoin(t_prog *prog, t_list *lst)
 {
 	char	*buff;
 	char	*temp;
@@ -89,41 +89,13 @@ char	*lstjoin(t_list *lst)
 	while (tmp)
 	{
 		temp = buff;
-		buff = pathjoin(buff, (char *) tmp->content, tmp->next == NULL);
+		buff = pathjoin(prog, buff, (char *) tmp->content, tmp->next == NULL);
 		if (temp)
-			free(temp);
+			ft_free(prog, temp);
 		tmp = tmp->next;
 	}
-	ft_lstclear(&lst, free);
+	ft_lstclear(prog, &lst, ft_free);
 	return (buff);
-}
-
-t_list	*lstbef(t_list *list, t_list *elem)
-{
-	t_list	*tmp;
-
-	tmp = list;
-	if (tmp == elem)
-		return (NULL);
-	while (tmp->next)
-	{
-		if (tmp->next == elem)
-			return (tmp);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-void	lstpop(t_list **list, t_list *elem)
-{
-	t_list	*bef;
-
-	bef = lstbef(*list, elem);
-	if (bef)
-		bef->next = elem->next;
-	else
-		*list = elem->next;
-	ft_lstdelone(elem, free);
 }
 
 char	*pathexpander(t_prog *prog, char *path)
@@ -136,16 +108,18 @@ char	*pathexpander(t_prog *prog, char *path)
 	if (path[0] == '~' && (path[1] == '/' || !path[1]))
 	{
 		home = ft_getenv(prog, "HOME");
-		ret = ft_strjoin(home, path + 1);
+		if (!home)
+			return (printf("mishell: Home env not set\n"), NULL);
+		ret = ft_strjoin(prog, home, path + 1);
 		return (ret);
 	}
-	else if (path[0] == '.')
+	else if (path[0] != '~' && path[0] != '/')
 	{
-		home = ft_getenv(prog, "PWD");
-		ret = strcjoin(home, path, '/');
+		home = prog->cwd;
+		ret = strcjoin(prog, home, path, '/');
 		return (ret);
 	}
-	return (ft_strjoin(path, ""));
+	return (ft_strjoin(prog, path, ""));
 }
 
 char	*parsepath(t_prog *prog, char *path)
@@ -156,8 +130,12 @@ char	*parsepath(t_prog *prog, char *path)
 	t_list	*buf;
 
 	path = pathexpander(prog, path);
-	paths = ft_split(path, '/');
-	pathlst = arrtolst(paths);
+	if (!path)
+		return (NULL);
+	paths = ft_split(prog, path, '/');
+	pathlst = arrtolst(prog, paths);
+	if (!pathlst)
+		return (NULL);
 	tmp = pathlst;
 	while (tmp)
 	{
@@ -165,19 +143,19 @@ char	*parsepath(t_prog *prog, char *path)
 		{
 			buf = tmp->next;
 			if (lstbef(pathlst, tmp))
-				lstpop(&pathlst, lstbef(pathlst, tmp));
-			lstpop(&pathlst, tmp);
+				ft_lstpop(prog, &pathlst, lstbef(pathlst, tmp));
+			ft_lstpop(prog, &pathlst, tmp);
 			tmp = buf;
 		}
 		else if (!ft_strncmp((char *)tmp->content, ".", -1))
 		{
 			buf = tmp->next;
-			lstpop(&pathlst, tmp);
+			ft_lstpop(prog, &pathlst, tmp);
 			tmp = buf;
 		}
 		else
 			tmp = tmp->next;
 	}
-	free(path);
-	return (lstjoin(pathlst));
+	ft_free(prog, path);
+	return (lstjoin(prog, pathlst));
 }

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/12 17:01:45 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/13 18:22:05 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	setstatus(t_prog *prog, int status)
 		prog->lastexit = WTERMSIG(status) + 128;
 }
 
-int	writeheredoc(char *lim)
+int	writeheredoc(t_prog *prog, char *lim)
 {
 	char	*buff;
 	pid_t	pid;
@@ -43,11 +43,12 @@ int	writeheredoc(char *lim)
 		while (1)
 		{
 			buff = readline("> ");
+			ft_malloc_add_ptr(prog, buff);
 			if (strcmp(buff, lim) == 0)
 				break ;
 			write(fd[1], buff, strlen(buff));
 			write(fd[1], "\n", 1);
-			free(buff);
+			ft_free(prog, buff);
 		}
 		close(fd[1]);
 		exit(EXIT_SUCCESS);
@@ -58,11 +59,11 @@ int	writeheredoc(char *lim)
 	return (1);
 }
 
-int	*openfd(t_cmd *cmd)
+int	*openfd(t_prog *prog, t_cmd *cmd)
 {
 	int	*fd;
 
-	fd = malloc(sizeof(int) * 2);
+	fd = ft_malloc(prog, sizeof(int) * 2);
 	if (pipe(fd) == -1)
 		return (NULL);
 	if (cmd->input)
@@ -92,11 +93,11 @@ int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 	t_cmd	*cmd;
 
 	cmd = cmdli->cmds[i];
-	fd = openfd(cmd);
+	fd = openfd(prog, cmd);
 	if (!fd)
 		return (0);
 	if (cmd->limmiter)
-		writeheredoc(cmd->limmiter);
+		writeheredoc(prog, cmd->limmiter);
 	pid = fork();
 	if (!cmdli->cmds[i + 1] && pid > 0)
 		cmdli->lastpid = pid;
@@ -139,7 +140,7 @@ void	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 	t_cmd	*cmd;
 
 	cmd = cmdli->cmds[i];
-	fd = openfd(cmd);
+	fd = openfd(prog, cmd);
 	if (cmd->output)
 		dup2(fd[1], STDOUT_FILENO);
 	if (cmd->input)
@@ -164,7 +165,7 @@ int	checkbuiltin(t_cmd *cmdl)
 	return (0);
 }
 
-char    **getpaths(char **env)
+char    **getpaths(t_prog *prog, char **env)
 {
     int        i;
     char    *pathe;
@@ -175,12 +176,12 @@ char    **getpaths(char **env)
     while (env[++i])
     {
         if (!ft_strncmp("PATH=", env[i], 5))
-            pathe = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
+            pathe = ft_substr(prog, env[i], 5, ft_strlen(env[i]) - 5);
     }
     if (!pathe)
         return (NULL);
-    res = ft_split(pathe, ':');
-    free(pathe);
+    res = ft_split(prog, pathe, ':');
+    ft_free(prog, pathe);
     if (!res)
         return (NULL);
     return (res);
@@ -195,25 +196,41 @@ char    *pather(t_prog *prog, char *cmd)
 
 	if (ft_strchr("/.~", cmd[0]))
 		return (parsepath(prog, cmd));
-    tmpcmd = ft_strjoin("/", cmd);
+    tmpcmd = ft_strjoin(prog, "/", cmd);
     if (!tmpcmd)
         return (NULL);
-    paths = getpaths(prog->minienv);
+    paths = getpaths(prog, prog->minienv);
     if (!paths)
-        return (free(tmpcmd), NULL);
+        return (ft_free(prog, tmpcmd), NULL);
     i = -1;
     while (paths[++i])
     {
-        buffer = ft_strjoin(paths[i], tmpcmd);
+        buffer = ft_strjoin(prog, paths[i], tmpcmd);
         if (!buffer)
-            return (free(tmpcmd), free2d(paths), NULL);
+            return (ft_free(prog, tmpcmd), free2d(prog, paths), NULL);
         if (access(buffer, X_OK) == 0)
-            return (free(tmpcmd), free2d(paths), buffer);
-        free(buffer);
+            return (ft_free(prog, tmpcmd), free2d(prog, paths), buffer);
+        ft_free(prog, buffer);
     }
-    free(tmpcmd);
-    free2d(paths);
+    ft_free(prog, tmpcmd);
+    free2d(prog, paths);
     return (NULL);
+}
+
+void	freeprog(t_prog *prog)
+{
+	t_list	*tmp;
+	t_list	*crnt;
+
+	crnt = prog->mallocs;
+	while (crnt)
+	{
+		tmp = crnt->next;
+		if (crnt->content)
+			free(crnt->content);
+		free(crnt);
+		crnt = tmp;
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -236,6 +253,7 @@ int	main(int argc, char **argv, char **envp)
 		stds[0] = dup(STDIN_FILENO);
 		stds[1] = dup(STDOUT_FILENO);
 		line = readline("mishell> ");
+		ft_malloc_add_ptr(&prog, line);
 		if (!line)
 		{
 			perror(strerror(errno));
@@ -243,16 +261,16 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (!*line)
 		{
-			free(line);
+			ft_free(&prog, line);
 			continue ;
 		}
 		if (!strcmp(line, "exit"))
 		{
-			free(line);
+			freeprog(&prog);
 			return (0);
 		}
 		cmdli = tokenize(&prog, line);
-		free(line);
+		ft_free(&prog, line);
 		if (!cmdli)
 			return (0);
 		i = 0;
@@ -286,9 +304,9 @@ int	main(int argc, char **argv, char **envp)
 		dup2(stds[0], STDIN_FILENO);
 		dup2(stds[1], STDOUT_FILENO);
 		while (i < cmdli->nbcmds)
-			free(cmdli->cmds[i++]);
-		free(cmdli->cmds);
-		free(cmdli);
+			ft_free(&prog, cmdli->cmds[i++]);
+		ft_free(&prog, cmdli->cmds);
+		ft_free(&prog, cmdli);
 	}
 	return (0);
 }

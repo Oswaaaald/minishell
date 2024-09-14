@@ -3,12 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/11 14:20:51 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:28:03 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 #include "unistd.h"
 #include "sys/types.h"
@@ -50,14 +53,6 @@ typedef struct s_cmdli
 	pid_t	lastpid;
 }	t_cmdli;
 
-//The data that is used to run the shell
-typedef struct s_prog
-{
-	char	lastexit;
-	char	*cwd;
-	char	**minienv;
-}	t_prog;
-
 //Mini Commands
 int		minicd(t_prog *prog, char **args);
 int		miniecho(char **args);
@@ -72,9 +67,11 @@ t_cmdli	*tokenize(t_prog *prog, char *line);
 
 //Utils
 int		initprog(t_prog *prog, char **envp);
-void	free2d(char **arr);
-char	**strarrdup(char **arr);
+void	free2d(t_prog *prog, char **arr);
+char	**strarrdup(t_prog *prog, char **arr);
 int		ft_setenv(t_prog *prog, char *var);
 char	*ft_getenv(t_prog *prog, char *s);
 int		ft_remenv(t_prog *prog, char *s);
 int		nameisvalid(char *s);
+
+#endif

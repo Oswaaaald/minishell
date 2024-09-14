@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 11:02:19 by fghysbre          #+#    #+#             */
-/*   Updated: 2023/11/07 16:58:15 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/13 16:33:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_prog *prog, t_list **lst, void (*del)(t_prog *, void *))
 {
 	t_list	*tmp;
 	t_list	*crnt;
@@ -23,7 +23,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 	while (crnt)
 	{
 		tmp = crnt->next;
-		ft_lstdelone(crnt, del);
+		ft_lstdelone(prog, crnt, del);
 		crnt = tmp;
 	}
 	*lst = (void *)0;

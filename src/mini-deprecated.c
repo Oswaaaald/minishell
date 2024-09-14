@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini-deprecated.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/06 18:37:29 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:30:35 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ void	cdback(t_prog *prog)
 {
 	char	*buff;
 
-	buff = ft_strdup(ft_getenv(prog, "PWD"));
+	buff = ft_strdup(prog, ft_getenv(prog, "PWD"));
 	if (chdir(ft_getenv(prog, "OLDPWD")) == -1)
 		perror("mishell: cd");
 	ft_setenv(prog, ft_strjoin("PWD=", ft_getenv(prog, "OLDPWD")));
 	ft_setenv(prog, ft_strjoin("OLDPWD=", buff));
 	free(prog->cwd);
-	prog->cwd = ft_strdup(ft_getenv(prog, "PWD"));
+	prog->cwd = ft_strdup(prog, ft_getenv(prog, "PWD"));
 	free(buff);
 }
 

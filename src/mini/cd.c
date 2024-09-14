@@ -6,19 +6,19 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/12 13:30:19 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/13 18:26:08 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*strjoin(char *s1, char *s2)
+char	*strjoin(t_prog *prog, char *s1, char *s2)
 {
 	char	*ret;
 	int		i;
 	int		j;
 
-	ret = malloc(strlen(s1) + strlen(s2) + 1);
+	ret = ft_malloc(prog, strlen(s1) + strlen(s2) + 1);
 	if (!ret)
 		return (NULL);
 	i = -1;
@@ -37,16 +37,16 @@ int	updatepwd(t_prog *prog, char *new, char *old)
 	char	*tmpnew;
 	char	*tmpold;
 
-	tmpnew = ft_strjoin("PWD=", new);
+	tmpnew = ft_strjoin(prog, "PWD=", new);
 	if (!tmpnew)
 		return (1);
-	tmpold = ft_strjoin("OLDPWD=", old);
+	tmpold = ft_strjoin(prog, "OLDPWD=", old);
 	if (!tmpold)
-		return (free(tmpnew), 1);
+		return (ft_free(prog, tmpnew), 1);
 	if (!ft_setenv(prog, tmpnew))
-		return (free(tmpnew), 1);
+		return (ft_free(prog, tmpnew), 1);
 	if (!ft_setenv(prog, tmpold))
-		return (free(tmpnew), free(tmpold), 1);
+		return (ft_free(prog, tmpnew), ft_free(prog, tmpold), 1);
 	return (0);
 }
 
@@ -54,18 +54,18 @@ int	cdback(t_prog *prog)
 {
 	char	*buff;
 
-	buff = ft_strdup(ft_getenv(prog, "PWD"));
+	buff = ft_strdup(prog, ft_getenv(prog, "PWD"));
 	if (!buff)
 		return (1);
 	if (chdir(ft_getenv(prog, "OLDPWD")) == -1)
-		return (perror("mishell: cd"), free(buff), 1);
+		return (perror("mishell: cd"), ft_free(prog, buff), 1);
 	if (updatepwd(prog, ft_getenv(prog, "OLDPWD"), buff))
-		return (free(buff), 1);
-	free(prog->cwd);
-	prog->cwd = ft_strdup(ft_getenv(prog, "PWD"));
+		return (ft_free(prog, buff), 1);
+	ft_free(prog, prog->cwd);
+	prog->cwd = ft_strdup(prog, ft_getenv(prog, "PWD"));
 	if (!prog->cwd)
-		return (free(buff), 1);
-	return (free(buff), 0);
+		return (ft_free(prog, buff), 1);
+	return (ft_free(prog, buff), 0);
 }
 
 int	minicd(t_prog *prog, char **args)
@@ -85,10 +85,10 @@ int	minicd(t_prog *prog, char **args)
 	if (!buff)
 		return (0);
 	if (!ft_strncmp(buff, "/-", -1))
-		return (free(buff), cdback(prog));
+		return (ft_free(prog, buff), cdback(prog));
 	if (chdir(buff) == -1)
-		return (perror("mishell: cd"), free(buff), 1);
-	free(prog->cwd);
+		return (perror("mishell: cd"), ft_free(prog, buff), 1);
+	ft_free(prog, prog->cwd);
 	prog->cwd = buff;
 	if (updatepwd(prog, buff, ft_getenv(prog, "PWD")))
 		return (1);

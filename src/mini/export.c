@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/04 17:58:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:32:52 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	expshowall(t_prog *prog)
 	char	**envdup;
 
 	i = -1;
-	envdup = strarrdup(prog->minienv);
+	envdup = strarrdup(prog, prog->minienv);
 	if (!envdup)
 		return ;
 	envdup = strarrsort(envdup);
