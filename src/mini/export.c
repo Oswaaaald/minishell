@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:32:52 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:04:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ void	putdeclare(char *s)
 	write(STDOUT_FILENO, "\n", 1);
 }
 
-void	expshowall(t_prog *prog)
+void	expshowall(void)
 {
 	int		i;
 	char	**envdup;
 
 	i = -1;
-	envdup = strarrdup(prog, prog->minienv);
+	envdup = strarrdup(prog.minienv);
 	if (!envdup)
 		return ;
 	envdup = strarrsort(envdup);
@@ -90,13 +90,13 @@ int	nameisvalid(char *s)
 	return (1);
 }
 
-int	miniexport(t_prog *prog, char **args)
+int	miniexport(char **args)
 {
 	int	i;
 	int	togg;
 
 	if (!args[1])
-		return (expshowall(prog), 0);
+		return (expshowall(), 0);
 	i = 0;
 	togg = 0;
 	while (args[++i])
@@ -110,7 +110,7 @@ int	miniexport(t_prog *prog, char **args)
 			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
 		else
 		{
-			if (!ft_setenv(prog, args[i]))
+			if (!ft_setenv(args[i]))
 				printf("Warning: A malloc has failed");
 			continue ;
 		}

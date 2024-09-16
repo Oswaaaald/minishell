@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:42:02 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:38:36 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:40:52 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	ft_strnlen(char const *s, size_t len)
 	return (c);
 }
 
-char	*ft_substr(t_prog *prog, char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*res;
 	char	*ptr;
@@ -30,9 +30,9 @@ char	*ft_substr(t_prog *prog, char const *s, unsigned int start, size_t len)
 	if (!s)
 		return ((void *)0);
 	if ((unsigned int)ft_strlen(s) <= start)
-		return (ft_strdup(prog, ""));
+		return (ft_strdup(""));
 	ptr = (char *)s + start;
-	res = (char *)ft_malloc(prog, (int)ft_strnlen(ptr, len) + 1);
+	res = (char *)ft_malloc((int)ft_strnlen(ptr, len) + 1);
 	if (!res)
 		return ((void *)0);
 	ft_strlcpy(res, ptr, (int)ft_strnlen(ptr, len) + 1);

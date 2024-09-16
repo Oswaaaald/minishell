@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 14:55:42 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:34:02 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:36:47 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,15 @@ static int	ilen(int n)
 	return (c);
 }
 
-static char	*exception_handler(t_prog *prog, int n)
+static char	*exception_handler(int n)
 {
 	if (n == -2147483648)
-		return (ft_strdup(prog, "-2147483648"));
+		return (ft_strdup("-2147483648"));
 	else
-		return (ft_strdup(prog, "0"));
+		return (ft_strdup("0"));
 }
 
-char	*ft_itoa(t_prog *prog, int n)
+char	*ft_itoa(int n)
 {
 	char	*res;
 	int		i;
@@ -45,8 +45,8 @@ char	*ft_itoa(t_prog *prog, int n)
 
 	len = ilen(n);
 	if (n == -2147483648 || n == 0)
-		return (exception_handler(prog, n));
-	res = (char *)ft_malloc(prog, (len + 1) * sizeof(char));
+		return (exception_handler(n));
+	res = (char *)ft_malloc((len + 1) * sizeof(char));
 	if (!res)
 		return ((void *)0);
 	if (n < 0)

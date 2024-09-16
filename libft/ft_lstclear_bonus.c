@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 11:02:19 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 16:33:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:05:51 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_prog *prog, t_list **lst, void (*del)(t_prog *, void *))
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*tmp;
 	t_list	*crnt;
@@ -23,7 +23,7 @@ void	ft_lstclear(t_prog *prog, t_list **lst, void (*del)(t_prog *, void *))
 	while (crnt)
 	{
 		tmp = crnt->next;
-		ft_lstdelone(prog, crnt, del);
+		ft_lstdelone(crnt, del);
 		crnt = tmp;
 	}
 	*lst = (void *)0;

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 11:42:31 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 16:14:35 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:39:58 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,18 @@ static int	wordlen(char const *s, char c, int ind)
 	return (count);
 }
 
-static void	*freem(t_prog *prog, char **str, int a)
+static void	*freem(char **str, int a)
 {
 	int	i;
 
 	i = -1;
 	while (str[++i] && i < a)
-		ft_free(prog, str[i]);
-	ft_free(prog, str);
+		ft_free(str[i]);
+	ft_free(str);
 	return ((void *)0);
 }
 
-static char	**split_process(t_prog *prog, char const *s, char c)
+static char	**split_process(char const *s, char c)
 {
 	int		nword;
 	int		i;
@@ -68,16 +68,16 @@ static char	**split_process(t_prog *prog, char const *s, char c)
 	nword = 1;
 	i = -1;
 	a = -1;
-	res = (char **)ft_malloc(prog, (nwords(s, c) + 1) * sizeof(char *));
+	res = (char **)ft_malloc((nwords(s, c) + 1) * sizeof(char *));
 	if (!res)
 		return (NULL);
 	while (s[++a])
 	{
 		if (s[a] != c && nword)
 		{
-			res[++i] = (char *)ft_malloc(prog, wordlen(s, c, a) + 1);
+			res[++i] = (char *)ft_malloc(wordlen(s, c, a) + 1);
 			if (!(res[i]))
-				return (freem(prog, res, i));
+				return (freem(res, i));
 			ft_strlcpy(res[i], s + a, wordlen(s, c, a) + 1);
 			a = a + wordlen(s, c, a) - 1;
 		}
@@ -87,11 +87,11 @@ static char	**split_process(t_prog *prog, char const *s, char c)
 	return (res);
 }
 
-char	**ft_split(t_prog *prog, char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	if (!s)
 		return (NULL);
-	return (split_process(prog, s, c));
+	return (split_process(s, c));
 }
 
 /* #include <stdio.h>

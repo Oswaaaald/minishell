@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:23:55 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:55:40 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*arrtolst(t_prog *prog, char **arr)
+t_list	*arrtolst(char **arr)
 {
 	int		i;
 	t_list	*tmp;
@@ -27,11 +27,11 @@ t_list	*arrtolst(t_prog *prog, char **arr)
 			return (NULL);
 		ft_lstadd_back(&final, tmp);
 	}
-	ft_free(prog, arr);
+	ft_free(arr);
 	return (final);
 }
 
-char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil)
+char	*strcjoin(char *s1, char *s2, char fil)
 {
 	char	*ret;
 	int		i;
@@ -41,7 +41,7 @@ char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil)
 	j = -1;
 	if (!s1 || !s2 || !fil)
 		return (NULL);
-	ret = ft_malloc(prog, strlen(s1) + strlen(s2) + 2);
+	ret = ft_malloc(strlen(s1) + strlen(s2) + 2);
 	if (!ret)
 		return (NULL);
 	while (s1[++i])
@@ -53,7 +53,7 @@ char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil)
 	return (ret);
 }
 
-char	*pathjoin(t_prog *prog, char *s1, char *s2, int last)
+char	*pathjoin(char *s1, char *s2, int last)
 {
 	char	*ret;
 	int		i;
@@ -61,7 +61,7 @@ char	*pathjoin(t_prog *prog, char *s1, char *s2, int last)
 
 	if (s1 == NULL)
 		s1 = "/";
-	ret = ft_malloc(prog, strlen(s1) + strlen(s2) + 1 + (last == 0));
+	ret = ft_malloc(strlen(s1) + strlen(s2) + 1 + (last == 0));
 	i = -1;
 	j = -1;
 	while (s1[++i])
@@ -78,7 +78,7 @@ char	*pathjoin(t_prog *prog, char *s1, char *s2, int last)
 	return (ret);
 }
 
-char	*lstjoin(t_prog *prog, t_list *lst)
+char	*lstjoin(t_list *lst)
 {
 	char	*buff;
 	char	*temp;
@@ -89,16 +89,16 @@ char	*lstjoin(t_prog *prog, t_list *lst)
 	while (tmp)
 	{
 		temp = buff;
-		buff = pathjoin(prog, buff, (char *) tmp->content, tmp->next == NULL);
+		buff = pathjoin(buff, (char *) tmp->content, tmp->next == NULL);
 		if (temp)
-			ft_free(prog, temp);
+			ft_free(temp);
 		tmp = tmp->next;
 	}
-	ft_lstclear(prog, &lst, ft_free);
+	ft_lstclear(&lst, ft_free);
 	return (buff);
 }
 
-char	*pathexpander(t_prog *prog, char *path)
+char	*pathexpander(char *path)
 {
 	char	*home;
 	char	*ret;
@@ -107,33 +107,33 @@ char	*pathexpander(t_prog *prog, char *path)
 		path = "~";
 	if (path[0] == '~' && (path[1] == '/' || !path[1]))
 	{
-		home = ft_getenv(prog, "HOME");
+		home = ft_getenv("HOME");
 		if (!home)
 			return (printf("mishell: Home env not set\n"), NULL);
-		ret = ft_strjoin(prog, home, path + 1);
+		ret = ft_strjoin(home, path + 1);
 		return (ret);
 	}
 	else if (path[0] != '~' && path[0] != '/')
 	{
-		home = prog->cwd;
-		ret = strcjoin(prog, home, path, '/');
+		home = prog.cwd;
+		ret = strcjoin(home, path, '/');
 		return (ret);
 	}
-	return (ft_strjoin(prog, path, ""));
+	return (ft_strjoin(path, ""));
 }
 
-char	*parsepath(t_prog *prog, char *path)
+char	*parsepath(char *path)
 {
 	char	**paths;
 	t_list	*pathlst;
 	t_list	*tmp;
 	t_list	*buf;
 
-	path = pathexpander(prog, path);
+	path = pathexpander(path);
 	if (!path)
 		return (NULL);
-	paths = ft_split(prog, path, '/');
-	pathlst = arrtolst(prog, paths);
+	paths = ft_split(path, '/');
+	pathlst = arrtolst(paths);
 	if (!pathlst)
 		return (NULL);
 	tmp = pathlst;
@@ -143,19 +143,19 @@ char	*parsepath(t_prog *prog, char *path)
 		{
 			buf = tmp->next;
 			if (lstbef(pathlst, tmp))
-				ft_lstpop(prog, &pathlst, lstbef(pathlst, tmp));
-			ft_lstpop(prog, &pathlst, tmp);
+				ft_lstpop(&pathlst, lstbef(pathlst, tmp));
+			ft_lstpop(&pathlst, tmp);
 			tmp = buf;
 		}
 		else if (!ft_strncmp((char *)tmp->content, ".", -1))
 		{
 			buf = tmp->next;
-			ft_lstpop(prog, &pathlst, tmp);
+			ft_lstpop(&pathlst, tmp);
 			tmp = buf;
 		}
 		else
 			tmp = tmp->next;
 	}
-	ft_free(prog, path);
-	return (lstjoin(prog, pathlst));
+	ft_free(path);
+	return (lstjoin(pathlst));
 }

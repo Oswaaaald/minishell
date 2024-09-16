@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/14 23:40:09 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/16 21:53:01 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	expandvar(t_prog *prog, char **buff, char *str, int i)
+int	expandvar(char **buff, char *str, int i)
 {
 	int		si;
 	char	*tmp;
@@ -21,12 +21,12 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 	si = i;
 	str[i] = '\0';
 	if (!*buff)
-		*buff = ft_strdup(prog, str);
+		*buff = ft_strdup(str);
 	else
 	{
 		tmp = *buff;
-		*buff = ft_strjoin(prog, *buff, str);
-		ft_free(prog, tmp);
+		*buff = ft_strjoin(*buff, str);
+		ft_free(tmp);
 	}
 	str[i] = '$';
 	while (str[++i])
@@ -42,21 +42,21 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 			if (si == i - 1)
 			{
 				tmp = *buff;
-				*buff = ft_strjoin(prog, *buff, "$");
-				ft_free(prog, tmp);
+				*buff = ft_strjoin(*buff, "$");
+				ft_free(tmp);
 				return (i - 1);
 			}
 		}
 	}
 	c = str[i];
 	str[i] = '\0';
-	if (ft_getenv(prog, &str[si + 1]))
-		*buff = ft_strjoin(prog, *buff, ft_getenv(prog, &str[si + 1]));
+	if (ft_getenv(&str[si + 1]))
+		*buff = ft_strjoin(*buff, ft_getenv(&str[si + 1]));
 	str[i] = c;
 	return (i - 1);
 }
 
-char	*expand(t_prog *prog, char *str)
+char	*expand(char *str)
 {
 	int		i;
 	char	*buff;
@@ -76,13 +76,13 @@ char	*expand(t_prog *prog, char *str)
 			quotes[0] = !quotes[0];
 		if (str[i] == '$' && !quotes[0])
 		{
-			last = expandvar(prog, &buff, &(str[last]), i - last);
+			last = expandvar(&buff, &(str[last]), i - last);
 			i = last;
 		}
 	}
 	if (!buff)
-		return (ft_strdup(prog, str));
-	return (ft_strjoin(prog, buff, &str[last + 1]));
+		return (ft_strdup(str));
+	return (ft_strjoin(buff, &str[last + 1]));
 }
 
 int	unfinished(char *line)
@@ -119,7 +119,7 @@ int	unfinished(char *line)
 	return (0);
 }
 
-void	finish(t_prog *prog, char **lineptr)
+void	finish(char **lineptr)
 {
 	char	*buff;
 	char	*tmp;
@@ -128,12 +128,12 @@ void	finish(t_prog *prog, char **lineptr)
 	if (!buff)
 		return ;
 	tmp = *lineptr;
-	*lineptr = ft_strjoin(prog, tmp, "\n");
-	ft_free(prog, tmp);
+	*lineptr = ft_strjoin(tmp, "\n");
+	ft_free(tmp);
 	tmp = *lineptr;
-	*lineptr = ft_strjoin(prog, tmp, buff);
-	ft_free(prog, tmp);
-	ft_free(prog, buff);
+	*lineptr = ft_strjoin(tmp, buff);
+	ft_free(tmp);
+	ft_free(buff);
 }
 
 int	nbcmds(char *line)
@@ -151,7 +151,7 @@ int	nbcmds(char *line)
 	return (ret);
 }
 
-char	**arrayaddback(t_prog *prog, char **currentarr, char *str)
+char	**arrayaddback(char **currentarr, char *str)
 {
 	char	**retarr;
 	int		i;
@@ -159,7 +159,7 @@ char	**arrayaddback(t_prog *prog, char **currentarr, char *str)
 	i = 0;
 	while (currentarr && currentarr[i])
 		i++;
-	retarr = (char **) ft_malloc(prog, sizeof(char *) * (i + 2));
+	retarr = (char **) ft_malloc(sizeof(char *) * (i + 2));
 	if (!retarr)
 		return (NULL);
 	i = 0;
@@ -170,11 +170,11 @@ char	**arrayaddback(t_prog *prog, char **currentarr, char *str)
 	}
 	retarr[i] = str;
 	retarr[i + 1] = NULL;
-	ft_free(prog, currentarr);
+	ft_free(currentarr);
 	return (retarr);
 }
 
-char	*pullarg(t_prog *prog, char *str, int qu[2], int *i)
+char	*pullarg(char *str, int qu[2], int *i)
 {
 	int		j;
 	char	*arg;
@@ -190,12 +190,12 @@ char	*pullarg(t_prog *prog, char *str, int qu[2], int *i)
 			break ;
 		j++;
 	}
-	arg = ft_substr(prog, str, *i, j);
+	arg = ft_substr(str, *i, j);
 	*i += j - 1;
 	return (arg);
 }
 
-void	arghandle(t_prog *prog, t_cmdli *ret, char *arg, int *cmdi)
+void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 {
 	int		i;
 	int		qu[2];
@@ -219,7 +219,7 @@ void	arghandle(t_prog *prog, t_cmdli *ret, char *arg, int *cmdi)
 		}
 		else if (!qu[0] && !qu[1] && (arg[i] == '<' || arg[i] == '>'))
 		{
-			tmp = pullarg(prog, arg, qu, &i);
+			tmp = pullarg(arg, qu, &i);
 			if (arg[i - 1] == '<')
 				current_cmd->input = tmp;
 			else
@@ -227,14 +227,14 @@ void	arghandle(t_prog *prog, t_cmdli *ret, char *arg, int *cmdi)
 		}
 		else if (!ft_strchr("|<>", arg[i]))
 		{
-			tmp = pullarg(prog, arg, qu, &i);
-			current_cmd->argv = arrayaddback(prog, current_cmd->argv, tmp);
+			tmp = pullarg(arg, qu, &i);
+			current_cmd->argv = arrayaddback(current_cmd->argv, tmp);
 		}
 		i++;
 	}
 }
 
-void	getcmds(t_prog *prog, t_cmdli *ret, char **args)
+void	getcmds(t_cmdli *ret, char **args)
 {
 	int		i;
 	int		cmdi;
@@ -243,7 +243,7 @@ void	getcmds(t_prog *prog, t_cmdli *ret, char **args)
 	cmdi = 0;
 	while (args[i])
 	{
-		arghandle(prog, ret, args[i], &cmdi);
+		arghandle(ret, args[i], &cmdi);
 		i++;
 	}
 }
@@ -297,18 +297,18 @@ static int	wordlen(char const *s, int ind)
 	return (count);
 }
 
-static void	*freem(t_prog *prog, char **str, int a)
+static void	*freem(char **str, int a)
 {
 	int	i;
 
 	i = -1;
 	while (str[++i] && i < a)
-		ft_free(prog, str[i]);
-	ft_free(prog, str);
+		ft_free(str[i]);
+	ft_free(str);
 	return ((void *)0);
 }
 
-static char	**split_process(t_prog *prog, char const *s, char **res)
+static char	**split_process(char const *s, char **res)
 {
 	int	nword;
 	int	i;
@@ -321,9 +321,9 @@ static char	**split_process(t_prog *prog, char const *s, char **res)
 	{
 		if (!ft_strchr(" \t\n", s[a]) && nword)
 		{
-			res[++i] = (char *)ft_malloc(prog, wordlen(s, a) + 1);
+			res[++i] = (char *)ft_malloc(wordlen(s, a) + 1);
 			if (!(res[i]))
-				return (freem(prog, res, i));
+				return (freem(res, i));
 			ft_strlcpy(res[i], s + a, wordlen(s, a) + 1);
 			a = a + wordlen(s, a) - 1;
 		}
@@ -333,41 +333,41 @@ static char	**split_process(t_prog *prog, char const *s, char **res)
 	return (res);
 }
 
-char	**splitline(t_prog *prog, char const *s)
+char	**splitline(char const *s)
 {
 	char	**res;
 
 	if (!s)
 		return (NULL);
-	res = (char **)ft_malloc(prog, (nwords(s) + 1) * sizeof(char *));
+	res = (char **)ft_malloc((nwords(s) + 1) * sizeof(char *));
 	if (!res)
 		return (NULL);
-	return (split_process(prog, s, res));
+	return (split_process(s, res));
 }
 
-t_cmdli	*actuallytokenize(t_prog *prog, char *line)
+t_cmdli	*actuallytokenize(char *line)
 {
 	t_cmdli	*ret;
 	char	**splitargs;
 	int		i;
 
-	ret = ft_malloc(prog, sizeof(t_cmdli));
+	ret = ft_malloc(sizeof(t_cmdli));
 	if (!ret)
 		return (NULL);
 	ret->nbcmds = nbcmds(line);
-	ret->cmds = ft_malloc(prog, sizeof(t_cmd *) * (ret->nbcmds + 1));
+	ret->cmds = ft_malloc(sizeof(t_cmd *) * (ret->nbcmds + 1));
 	if (!ret->cmds)
-		return (ft_free(prog, ret), NULL);
+		return (ft_free(ret), NULL);
 	i = 0;
 	while (i < ret->nbcmds)
 	{
-		ret->cmds[i] = ft_malloc(prog, sizeof(t_cmd));
+		ret->cmds[i] = ft_malloc(sizeof(t_cmd));
 		if (!ret->cmds[i])
 		{
 			while (i-- > 0)
-				ft_free(prog, ret->cmds[i]);
-			ft_free(prog, ret->cmds);
-			ft_free(prog, ret);
+				ft_free(ret->cmds[i]);
+			ft_free(ret->cmds);
+			ft_free(ret);
 			return (NULL);
 		}
 		ret->cmds[i]->argv = NULL;
@@ -377,27 +377,33 @@ t_cmdli	*actuallytokenize(t_prog *prog, char *line)
 		ret->cmds[i]->limmiter = NULL;
 		ret->cmds[i]->outappend = 0;
 		ft_memset(ret->cmds[i]->fd, 0, sizeof(int) * 2);
+		ret->cmds[i]->pid = 0;
 		i++;
 	}
 	ret->cmds[ret->nbcmds] = NULL;
-	splitargs = splitline(prog, line);
-	getcmds(prog, ret, splitargs);
-	free2d(prog, splitargs);
+	splitargs = splitline(line);
+	if (!*splitargs)
+	{
+		ret->nbcmds = 0;
+		return (ft_free(ret->cmds[0]), ret);
+	}
+	getcmds(ret, splitargs);
+	free2d(splitargs);
 	return (ret);
 }
 
-t_cmdli	*tokenize(t_prog *prog, char *line)
+t_cmdli	*tokenize(char *line)
 {
 	char	*eline;
 	t_cmdli	*ret;
 
 	while (unfinished(line))
-		finish(prog, &line);
+		finish(&line);
 	if (!line)
 		return (NULL);
 	add_history(line);
-	eline = expand(prog, line);
-	ret = actuallytokenize(prog, eline);
-	ft_free(prog, eline);
+	eline = expand(line);
+	ret = actuallytokenize(eline);
+	ft_free(eline);
 	return (ret);
 }
