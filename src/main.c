@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 21:52:34 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:14:12 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ int	exebuiltin(t_cmd *cmd)
 		return (miniexport(cmd->argv));
 	else if (!strcmp(cmd->argv[0], "unset"))
 		return (miniunset(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "exit"))
+		return (miniexit(cmd->argv));
 	return (1);
 }
 
@@ -159,6 +161,8 @@ int	checkbuiltin(t_cmd *cmdl)
 	else if (!strcmp(cmdl->argv[0], "export"))
 		return (1);
 	else if (!strcmp(cmdl->argv[0], "unset"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "exit"))
 		return (1);
 	return (0);
 }
@@ -291,11 +295,6 @@ int	main(int argc, char **argv, char **envp)
 		{
 			ft_free(line);
 			continue ;
-		}
-		if (!strcmp(line, "exit"))
-		{
-			freeprog();
-			return (0);
 		}
 		prog.cmdli = tokenize(line);
 		ft_free(line);

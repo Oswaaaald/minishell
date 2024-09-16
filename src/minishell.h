@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 18:04:03 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/17 00:13:11 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int		minipwd(void);
 int		miniexport(char **args);
 int		miniunset(char **args);
 int		minienv(char **args);
+int		miniexit(char **args);
 
 //Parsing
 char	*parsepath(char *path);
@@ -55,5 +56,6 @@ char	*ft_getenv(char *s);
 int		ft_remenv(char *s);
 int		nameisvalid(char *s);
 void	setstatus(int status);
+void	freeprog(void);
 
 #endif
