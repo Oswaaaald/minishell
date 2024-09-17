@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 21:53:01 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:08:43 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	expandvar(char **buff, char *str, int i)
 				ft_free(tmp);
 				return (i - 1);
 			}
+			break;
 		}
 	}
 	c = str[i];
@@ -53,7 +54,7 @@ int	expandvar(char **buff, char *str, int i)
 	if (ft_getenv(&str[si + 1]))
 		*buff = ft_strjoin(*buff, ft_getenv(&str[si + 1]));
 	str[i] = c;
-	return (i - 1);
+	return (i);
 }
 
 char	*expand(char *str)
@@ -76,7 +77,7 @@ char	*expand(char *str)
 			quotes[0] = !quotes[0];
 		if (str[i] == '$' && !quotes[0])
 		{
-			last = expandvar(&buff, &(str[last]), i - last);
+			last = last + expandvar(&buff, &(str[last]), i - last);
 			i = last;
 		}
 	}
