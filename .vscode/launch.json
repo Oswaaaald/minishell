@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug C Program",
+            "name": "Linux",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/minishell", // Path to your executable
@@ -12,7 +12,7 @@
             "environment": [],
             "externalConsole": false, // Change to true if you prefer an external console
             "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb", // Adjust if gdb is located elsewhere
+            "miDebuggerPath": "/Users/fghysbre/.brew/bin/gdb", // Adjust if gdb is located elsewhere
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",

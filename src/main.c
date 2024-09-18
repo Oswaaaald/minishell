@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/18 16:13:42 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:46:09 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,44 @@ int	openfd(t_cmd *cmd)
 	return (1);
 }
 
+int	checkbuiltin(t_cmd *cmdl)
+{
+	if (!strcmp(cmdl->argv[0], "echo"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "cd"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "pwd"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "env"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "export"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "unset"))
+		return (1);
+	else if (!strcmp(cmdl->argv[0], "exit"))
+		return (1);
+	return (0);
+}
+
+int	exebuiltin(t_cmd *cmd)
+{
+	if (!strcmp(cmd->argv[0], "echo"))
+		return (miniecho(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "cd"))
+		return (minicd(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "pwd"))
+		return (minipwd());
+	else if (!strcmp(cmd->argv[0], "env"))
+		return (minienv(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "export"))
+		return (miniexport(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "unset"))
+		return (miniunset(cmd->argv));
+	else if (!strcmp(cmd->argv[0], "exit"))
+		return (miniexit(cmd->argv));
+	return (1);
+}
+
 int	cmd(t_cmdli *cmdli, int i)
 {
 	pid_t	pid;
@@ -108,8 +146,12 @@ int	cmd(t_cmdli *cmdli, int i)
 		if (i)
 			dup2(prev_fd, STDIN_FILENO);
 		closefd(cmd->fd);
-		if (execve(cmd->path, cmd->argv, prog.minienv))
-			exit(EXIT_FAILURE);
+		if (!checkbuiltin(cmd))
+		{
+			if (execve(cmd->path, cmd->argv, prog.minienv))
+				exit(EXIT_FAILURE);
+		} else
+			exit(exebuiltin(cmd));
 	}
 	if (!cmdli->cmds[i + 1] && pid > 0)
 		cmdli->lastpid = pid;
@@ -120,25 +162,6 @@ int	cmd(t_cmdli *cmdli, int i)
 	// if (i && cmdli->cmds[i + 1])
 	// 	dup2(cmd->fd[0], STDIN_FILENO);
 	close(cmd->fd[1]);
-	return (1);
-}
-
-int	exebuiltin(t_cmd *cmd)
-{
-	if (!strcmp(cmd->argv[0], "echo"))
-		return (miniecho(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "cd"))
-		return (minicd(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "pwd"))
-		return (minipwd());
-	else if (!strcmp(cmd->argv[0], "env"))
-		return (minienv(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "export"))
-		return (miniexport(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "unset"))
-		return (miniunset(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "exit"))
-		return (miniexit(cmd->argv));
 	return (1);
 }
 
@@ -155,25 +178,6 @@ void	cmdbuiltin(t_cmdli *cmdli, int i)
 	if (cmd->input)
 		dup2(cmd->fd[0], STDIN_FILENO);
 	prog.lastexit = exebuiltin(cmd);
-}
-
-int	checkbuiltin(t_cmd *cmdl)
-{
-	if (!strcmp(cmdl->argv[0], "echo"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "cd"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "pwd"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "env"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "export"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "unset"))
-		return (1);
-	else if (!strcmp(cmdl->argv[0], "exit"))
-		return (1);
-	return (0);
 }
 
 char    **getpaths(char **env)
@@ -312,7 +316,7 @@ int	main(int argc, char **argv, char **envp)
 		i = 0;
 		while (i < prog.cmdli->nbcmds)
 		{
-			if (checkbuiltin(prog.cmdli->cmds[i]))
+			if (checkbuiltin(prog.cmdli->cmds[i]) && prog.cmdli->nbcmds == 1)
 			{
 				prog.cmdli->cmds[i]->path = "BUILTIN";
 				cmdbuiltin(prog.cmdli, i);
