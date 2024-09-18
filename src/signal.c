@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:27:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 18:29:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:37:13 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	getstatus(int status)
-{
-	if (WIFEXITED(status))
-		return WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		return WTERMSIG(status) + 128;
-	else
-		return (-1);
-}
 
 void	sighandler(int sig)
 {
@@ -32,12 +22,14 @@ void	sighandler(int sig)
 		while (prog.cmdli->cmds[++i])
 		{
 			if (!kill(prog.cmdli->cmds[i]->pid, sig) && prog.cmdli->cmds[i]->pid == prog.cmdli->lastpid)
-				setstatus(sig);
+				//setstatus(sig);
+				;
 		}
 		printf("\n");
 	}
 	else if (sig == SIGINT)
 	{
+		setstatus(sig);
         printf("\n");
 		rl_on_new_line();
         rl_replace_line("", 0);

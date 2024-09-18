@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 16:03:50 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:10:59 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	minicd(char **args)
 	if (!buff)
 		return (0);
 	if (!ft_strncmp(buff, "/-", -1))
-		return (ft_free(buff), cdback(prog));
+		return (ft_free(buff), cdback());
 	if (chdir(buff) == -1)
 		return (perror("mishell: cd"), ft_free(buff), 1);
 	ft_free(prog.cwd);

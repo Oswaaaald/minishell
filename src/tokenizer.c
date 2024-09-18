@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/17 11:08:43 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:03:33 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	unfinished(char *line)
 		return (1);
 	if (lastchar - startchar <= 2)
 		return (0);
-	if ((lastchar[0] == '|'))
+	if (lastchar[0] == '|')
 		return (1);
 	return (0);
 }

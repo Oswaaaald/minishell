@@ -7,7 +7,7 @@ TEST = test.c
 
 TESTO = ${TEST:.c=.o}
 
-HEADERS = src/minishell.h
+HEADERS = -I ./src/minishell.h -I ~/.brew/Cellar/readline/8.2.13/include
 
 OBJS = ${SRC:.c=.o}
 
@@ -22,7 +22,7 @@ LIBFT = libft/libft.a
 all: ${NAME}
 
 .c.o:
-	${CC} ${CFLAGS} -g3 -c $< -o ${<:.c=.o}
+	${CC} ${CFLAGS} $(HEADERS) -g3 -c $< -o ${<:.c=.o}
 
 clean:
 	@make -C ./libft clean
@@ -36,7 +36,7 @@ re: fclean all
 
 ${NAME}: ${OBJS}
 	@make -C ./libft bonus
-	${CC} ${CFLAGS} ${OBJS} ${LIBFT} -g3 -o ${NAME} -lreadline
+	${CC} ${CFLAGS} ${OBJS} $(HEADERS) ${LIBFT} -g3 -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.13/lib
 
 test: ${TESTO}
 	@make -C ./libft bonus
