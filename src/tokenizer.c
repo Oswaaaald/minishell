@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: boyflo06 <boyflo06@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/18 15:03:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:53:37 by boyflo06         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,14 +397,21 @@ t_cmdli	*tokenize(char *line)
 {
 	char	*eline;
 	t_cmdli	*ret;
+	int		togg;
 
+	togg = 0;
 	while (unfinished(line))
+	{
+		togg = 1;
 		finish(&line);
+	}
 	if (!line)
 		return (NULL);
 	add_history(line);
 	eline = expand(line);
 	ret = actuallytokenize(eline);
 	ft_free(eline);
+	if (!togg)
+		ft_free(line);
 	return (ret);
 }

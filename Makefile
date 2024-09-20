@@ -7,7 +7,7 @@ TEST = test.c
 
 TESTO = ${TEST:.c=.o}
 
-HEADERS = -I ./src/minishell.h -I ~/.brew/Cellar/readline/8.2.13/include
+HEADERS = -I ./src/ -I ~/.brew/Cellar/readline/8.2.13/include
 
 OBJS = ${SRC:.c=.o}
 

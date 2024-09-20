@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: boyflo06 <boyflo06@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/18 16:46:09 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:53:51 by boyflo06         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,6 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		prog.cmdli = tokenize(line);
-		ft_free(line);
 		if (!prog.cmdli)
 			return (0);
 		i = 0;
