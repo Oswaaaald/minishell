@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/18 15:10:59 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:24:52 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	updatepwd(char *new, char *old)
 	return (0);
 }
 
-int	cdback()
+int	cdback(void)
 {
 	char	*buff;
 
@@ -73,7 +73,7 @@ int	minicd(char **args)
 	char	*buff;
 
 	if (args[1] && ((args[2] && ft_strncmp(args[1], "--", -1))
-		|| (!ft_strncmp(args[1], "--", -1) && args[3])))
+			|| (!ft_strncmp(args[1], "--", -1) && args[3])))
 	{
 		write(STDERR_FILENO, "mishell: cd: too many arguments\n", 33);
 		return (1);

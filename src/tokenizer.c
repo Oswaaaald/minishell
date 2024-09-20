@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:39:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:42:07 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	expandvar(char **buff, char *str, int i)
 		if (str[i] == '?' && si == i - 1)
 		{
 			i++;
-			break;
+			break ;
 		}
 		if ((i == si + 1 && !(ft_isalpha(str[i]) || str[i] == '_'))
 			|| (i > 0 && !(ft_isalnum(str[i]) || str[i] == '_')))
@@ -46,7 +46,7 @@ int	expandvar(char **buff, char *str, int i)
 				ft_free(tmp);
 				return (i - 1);
 			}
-			break;
+			break ;
 		}
 	}
 	c = str[i];

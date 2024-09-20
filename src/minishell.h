@@ -3,33 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/18 15:10:35 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:31:10 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "unistd.h"
-#include "sys/types.h"
-#include "sys/wait.h"
-#include "errno.h"
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
-#include "fcntl.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "signal.h"
-#include "dirent.h"
-#include "../libft/libft.h"
+# include "unistd.h"
+# include "sys/types.h"
+# include "sys/wait.h"
+# include "errno.h"
+# include "stdio.h"
+# include "string.h"
+# include "stdlib.h"
+# include "fcntl.h"
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "signal.h"
+# include "dirent.h"
+# include "../libft/libft.h"
 
-#define C_PIPE 1
-#define C_IN 2
-#define C_OUT 4
+# define C_PIPE 1
+# define C_IN 2
+# define C_OUT 4
 
 //Mini Commands
 int		minicd(char **args);

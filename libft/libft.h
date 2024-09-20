@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 21:52:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:22:04 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
-
 
 //A command that is in a promt line
 typedef struct s_cmd
@@ -110,10 +109,9 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 void				ft_lstpop(t_list **list, t_list *elem);
 t_list				*lstbef(t_list *list, t_list *elem);
 
-
 //Memory
-void	ft_free(void *ptr);
-void	*ft_malloc(size_t size);
-void	ft_malloc_add_ptr(void *ptr);
+void				ft_free(void *ptr);
+void				*ft_malloc(size_t size);
+void				ft_malloc_add_ptr(void *ptr);
 
 #endif

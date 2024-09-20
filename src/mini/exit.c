@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/17 00:22:58 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:23:42 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	doexit(int	n){
+void	doexit(int n)
+{
 	freeprog();
 	exit(n);
 }
@@ -41,7 +42,7 @@ int	miniexit(char **args)
 		doexit(2);
 	}
 	if (args[2])
-		return(printf("bash: exit: too many arguments\n"), 1);
+		return (printf("bash: exit: too many arguments\n"), 1);
 	doexit((char) ft_atoi(args[1]));
 	return (0);
 }
