@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: boyflo06 <boyflo06@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 13:53:51 by boyflo06         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:29:42 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,9 @@ int	exebuiltin(t_cmd *cmd)
 
 int	cmd(t_cmdli *cmdli, int i)
 {
-	pid_t	pid;
-	t_cmd	*cmd;
-	static int prev_fd;
+	pid_t		pid;
+	t_cmd		*cmd;
+	static int	prev_fd;
 
 	cmd = cmdli->cmds[i];
 	// prev_fd = 0;
@@ -150,7 +150,8 @@ int	cmd(t_cmdli *cmdli, int i)
 		{
 			if (execve(cmd->path, cmd->argv, prog.minienv))
 				exit(EXIT_FAILURE);
-		} else
+		}
+		else
 			exit(exebuiltin(cmd));
 	}
 	if (!cmdli->cmds[i + 1] && pid > 0)
@@ -170,7 +171,6 @@ void	cmdbuiltin(t_cmdli *cmdli, int i)
 	t_cmd	*cmd;
 
 	cmd = cmdli->cmds[i];
-	
 	if (!openfd(cmd))
 		return ;
 	if (cmd->output)
@@ -180,56 +180,56 @@ void	cmdbuiltin(t_cmdli *cmdli, int i)
 	prog.lastexit = exebuiltin(cmd);
 }
 
-char    **getpaths(char **env)
+char	**getpaths(char **env)
 {
-    int        i;
-    char    *pathe;
-    char    **res;
+	int		i;
+	char	*pathe;
+	char	**res;
 
-    i = -1;
-    pathe = NULL;
-    while (env[++i])
-    {
-        if (!ft_strncmp("PATH=", env[i], 5))
-            pathe = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
-    }
-    if (!pathe)
-        return (NULL);
-    res = ft_split(pathe, ':');
-    ft_free(pathe);
-    if (!res)
-        return (NULL);
-    return (res);
+	i = -1;
+	pathe = NULL;
+	while (env[++i])
+	{
+		if (!ft_strncmp("PATH=", env[i], 5))
+			pathe = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
+	}
+	if (!pathe)
+		return (NULL);
+	res = ft_split(pathe, ':');
+	ft_free(pathe);
+	if (!res)
+		return (NULL);
+	return (res);
 }
 
-char    *pather(char *cmd)
+char	*pather(char *cmd)
 {
-    char    *buffer;
-    char    **paths;
-    char    *tmpcmd;
-    int        i;
+	char	*buffer;
+	char	**paths;
+	char	*tmpcmd;
+	int		i;
 
 	if (ft_strchr("/.~", cmd[0]))
 		return (parsepath(cmd));
-    tmpcmd = ft_strjoin("/", cmd);
-    if (!tmpcmd)
-        return (NULL);
-    paths = getpaths(prog.minienv);
-    if (!paths)
-        return (ft_free(tmpcmd), NULL);
-    i = -1;
-    while (paths[++i])
-    {
-        buffer = ft_strjoin(paths[i], tmpcmd);
-        if (!buffer)
-            return (ft_free(tmpcmd), free2d(paths), NULL);
-        if (access(buffer, X_OK) == 0)
-            return (ft_free(tmpcmd), free2d(paths), buffer);
-        ft_free(buffer);
-    }
-    ft_free(tmpcmd);
-    free2d(paths);
-    return (NULL);
+	tmpcmd = ft_strjoin("/", cmd);
+	if (!tmpcmd)
+		return (NULL);
+	paths = getpaths(prog.minienv);
+	if (!paths)
+		return (ft_free(tmpcmd), NULL);
+	i = -1;
+	while (paths[++i])
+	{
+		buffer = ft_strjoin(paths[i], tmpcmd);
+		if (!buffer)
+			return (ft_free(tmpcmd), free2d(paths), NULL);
+		if (access(buffer, X_OK) == 0)
+			return (ft_free(tmpcmd), free2d(paths), buffer);
+		ft_free(buffer);
+	}
+	ft_free(tmpcmd);
+	free2d(paths);
+	return (NULL);
 }
 
 void	freeprog(void)
@@ -249,12 +249,12 @@ void	freeprog(void)
 	//rl_clear_history();
 }
 
-char *ft_readline(void)
+char	*ft_readline(void)
 {
 	char	*home;
 	char	*buff;
 	char	*ret;
-	
+
 	home = ft_getenv("HOME");
 	buff = NULL;
 	if (home && !ft_strncmp(home, prog.cwd, ft_strlen(home)))
@@ -276,7 +276,7 @@ char *ft_readline(void)
 	ret = readline(home);
 	ft_malloc_add_ptr(ret);
 	ft_free(home);
-	return(ret);
+	return (ret);
 }
 
 int	main(int argc, char **argv, char **envp)

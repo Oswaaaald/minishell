@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:42:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 16:05:08 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:23:17 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	miniunset(char **args)
 {
 	int	i;
-	int	togg = 1;
+	int	togg;
 
 	i = 0;
 	togg = 0;

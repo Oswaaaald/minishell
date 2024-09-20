@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: boyflo06 <boyflo06@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:27:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 13:42:26 by boyflo06         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:32:03 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ void	sighandler(int sig)
 		while (prog.cmdli->cmds[++i])
 		{
 			if (kill(prog.cmdli->cmds[i]->pid, sig) == -1)
-				printf("mishell: failed to kill process with pid: %d\n", prog.cmdli->cmds[i]->pid);
+				printf("mishell: failed to kill process with pid: %d\n",
+					prog.cmdli->cmds[i]->pid);
 		}
 		printf("\n");
 	}
 	else if (sig == SIGINT)
 	{
 		setstatus(sig);
-        printf("\n");
+		printf("\n");
 		rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
