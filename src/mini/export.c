@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 16:04:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	expshowall(void)
 	char	**envdup;
 
 	i = -1;
-	envdup = strarrdup(prog.minienv);
+	envdup = strarrdup(g_prog.minienv);
 	if (!envdup)
 		return ;
 	envdup = strarrsort(envdup);

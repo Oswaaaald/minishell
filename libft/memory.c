@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:14:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:22:43 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_prog	prog;
+t_prog	g_prog;
 
 void	ft_malloc_add_ptr(void *ptr)
 {
@@ -21,7 +21,7 @@ void	ft_malloc_add_ptr(void *ptr)
 	link = ft_lstnew(ptr);
 	if (!link)
 		return ;
-	ft_lstadd_back(&prog.mallocs, link);
+	ft_lstadd_back(&g_prog.mallocs, link);
 }
 
 void	*ft_malloc(size_t size)
@@ -35,7 +35,7 @@ void	*ft_malloc(size_t size)
 	link = ft_lstnew(res);
 	if (!link)
 		return (free(res), NULL);
-	ft_lstadd_back(&prog.mallocs, link);
+	ft_lstadd_back(&g_prog.mallocs, link);
 	return (res);
 }
 
@@ -44,16 +44,16 @@ void	ft_free(void *ptr)
 	t_list	*tmp;
 	t_list	*bef;
 
-	tmp = prog.mallocs;
+	tmp = g_prog.mallocs;
 	while (tmp && tmp->content != ptr)
 		tmp = tmp->next;
 	if (tmp)
 	{
-		bef = lstbef(prog.mallocs, tmp);
+		bef = lstbef(g_prog.mallocs, tmp);
 		if (bef)
 			bef->next = tmp->next;
 		else
-			prog.mallocs = tmp->next;
+			g_prog.mallocs = tmp->next;
 		free(tmp);
 	}
 	free(ptr);

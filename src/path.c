@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:39:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	*pathexpander(char *path)
 	}
 	else if (path[0] != '~' && path[0] != '/')
 	{
-		home = prog.cwd;
+		home = g_prog.cwd;
 		ret = strcjoin(home, path, '/');
 		return (ret);
 	}

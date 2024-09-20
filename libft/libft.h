@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:22:04 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_prog
 }	t_prog;
 
 //defined in memory.c
-extern t_prog	prog;
+extern t_prog	g_prog;
 
 int					ft_atoi(const char *str);
 void				*ft_calloc(size_t count, size_t size);

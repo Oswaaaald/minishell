@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:41:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	closefd(int fd[2])
 void	setstatus(int status)
 {
 	if (WIFEXITED(status))
-		prog.lastexit = WEXITSTATUS(status);
+		g_prog.lastexit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		prog.lastexit = WTERMSIG(status) + 128;
+		g_prog.lastexit = WTERMSIG(status) + 128;
 }
 
 int	writeheredoc(char *lim)
@@ -148,7 +148,7 @@ int	cmd(t_cmdli *cmdli, int i)
 		closefd(cmd->fd);
 		if (!checkbuiltin(cmd))
 		{
-			if (execve(cmd->path, cmd->argv, prog.minienv))
+			if (execve(cmd->path, cmd->argv, g_prog.minienv))
 				exit(EXIT_FAILURE);
 		}
 		else
@@ -177,7 +177,7 @@ void	cmdbuiltin(t_cmdli *cmdli, int i)
 		dup2(cmd->fd[1], STDOUT_FILENO);
 	if (cmd->input)
 		dup2(cmd->fd[0], STDIN_FILENO);
-	prog.lastexit = exebuiltin(cmd);
+	g_prog.lastexit = exebuiltin(cmd);
 }
 
 char	**getpaths(char **env)
@@ -214,7 +214,7 @@ char	*pather(char *cmd)
 	tmpcmd = ft_strjoin("/", cmd);
 	if (!tmpcmd)
 		return (NULL);
-	paths = getpaths(prog.minienv);
+	paths = getpaths(g_prog.minienv);
 	if (!paths)
 		return (ft_free(tmpcmd), NULL);
 	i = -1;
@@ -237,7 +237,7 @@ void	freeprog(void)
 	t_list	*tmp;
 	t_list	*crnt;
 
-	crnt = prog.mallocs;
+	crnt = g_prog.mallocs;
 	while (crnt)
 	{
 		tmp = crnt->next;
@@ -257,16 +257,16 @@ char	*ft_readline(void)
 
 	home = ft_getenv("HOME");
 	buff = NULL;
-	if (home && !ft_strncmp(home, prog.cwd, ft_strlen(home)))
+	if (home && !ft_strncmp(home, g_prog.cwd, ft_strlen(home)))
 	{
-		home = ft_strjoin("~", prog.cwd + ft_strlen(home));
+		home = ft_strjoin("~", g_prog.cwd + ft_strlen(home));
 		if (!home)
 			return (NULL);
 		buff = ft_strjoin("mishell:", home);
 		ft_free(home);
 	}
 	else
-		buff = ft_strjoin("mishell:", prog.cwd);
+		buff = ft_strjoin("mishell:", g_prog.cwd);
 	if (!buff)
 		return (NULL);
 	home = ft_strjoin(buff, "$ ");
@@ -294,7 +294,7 @@ int	main(int argc, char **argv, char **envp)
 	//char temp[10];
 	while (1)
 	{
-		prog.cmdli = NULL;
+		g_prog.cmdli = NULL;
 		//printf("%ld\n", read(STDIN_FILENO, temp, 10));
 		//perror(strerror(errno));
 		stds[0] = dup(STDIN_FILENO);
@@ -309,35 +309,35 @@ int	main(int argc, char **argv, char **envp)
 			ft_free(line);
 			continue ;
 		}
-		prog.cmdli = tokenize(line);
-		if (!prog.cmdli)
+		g_prog.cmdli = tokenize(line);
+		if (!g_prog.cmdli)
 			return (0);
 		i = 0;
-		while (i < prog.cmdli->nbcmds)
+		while (i < g_prog.cmdli->nbcmds)
 		{
-			if (checkbuiltin(prog.cmdli->cmds[i]) && prog.cmdli->nbcmds == 1)
+			if (checkbuiltin(g_prog.cmdli->cmds[i]) && g_prog.cmdli->nbcmds == 1)
 			{
-				prog.cmdli->cmds[i]->path = "BUILTIN";
-				cmdbuiltin(prog.cmdli, i);
+				g_prog.cmdli->cmds[i]->path = "BUILTIN";
+				cmdbuiltin(g_prog.cmdli, i);
 			}
 			else
 			{
-				prog.cmdli->cmds[i]->path
-					= pather(prog.cmdli->cmds[i]->argv[0]);
-				if (!prog.cmdli->cmds[i]->path)
+				g_prog.cmdli->cmds[i]->path
+					= pather(g_prog.cmdli->cmds[i]->argv[0]);
+				if (!g_prog.cmdli->cmds[i]->path)
 					break ;
-				if (!cmd(prog.cmdli, i))
+				if (!cmd(g_prog.cmdli, i))
 					return (0);
 			}
 			i++;
 		}
 		// Print path
-		//printf("PATH: %s\n", prog.cmdli->cmds[0]->path);
+		//printf("PATH: %s\n", g_prog.cmdli->cmds[0]->path);
 		for (int j = 0; j < i; j++) {
 			int	status;
 			// pid_t pid = wait(&status);
-			waitpid(prog.cmdli->cmds[j]->pid, &status, 0);
-			if (prog.cmdli->cmds[j]->pid == prog.cmdli->lastpid)
+			waitpid(g_prog.cmdli->cmds[j]->pid, &status, 0);
+			if (g_prog.cmdli->cmds[j]->pid == g_prog.cmdli->lastpid)
 				setstatus(status);
 		}
 		i = 0;
@@ -345,10 +345,10 @@ int	main(int argc, char **argv, char **envp)
 		dup2(stds[1], STDOUT_FILENO);
 		close(stds[0]);
 		close(stds[1]);
-		while (i < prog.cmdli->nbcmds)
-			ft_free(prog.cmdli->cmds[i++]);
-		ft_free(prog.cmdli->cmds);
-		ft_free(prog.cmdli);
+		while (i < g_prog.cmdli->nbcmds)
+			ft_free(g_prog.cmdli->cmds[i++]);
+		ft_free(g_prog.cmdli->cmds);
+		ft_free(g_prog.cmdli);
 	}
 	return (0);
 }

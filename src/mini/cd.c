@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:24:52 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ int	cdback(void)
 		return (perror("mishell: cd"), ft_free(buff), 1);
 	if (updatepwd(ft_getenv("OLDPWD"), buff))
 		return (ft_free(buff), 1);
-	ft_free(prog.cwd);
-	prog.cwd = ft_strdup(ft_getenv("PWD"));
-	if (!prog.cwd)
+	ft_free(g_prog.cwd);
+	g_prog.cwd = ft_strdup(ft_getenv("PWD"));
+	if (!g_prog.cwd)
 		return (ft_free(buff), 1);
 	return (ft_free(buff), 0);
 }
@@ -88,8 +88,8 @@ int	minicd(char **args)
 		return (ft_free(buff), cdback());
 	if (chdir(buff) == -1)
 		return (perror("mishell: cd"), ft_free(buff), 1);
-	ft_free(prog.cwd);
-	prog.cwd = buff;
+	ft_free(g_prog.cwd);
+	g_prog.cwd = buff;
 	if (updatepwd(buff, ft_getenv("PWD")))
 		return (1);
 	return (0);

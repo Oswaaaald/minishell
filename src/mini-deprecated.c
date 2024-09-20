@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 12:38:28 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/13 17:30:35 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,21 @@
 	return (ret);
 }
 
-void	cdback(t_prog *prog)
+void	cdback(t_prog *g_prog)
 {
 	char	*buff;
 
-	buff = ft_strdup(prog, ft_getenv(prog, "PWD"));
-	if (chdir(ft_getenv(prog, "OLDPWD")) == -1)
+	buff = ft_strdup(g_prog, ft_getenv(g_prog, "PWD"));
+	if (chdir(ft_getenv(g_prog, "OLDPWD")) == -1)
 		perror("mishell: cd");
-	ft_setenv(prog, ft_strjoin("PWD=", ft_getenv(prog, "OLDPWD")));
-	ft_setenv(prog, ft_strjoin("OLDPWD=", buff));
-	free(prog->cwd);
-	prog->cwd = ft_strdup(prog, ft_getenv(prog, "PWD"));
+	ft_setenv(g_prog, ft_strjoin("PWD=", ft_getenv(g_prog, "OLDPWD")));
+	ft_setenv(g_prog, ft_strjoin("OLDPWD=", buff));
+	free(g_prog->cwd);
+	g_prog->cwd = ft_strdup(g_prog, ft_getenv(g_prog, "PWD"));
 	free(buff);
 }
 
-int	minicd(t_prog *prog, char **args)
+int	minicd(t_prog *g_prog, char **args)
 {
 	char	*buff;
 
@@ -59,20 +59,20 @@ int	minicd(t_prog *prog, char **args)
 		return (1);
 	}
 	else if (args[1] && !ft_strncmp(args[1], "--", -1))
-		buff = parsepath(prog, args[2]);
+		buff = parsepath(g_prog, args[2]);
 	else
-		buff = parsepath(prog, args[1]);
+		buff = parsepath(g_prog, args[1]);
 	if (!ft_strncmp(buff, "/-", -1))
 	{
-		cdback(prog);
+		cdback(g_prog);
 		return (0);
 	}
 	if (chdir(buff) == -1 && errno == ENOENT)
 		perror("mishell: cd");
-	ft_setenv(prog, strjoin("OLDPWD=", ft_getenv(prog, "PWD")));
-	ft_setenv(prog, strjoin("PWD=", buff));
-	free(prog->cwd);
-	prog->cwd = buff;
+	ft_setenv(g_prog, strjoin("OLDPWD=", ft_getenv(g_prog, "PWD")));
+	ft_setenv(g_prog, strjoin("PWD=", buff));
+	free(g_prog->cwd);
+	g_prog->cwd = buff;
 	return (0);
 } */
 
@@ -101,9 +101,9 @@ int	minicd(t_prog *prog, char **args)
 
 //	PWD
 
-/* int	minipwd(t_prog *prog)
+/* int	minipwd(t_prog *g_prog)
 {
-	write(STDOUT_FILENO, prog->cwd, strlen(prog->cwd));
+	write(STDOUT_FILENO, g_prog->cwd, strlen(g_prog->cwd));
 	write(STDOUT_FILENO, "\n", 1);
 	return (0);
 } */
@@ -162,13 +162,13 @@ void	putdeclare(char *s)
 	write(STDOUT_FILENO, "\n", 1);
 }
 
-void	expshowall(t_prog *prog)
+void	expshowall(t_prog *g_prog)
 {
 	int		i;
 	char	**envdup;
 
 	i = -1;
-	envdup = strarrdup(prog->minienv);
+	envdup = strarrdup(g_prog->minienv);
 	envdup = strarrsort(envdup);
 	while (envdup[++i])
 		putdeclare(envdup[i]);
@@ -195,13 +195,13 @@ int	nameisvalid(char *s)
 	return (1);
 }
 
-int	miniexport(t_prog *prog, char **args)
+int	miniexport(t_prog *g_prog, char **args)
 {
 	int	i;
 	int	togg;
 
 	if (!args[1])
-		return (expshowall(prog), 0);
+		return (expshowall(g_prog), 0);
 	i = 0;
 	togg = 0;
 	while (args[++i])
@@ -215,7 +215,7 @@ int	miniexport(t_prog *prog, char **args)
 			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
 		else
 		{
-			ft_setenv(prog, args[i]);
+			ft_setenv(g_prog, args[i]);
 			continue ;
 		}
 		togg = 1;
@@ -225,7 +225,7 @@ int	miniexport(t_prog *prog, char **args)
 
 // Un-Set
 
-/* int	miniunset(t_prog *prog, char **args)
+/* int	miniunset(t_prog *g_prog, char **args)
 {
 	int	i;
 
@@ -234,22 +234,22 @@ int	miniexport(t_prog *prog, char **args)
 	{
 		if (ft_strchr(args[i], '='))
 			continue ;
-		if (ft_getenv(prog, args[i]))
-			ft_remenv(prog, args[i]);
+		if (ft_getenv(g_prog, args[i]))
+			ft_remenv(g_prog, args[i]);
 	}
 	return (1);
 } */
 
 //	env
 
-/* int	minienv(t_prog *prog, char **args)
+/* int	minienv(t_prog *g_prog, char **args)
 {
 	int	i;
 
 	if (args[1])
 		return (printf("mishell: env: too many arguments"), 1);
 	i = -1;
-	while (prog->minienv[++i])
-		printf("%s\n", prog->minienv[i]);
+	while (g_prog->minienv[++i])
+		printf("%s\n", g_prog->minienv[i]);
 	return (1);
 } */

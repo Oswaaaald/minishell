@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/16 16:03:08 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,19 @@ char	*ft_getenv(char *s)
 
 	i = -1;
 	if (s[0] == '?' && s[1] == 0)
-		return (ft_itoa(prog.lastexit));
+		return (ft_itoa(g_prog.lastexit));
 	buff = ft_strjoin(s, "=");
 	if (!buff)
 		return (NULL);
-	while (prog.minienv[++i])
+	while (g_prog.minienv[++i])
 	{
-		if (!ft_strncmp(prog.minienv[i], buff, ft_strlen(buff)))
+		if (!ft_strncmp(g_prog.minienv[i], buff, ft_strlen(buff)))
 			break ;
 	}
 	ft_free(buff);
-	if (!prog.minienv[i])
+	if (!g_prog.minienv[i])
 		return (NULL);
-	res = ft_strchr(prog.minienv[i], '=');
+	res = ft_strchr(g_prog.minienv[i], '=');
 	if (res)
 		return (++res);
 	return (NULL);
@@ -44,18 +44,18 @@ int	ft_addenv(char *var)
 	char	**res;
 
 	i = -1;
-	while (prog.minienv[++i])
+	while (g_prog.minienv[++i])
 		;
 	res = ft_malloc(sizeof(char **) * (i + 2));
 	if (!res)
 		return (0);
 	i = -1;
-	while (prog.minienv[++i])
-		res[i] = prog.minienv[i];
+	while (g_prog.minienv[++i])
+		res[i] = g_prog.minienv[i];
 	res[i] = var;
 	res[++i] = NULL;
-	ft_free(prog.minienv);
-	prog.minienv = res;
+	ft_free(g_prog.minienv);
+	g_prog.minienv = res;
 	return (1);
 }
 
@@ -71,12 +71,12 @@ int	ft_setenv(char *var)
 			break ;
 	}
 	i = -1;
-	while (prog.minienv[++i])
+	while (g_prog.minienv[++i])
 	{
-		if (!ft_strncmp(prog.minienv[i], var, eq))
+		if (!ft_strncmp(g_prog.minienv[i], var, eq))
 		{
-			ft_free(prog.minienv[i]);
-			prog.minienv[i] = var;
+			ft_free(g_prog.minienv[i]);
+			g_prog.minienv[i] = var;
 			return (1);
 		}
 	}
@@ -93,26 +93,26 @@ int	ft_remenv(char *s)
 
 	i = -1;
 	tog = 0;
-	while (prog.minienv[++i])
+	while (g_prog.minienv[++i])
 		;
 	newenv = (char **) ft_malloc(sizeof(char *) * i);
 	if (!newenv)
 		return (0);
 	i = -1;
 	buff = ft_strjoin(s, "=");
-	while (prog.minienv[++i])
+	while (g_prog.minienv[++i])
 	{
-		if (!ft_strncmp(prog.minienv[i], buff, ft_strlen(buff)))
+		if (!ft_strncmp(g_prog.minienv[i], buff, ft_strlen(buff)))
 		{
-			ft_free(prog.minienv[i]);
+			ft_free(g_prog.minienv[i]);
 			tog = 1;
 		}
 		else
-			newenv[i - tog] = prog.minienv[i];
+			newenv[i - tog] = g_prog.minienv[i];
 	}
-	ft_free(prog.minienv);
+	ft_free(g_prog.minienv);
 	ft_free(buff);
 	newenv[i - tog] = NULL;
-	prog.minienv = newenv;
+	g_prog.minienv = newenv;
 	return (1);
 }
