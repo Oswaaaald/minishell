@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:28:51 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_prog
 	char	**minienv;
 	t_list	*mallocs; //<-- pottentiel de fou en sah
 	t_cmdli	*cmdli;
+	int		interupt;
 }	t_prog;
 
 //defined in memory.c

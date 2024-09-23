@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:46:43 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	setstatus(int status)
 		g_prog.lastexit = WTERMSIG(status) + 128;
 }
 
+//TODO: add handle when ctrl+C mid heredoc and move heredoc to execute before any command
 int	writeheredoc(char *lim)
 {
 	char	*buff;
@@ -43,6 +44,7 @@ int	writeheredoc(char *lim)
 		while (1)
 		{
 			buff = readline("> ");
+			if (!buff)
 			ft_malloc_add_ptr(buff);
 			if (strcmp(buff, lim) == 0)
 				break ;
@@ -124,18 +126,17 @@ int	exebuiltin(t_cmd *cmd)
 	return (1);
 }
 
-int	cmd(t_cmdli *cmdli, int i)
+int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 {
 	pid_t		pid;
 	t_cmd		*cmd;
-	static int	prev_fd;
+	//static int	prev_fd;
 
 	cmd = cmdli->cmds[i];
-	// prev_fd = 0;
-	if (i == 0)
+	/* if (i == 0)
 		prev_fd = cmdli->cmds[0]->fd[0];
 	if (!openfd(cmd))
-		return (0);
+		return (0); */
 	if (cmd->limmiter)
 		writeheredoc(cmd->limmiter);
 	pid = fork();
@@ -157,9 +158,9 @@ int	cmd(t_cmdli *cmdli, int i)
 	if (!cmdli->cmds[i + 1] && pid > 0)
 		cmdli->lastpid = pid;
 	cmd->pid = pid;
-	if (prev_fd != 0)
+	/* if (prev_fd != 0)
 		close(prev_fd);
-	prev_fd = cmd->fd[0];
+	prev_fd = cmd->fd[0]; */
 	// if (i && cmdli->cmds[i + 1])
 	// 	dup2(cmd->fd[0], STDIN_FILENO);
 	close(cmd->fd[1]);
@@ -284,6 +285,7 @@ int	main(int argc, char **argv, char **envp)
 	int		i;
 	char	*line;
 	int		stds[2];
+	int		togg;
 
 	if (!argc && !argv && !envp)
 		return (1);
@@ -294,25 +296,56 @@ int	main(int argc, char **argv, char **envp)
 	//char temp[10];
 	while (1)
 	{
+		g_prog.interupt = 0;
 		g_prog.cmdli = NULL;
 		//printf("%ld\n", read(STDIN_FILENO, temp, 10));
 		//perror(strerror(errno));
 		stds[0] = dup(STDIN_FILENO);
 		stds[1] = dup(STDOUT_FILENO);
 		line = ft_readline();
-		if (!line)
+		if (!line && g_prog.interupt)
 		{
-			return (printf("exit\n"), freeprog(), 0);
+			closefd(stds);
+			continue ;
 		}
+		else if (!line)
+			return (printf("exit\n"), freeprog(), 0);
 		if (!*line)
 		{
 			ft_free(line);
 			continue ;
 		}
 		g_prog.cmdli = tokenize(line);
-		if (!g_prog.cmdli)
-			return (0);
+		if (!g_prog.cmdli && g_prog.interupt)
+		{
+			closefd(stds);
+			continue ;
+		}
+		else if (!g_prog.cmdli)
+			return (printf("exit\n"), freeprog(), 0);
+		i = -1;
+		togg = 0;
+		while (++i < g_prog.cmdli->nbcmds)
+		{
+			if (!openfd(g_prog.cmdli->cmds[i]))
+			{
+				togg = 1;
+				printf("mishell: %s: No such file or directory", 
+					g_prog.cmdli->cmds[i]->argv[0]);
+			}
+		}
+		if (togg)
+		{
+			closefd(stds);
+			while (i < g_prog.cmdli->nbcmds)
+				ft_free(g_prog.cmdli->cmds[i++]);
+			ft_free(g_prog.cmdli->cmds);
+			ft_free(g_prog.cmdli);
+			continue ;
+		}
 		i = 0;
+		int prev_fd;
+		prev_fd = 0;
 		while (i < g_prog.cmdli->nbcmds)
 		{
 			if (checkbuiltin(g_prog.cmdli->cmds[i]) && g_prog.cmdli->nbcmds == 1)
@@ -326,8 +359,14 @@ int	main(int argc, char **argv, char **envp)
 					= pather(g_prog.cmdli->cmds[i]->argv[0]);
 				if (!g_prog.cmdli->cmds[i]->path)
 					break ;
-				if (!cmd(g_prog.cmdli, i))
+				if (i == 0)
+					prev_fd = g_prog.cmdli->cmds[0]->fd[0];
+				openfd(g_prog.cmdli->cmds[i]);
+				if (!cmd(g_prog.cmdli, i, prev_fd))
 					return (0);
+				if (prev_fd != 0)
+					close(prev_fd);
+				prev_fd = g_prog.cmdli->cmds[i]->fd[0];
 			}
 			i++;
 		}

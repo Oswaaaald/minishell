@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:42:07 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:44:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,14 +120,14 @@ int	unfinished(char *line)
 	return (0);
 }
 
-void	finish(char **lineptr)
+int	finish(char **lineptr)
 {
 	char	*buff;
 	char	*tmp;
 
 	buff = readline("> ");
 	if (!buff)
-		return ;
+		return (0);
 	tmp = *lineptr;
 	*lineptr = ft_strjoin(tmp, "\n");
 	ft_free(tmp);
@@ -135,6 +135,7 @@ void	finish(char **lineptr)
 	*lineptr = ft_strjoin(tmp, buff);
 	ft_free(tmp);
 	ft_free(buff);
+	return (1);
 }
 
 int	nbcmds(char *line)
@@ -346,11 +347,34 @@ char	**splitline(char const *s)
 	return (split_process(s, res));
 }
 
+int	openredir(t_cmd *cmd) {
+	int	fd;
+	if (cmd->input)
+	{
+		fd = open(cmd->input, O_RDONLY, 0777);
+		if (!fd)
+			return (0);
+		close(fd);
+	}
+	if (cmd->output)
+	{
+		if (cmd->outappend)
+			fd = open(cmd->output, O_RDWR | O_CREAT | O_APPEND, 0777);
+		else
+			fd = open(cmd->output, O_RDWR | O_CREAT | O_TRUNC, 0777);
+		if (!fd)
+			return (0);
+		close(fd);
+	}
+	return (1);
+}
+
 t_cmdli	*actuallytokenize(char *line)
 {
 	t_cmdli	*ret;
 	char	**splitargs;
 	int		i;
+	int		togg;
 
 	ret = ft_malloc(sizeof(t_cmdli));
 	if (!ret)
@@ -390,6 +414,19 @@ t_cmdli	*actuallytokenize(char *line)
 	}
 	getcmds(ret, splitargs);
 	free2d(splitargs);
+	i = -1;
+	togg = 0;
+	while (++i < ret->nbcmds)
+		if (!openredir(ret->cmds[i]))
+			togg = 1;
+	if (togg)
+	{
+		i = -1;
+		while (++i < ret->nbcmds)
+			ft_free(ret->cmds[i]);
+		ft_free(ret->cmds);
+		ft_free(ret);
+	}
 	return (ret);
 }
 
@@ -402,8 +439,13 @@ t_cmdli	*tokenize(char *line)
 	togg = 0;
 	while (unfinished(line))
 	{
+		if (!finish(&line))
+		{
+			if (!togg)
+				ft_free(line);
+			return (NULL);
+		}
 		togg = 1;
-		finish(&line);
 	}
 	if (!line)
 		return (NULL);
