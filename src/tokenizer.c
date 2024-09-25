@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/23 18:44:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:54:16 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,7 +374,6 @@ t_cmdli	*actuallytokenize(char *line)
 	t_cmdli	*ret;
 	char	**splitargs;
 	int		i;
-	int		togg;
 
 	ret = ft_malloc(sizeof(t_cmdli));
 	if (!ret)
@@ -415,18 +414,10 @@ t_cmdli	*actuallytokenize(char *line)
 	getcmds(ret, splitargs);
 	free2d(splitargs);
 	i = -1;
-	togg = 0;
-	while (++i < ret->nbcmds)
-		if (!openredir(ret->cmds[i]))
-			togg = 1;
-	if (togg)
-	{
-		i = -1;
-		while (++i < ret->nbcmds)
-			ft_free(ret->cmds[i]);
-		ft_free(ret->cmds);
-		ft_free(ret);
-	}
+	while (ret->cmds[++i])
+		ret->cmds[i]->path = pather(ret->cmds[i]->argv[0]);
+	if (!checkcmdli(ret))
+		return (NULL);
 	return (ret);
 }
 

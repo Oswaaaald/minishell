@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 18:31:10 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/25 16:57:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "unistd.h"
 # include "sys/types.h"
 # include "sys/wait.h"
+# include "sys/stat.h"
 # include "errno.h"
 # include "stdio.h"
 # include "string.h"
@@ -43,6 +44,10 @@ int		miniexit(char **args);
 //Parsing
 char	*parsepath(char *path);
 t_cmdli	*tokenize(char *line);
+char	*pather(char *cmd);
+
+//Checker
+int		checkcmdli(t_cmdli *cmdli);
 
 //Signal
 void	sighandler(int sig);
@@ -57,5 +62,6 @@ int		ft_remenv(char *s);
 int		nameisvalid(char *s);
 void	setstatus(int status);
 void	freeprog(void);
+int		checkbuiltin(t_cmd *cmdl);
 
 #endif

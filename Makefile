@@ -1,7 +1,10 @@
-SRC = src/main.c src/path.c src/init.c src/env.c src/tokenizer.c src/signal.c \
-		${MINI_SRC}
+SRC = src/main.c src/init.c src/env.c src/tokenizer.c src/signal.c src/checker.c \
+		${MINI_SRC} \
+		${PATH_SRC}
 
 MINI_SRC = src/mini/cd.c src/mini/echo.c src/mini/env.c src/mini/export.c src/mini/pwd.c src/mini/unset.c src/mini/exit.c
+
+PATH_SRC = src/path/cmd-pather.c src/path/path-simplifier.c
 
 TEST = test.c
 

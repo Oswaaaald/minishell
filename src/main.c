@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/23 18:46:43 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/25 16:55:40 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,58 +181,6 @@ void	cmdbuiltin(t_cmdli *cmdli, int i)
 	g_prog.lastexit = exebuiltin(cmd);
 }
 
-char	**getpaths(char **env)
-{
-	int		i;
-	char	*pathe;
-	char	**res;
-
-	i = -1;
-	pathe = NULL;
-	while (env[++i])
-	{
-		if (!ft_strncmp("PATH=", env[i], 5))
-			pathe = ft_substr(env[i], 5, ft_strlen(env[i]) - 5);
-	}
-	if (!pathe)
-		return (NULL);
-	res = ft_split(pathe, ':');
-	ft_free(pathe);
-	if (!res)
-		return (NULL);
-	return (res);
-}
-
-char	*pather(char *cmd)
-{
-	char	*buffer;
-	char	**paths;
-	char	*tmpcmd;
-	int		i;
-
-	if (ft_strchr("/.~", cmd[0]))
-		return (parsepath(cmd));
-	tmpcmd = ft_strjoin("/", cmd);
-	if (!tmpcmd)
-		return (NULL);
-	paths = getpaths(g_prog.minienv);
-	if (!paths)
-		return (ft_free(tmpcmd), NULL);
-	i = -1;
-	while (paths[++i])
-	{
-		buffer = ft_strjoin(paths[i], tmpcmd);
-		if (!buffer)
-			return (ft_free(tmpcmd), free2d(paths), NULL);
-		if (access(buffer, X_OK) == 0)
-			return (ft_free(tmpcmd), free2d(paths), buffer);
-		ft_free(buffer);
-	}
-	ft_free(tmpcmd);
-	free2d(paths);
-	return (NULL);
-}
-
 void	freeprog(void)
 {
 	t_list	*tmp;
@@ -316,13 +264,11 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		g_prog.cmdli = tokenize(line);
-		if (!g_prog.cmdli && g_prog.interupt)
+		if (!g_prog.cmdli)
 		{
 			closefd(stds);
 			continue ;
 		}
-		else if (!g_prog.cmdli)
-			return (printf("exit\n"), freeprog(), 0);
 		i = -1;
 		togg = 0;
 		while (++i < g_prog.cmdli->nbcmds)
@@ -355,10 +301,6 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				g_prog.cmdli->cmds[i]->path
-					= pather(g_prog.cmdli->cmds[i]->argv[0]);
-				if (!g_prog.cmdli->cmds[i]->path)
-					break ;
 				if (i == 0)
 					prev_fd = g_prog.cmdli->cmds[0]->fd[0];
 				openfd(g_prog.cmdli->cmds[i]);
