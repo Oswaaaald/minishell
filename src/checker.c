@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/25 17:01:50 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:10:52 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	checkreadfiles(t_cmdli *cmdli)
 		else if (cmd->input && access(cmd->input, R_OK))
 			printf("mishell: %s: Permission denied\n", cmd->input);
 		else
-			continue;
+			continue ;
 		togg = 0;
 	}
 	return (togg);
@@ -64,7 +64,9 @@ int	checkwritefiles(t_cmdli	*cmdli)
 int	isdir(char *path)
 {
 	struct stat	st;
-	if (stat(path, &st) != 0) {
+
+	if (stat(path, &st) != 0)
+	{
 		printf("mishell: stat failed");
 		return (-1);
 	}

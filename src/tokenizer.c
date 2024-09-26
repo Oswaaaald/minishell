@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/25 16:54:16 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:14:11 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,8 +347,10 @@ char	**splitline(char const *s)
 	return (split_process(s, res));
 }
 
-int	openredir(t_cmd *cmd) {
+int	openredir(t_cmd *cmd)
+{
 	int	fd;
+
 	if (cmd->input)
 	{
 		fd = open(cmd->input, O_RDONLY, 0777);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/25 16:55:40 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:12:49 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	writeheredoc(char *lim)
 		{
 			buff = readline("> ");
 			if (!buff)
-			ft_malloc_add_ptr(buff);
+				ft_malloc_add_ptr(buff);
 			if (strcmp(buff, lim) == 0)
 				break ;
 			write(fd[1], buff, strlen(buff));
@@ -276,7 +276,7 @@ int	main(int argc, char **argv, char **envp)
 			if (!openfd(g_prog.cmdli->cmds[i]))
 			{
 				togg = 1;
-				printf("mishell: %s: No such file or directory", 
+				printf("mishell: %s: No such file or directory",
 					g_prog.cmdli->cmds[i]->argv[0]);
 			}
 		}
@@ -290,11 +290,12 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		i = 0;
-		int prev_fd;
+		int	prev_fd;
 		prev_fd = 0;
 		while (i < g_prog.cmdli->nbcmds)
 		{
-			if (checkbuiltin(g_prog.cmdli->cmds[i]) && g_prog.cmdli->nbcmds == 1)
+			if (checkbuiltin(g_prog.cmdli->cmds[i])
+				&& g_prog.cmdli->nbcmds == 1)
 			{
 				g_prog.cmdli->cmds[i]->path = "BUILTIN";
 				cmdbuiltin(g_prog.cmdli, i);
