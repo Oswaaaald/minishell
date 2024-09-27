@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/26 17:12:49 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/27 16:51:53 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 
 	cmd = cmdli->cmds[i];
 	/* if (i == 0)
-		prev_fd = cmdli->cmds[0]->fd[0];
+		prev_fd = cmd->fd[0];
 	if (!openfd(cmd))
 		return (0); */
 	if (cmd->limmiter)
@@ -158,7 +158,7 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 	if (!cmdli->cmds[i + 1] && pid > 0)
 		cmdli->lastpid = pid;
 	cmd->pid = pid;
-	/* if (prev_fd != 0)
+	/* if (i != 0)
 		close(prev_fd);
 	prev_fd = cmd->fd[0]; */
 	// if (i && cmdli->cmds[i + 1])
@@ -289,6 +289,9 @@ int	main(int argc, char **argv, char **envp)
 			ft_free(g_prog.cmdli);
 			continue ;
 		}
+		i = -1;
+		while (++i < g_prog.cmdli->nbcmds)
+			openfd(g_prog.cmdli->cmds[i]);
 		i = 0;
 		int	prev_fd;
 		prev_fd = 0;
@@ -304,14 +307,17 @@ int	main(int argc, char **argv, char **envp)
 			{
 				if (i == 0)
 					prev_fd = g_prog.cmdli->cmds[0]->fd[0];
-				openfd(g_prog.cmdli->cmds[i]);
+				//openfd(g_prog.cmdli->cmds[i]);
 				if (!cmd(g_prog.cmdli, i, prev_fd))
 					return (0);
-				if (prev_fd != 0)
+				if (i != 0)
 					close(prev_fd);
 				prev_fd = g_prog.cmdli->cmds[i]->fd[0];
 			}
 			i++;
+		}
+		for (int j = 0; j < i; j++) {
+			closefd(g_prog.cmdli->cmds[j]->fd);
 		}
 		// Print path
 		//printf("PATH: %s\n", g_prog.cmdli->cmds[0]->path);
@@ -319,6 +325,7 @@ int	main(int argc, char **argv, char **envp)
 			int	status;
 			// pid_t pid = wait(&status);
 			waitpid(g_prog.cmdli->cmds[j]->pid, &status, 0);
+			printf("done: %d\n", g_prog.cmdli->cmds[j]->pid);
 			if (g_prog.cmdli->cmds[j]->pid == g_prog.cmdli->lastpid)
 				setstatus(status);
 		}
