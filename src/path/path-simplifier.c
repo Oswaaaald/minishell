@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   path-simplifier.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:50:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,19 @@ char	*pathexpander(char *path)
 	return (ft_strjoin(path, ""));
 }
 
+int	isonlyslash(char *path)
+{
+	int	i;
+
+	i = -1;
+	while (path[++i])
+	{
+		if (path[i] != '/')
+			return (0);
+	}
+	return (1);
+}
+
 char	*parsepath(char *path)
 {
 	char	**paths;
@@ -132,6 +145,8 @@ char	*parsepath(char *path)
 	path = pathexpander(path);
 	if (!path)
 		return (NULL);
+	if (isonlyslash(path))
+		return (ft_free(path), ft_strdup("/"));
 	paths = ft_split(path, '/');
 	pathlst = arrtolst(paths);
 	if (!pathlst)
