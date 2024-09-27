@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/26 17:12:49 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/27 17:04:39 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 		return (0); */
 	if (cmd->limmiter)
 		writeheredoc(cmd->limmiter);
+	if (!openfd(cmd))
+		return (0);
 	pid = fork();
 	if (!pid)
 	{

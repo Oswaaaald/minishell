@@ -6,7 +6,7 @@
 /*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/26 17:14:11 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/27 21:24:56 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,23 @@ char	*pullarg(char *str, int qu[2], int *i)
 	char	*arg;
 
 	j = 0;
+	while (str[*i] == ' ' || str[*i] == '\t')
+		(*i)++;
+	if (!str[*i])
+		return (NULL);
+
+	if (ft_strnstr(str + *i, ">>", 2) || ft_strnstr(str + *i, "<<", 2))
+	{
+		arg = ft_substr(str, *i, 2);
+		(*i) += 2;
+		return (arg);
+	}
+	else if (ft_strchr("<>", str[*i]))
+	{
+		arg = ft_substr(str, *i, 1);
+		(*i)++;
+		return (arg);
+	}
 	while (str[*i + j])
 	{
 		if (str[*i + j] == '"' && !qu[0])
@@ -193,9 +210,10 @@ char	*pullarg(char *str, int qu[2], int *i)
 		j++;
 	}
 	arg = ft_substr(str, *i, j);
-	*i += j - 1;
+	*i += j;
 	return (arg);
 }
+
 
 void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 {
@@ -222,10 +240,28 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		else if (!qu[0] && !qu[1] && (arg[i] == '<' || arg[i] == '>'))
 		{
 			tmp = pullarg(arg, qu, &i);
-			if (arg[i - 1] == '<')
+			if (strcmp(tmp, "<") == 0)
+			{
 				current_cmd->input = tmp;
-			else
+				printf("input: %s\n", current_cmd->input);
+			}
+			else if (strcmp(tmp, ">") == 0)
+			{
 				current_cmd->output = tmp;
+				printf("output: %s\n", current_cmd->output);
+			}
+			else if (strcmp(tmp, ">>") == 0)
+			{
+				current_cmd->output = tmp;
+				current_cmd->outappend = 1;
+				printf("output: %s\n", current_cmd->output);
+				printf("append: %d\n", current_cmd->outappend);
+			}
+			else if (strcmp(tmp, "<<") == 0)
+			{
+				current_cmd->limmiter = tmp;
+				printf("limmiter: %s\n", current_cmd->limmiter);
+			}
 		}
 		else if (!ft_strchr("|<>", arg[i]))
 		{
@@ -235,6 +271,7 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		i++;
 	}
 }
+
 
 void	getcmds(t_cmdli *ret, char **args)
 {
@@ -364,12 +401,13 @@ int	openredir(t_cmd *cmd)
 			fd = open(cmd->output, O_RDWR | O_CREAT | O_APPEND, 0777);
 		else
 			fd = open(cmd->output, O_RDWR | O_CREAT | O_TRUNC, 0777);
-		if (!fd)
+		if (fd < 0)
 			return (0);
 		close(fd);
 	}
 	return (1);
 }
+
 
 t_cmdli	*actuallytokenize(char *line)
 {
