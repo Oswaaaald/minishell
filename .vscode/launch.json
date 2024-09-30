@@ -1,6 +1,18 @@
 {
     "version": "0.2.0",
     "configurations": [
+		{
+			"name": "19",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/minishell",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${fileDirname}",
+			"environment": [],
+			"externalConsole": true,
+			"MIMode": "lldb"
+		},
         {
             "name": "Linux",
             "type": "cppdbg",
