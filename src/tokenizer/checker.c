@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/27 19:02:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/29 20:08:49 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int	checkwritefiles(t_cmdli	*cmdli)
 	while (cmdli->cmds[++i])
 	{
 		cmd = cmdli->cmds[i];
-		if (cmd->input)
+		if (cmd->output)
 		{
-			tmpfd = open(cmd->input, O_RDWR | O_CREAT, 0777);
+			tmpfd = open(cmd->output, O_RDWR | O_CREAT, 0777);
 			if (!tmpfd)
 			{
-				printf("mishell: %s: Permission denied\n", cmd->input);
+				printf("mishell: %s: Permission denied\n", cmd->output);
 				togg = 0;
 			}
 			else
@@ -83,9 +83,9 @@ int	checkexecutables(t_cmdli *cmdli)
 	togg = 1;
 	while (cmdli->cmds[++i])
 	{
+		cmd = cmdli->cmds[i];
 		if (checkbuiltin(cmd))
 			continue ;
-		cmd = cmdli->cmds[i];
 		if (!cmd->path)
 			printf("mishell: %s: command not found\n", cmd->argv[0]);
 		else if (access(cmd->path, F_OK))
@@ -101,13 +101,18 @@ int	checkexecutables(t_cmdli *cmdli)
 	return (togg);
 }
 
-int	checkcmdli(t_cmdli *cmdli)
+int	checkcmd(t_cmdli *cmdli)
+{
+	if (!checkexecutables(cmdli))
+		return (0);
+	return (1);
+}
+
+int	checkfiles(t_cmdli *cmdli)
 {
 	if (!checkreadfiles(cmdli))
 		return (0);
 	if (!checkwritefiles(cmdli))
-		return (0);
-	if (!checkexecutables(cmdli))
 		return (0);
 	return (1);
 }

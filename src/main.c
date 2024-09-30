@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/27 22:09:15 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:47:29 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 	{
 		if (cmdli->cmds[i + 1] || cmd->output)
 			dup2(cmd->fd[1], STDOUT_FILENO);
-		if (i)
+		if (i || cmd->input)
 			dup2(prev_fd, STDIN_FILENO);
 		closefd(cmd->fd);
 		if (!checkbuiltin(cmd))

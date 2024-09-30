@@ -1,10 +1,13 @@
-SRC = src/main.c src/init.c src/env.c src/tokenizer.c src/signal.c src/checker.c \
+SRC = src/main.c src/init.c src/env.c src/signal.c\
 		${MINI_SRC} \
-		${PATH_SRC}
+		${PATH_SRC} \
+		${TOKEN_SRC}
 
 MINI_SRC = src/mini/cd.c src/mini/echo.c src/mini/env.c src/mini/export.c src/mini/pwd.c src/mini/unset.c src/mini/exit.c
 
 PATH_SRC = src/path/cmd-pather.c src/path/path-simplifier.c
+
+TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/filer.c
 
 TEST = test.c
 
@@ -43,4 +46,4 @@ ${NAME}: ${OBJS}
 
 test: ${TESTO}
 	@make -C ./libft bonus
-	${CC} ${CFLAGS} ${TESTO} ${LIBFT} -g3 -o test -lreadline
+	${CC} ${CFLAGS} ${TESTO} ${HEADERS} ${LIBFT} -g3 -o test -lreadline

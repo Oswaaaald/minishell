@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/27 21:24:56 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/09/29 19:58:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ char	*pullarg(char *str, int qu[2], int *i)
 	while (str[*i] == ' ' || str[*i] == '\t')
 		(*i)++;
 	if (!str[*i])
-		return (NULL);
+		return (NULL);/* 
 
 	if (ft_strnstr(str + *i, ">>", 2) || ft_strnstr(str + *i, "<<", 2))
 	{
@@ -198,14 +198,14 @@ char	*pullarg(char *str, int qu[2], int *i)
 		arg = ft_substr(str, *i, 1);
 		(*i)++;
 		return (arg);
-	}
+	} */
 	while (str[*i + j])
 	{
 		if (str[*i + j] == '"' && !qu[0])
 			qu[1] = !qu[1];
 		else if (str[*i + j] == '\'' && !qu[1])
 			qu[0] = !qu[0];
-		else if (!qu[0] && !qu[1] && ft_strchr("<|>", str[*i + j]))
+		else if (!qu[0] && !qu[1] && str[*i + j] == '|')
 			break ;
 		j++;
 	}
@@ -236,7 +236,7 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		{
 			(*cmdi)++;
 			current_cmd = ret->cmds[*cmdi];
-		}
+		}/* 
 		else if (!qu[0] && !qu[1] && (arg[i] == '<' || arg[i] == '>'))
 		{
 			tmp = pullarg(arg, qu, &i);
@@ -262,8 +262,8 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 				current_cmd->limmiter = tmp;
 				printf("limmiter: %s\n", current_cmd->limmiter);
 			}
-		}
-		else if (!ft_strchr("|<>", arg[i]))
+		} */
+		else if (arg[i] != '|')
 		{
 			tmp = pullarg(arg, qu, &i);
 			current_cmd->argv = arrayaddback(current_cmd->argv, tmp);
@@ -440,6 +440,7 @@ t_cmdli	*actuallytokenize(char *line)
 		ret->cmds[i]->output = NULL;
 		ret->cmds[i]->limmiter = NULL;
 		ret->cmds[i]->outappend = 0;
+		ret->cmds[i]->path = NULL;
 		ft_memset(ret->cmds[i]->fd, 0, sizeof(int) * 2);
 		ret->cmds[i]->pid = 0;
 		i++;
@@ -455,8 +456,12 @@ t_cmdli	*actuallytokenize(char *line)
 	free2d(splitargs);
 	i = -1;
 	while (ret->cmds[++i])
+	{
+		if (!getredirs(ret, ret->cmds[i]))
+			return (NULL);
 		ret->cmds[i]->path = pather(ret->cmds[i]->argv[0]);
-	if (!checkcmdli(ret))
+	}
+	if (!checkcmd(ret))
 		return (NULL);
 	return (ret);
 }
