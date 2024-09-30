@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/23 16:28:51 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:17:04 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_prog
 	t_list	*mallocs; //<-- pottentiel de fou en sah
 	t_cmdli	*cmdli;
 	int		interupt;
+	int		heredocpid;
 }	t_prog;
 
 //defined in memory.c

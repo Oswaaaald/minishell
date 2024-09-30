@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   filer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/29 19:57:20 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:25:18 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ int	remfromnext(t_cmd *cmd, int *i, int k)
 		ft_free(cmd->argv[*i]);
 		cmd->argv[*i] = tmp;
 	}
-	if ((ft_strchr("<>", cmd->argv[*i - 1][0]) && !cmd->argv[*i - 1][0]) ||
+	if ((ft_strchr("<>", cmd->argv[*i - 1][0]) && !cmd->argv[*i - 1][1]) ||
 		(ft_strchr("<>", cmd->argv[*i - 1][0]) && 
-		ft_strchr("<>", cmd->argv[*i - 1][1]) && !cmd->argv[*i - 1][1]))
+		ft_strchr("<>", cmd->argv[*i - 1][1]) && !cmd->argv[*i - 1][2]))
 	{
 		if (!strarrpop(cmd, *i - 1))
 			return (0);

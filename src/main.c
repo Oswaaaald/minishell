@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/29 19:47:29 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 17:52:03 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,25 @@ void	setstatus(int status)
 int	writeheredoc(char *lim)
 {
 	char	*buff;
-	pid_t	pid;
 	int		fd[2];
+	int		ret;
 
 	if (pipe(fd) == -1)
-		return (0);
-	pid = fork();
-	if (pid == -1)
-		return (0);
-	if (pid == 0)
+		return (-1);
+	ret = 0;
+	g_prog.heredocpid = fork();
+	if (g_prog.heredocpid == -1)
+		return (-1);
+	if (g_prog.heredocpid == 0)
 	{
 		close(fd[0]);
+		signal(SIGINT, heredocsighandler);
 		while (1)
 		{
 			buff = readline("> ");
 			if (!buff)
-				ft_malloc_add_ptr(buff);
+				break ;
+			ft_malloc_add_ptr(buff);
 			if (strcmp(buff, lim) == 0)
 				break ;
 			write(fd[1], buff, strlen(buff));
@@ -53,12 +56,15 @@ int	writeheredoc(char *lim)
 			ft_free(buff);
 		}
 		close(fd[1]);
+		//printf("closing...");
 		exit(EXIT_SUCCESS);
 	}
 	close(fd[1]);
-	wait(0);
-	dup2(fd[0], STDIN_FILENO);
-	return (1);
+	wait(&ret);
+	g_prog.heredocpid = 0;
+	if (ret)
+		return (-1);
+	return (fd[0]);
 }
 
 int	openfd(t_cmd *cmd)
@@ -72,6 +78,13 @@ int	openfd(t_cmd *cmd)
 	{
 		close(fd[0]);
 		fd[0] = open(cmd->input, O_RDONLY, 0777);
+		if (fd[0] == -1)
+			return (closefd(fd), 0);
+	}
+	if (cmd->limmiter)
+	{
+		close(fd[0]);
+		fd[0] = writeheredoc(cmd->limmiter);
 		if (fd[0] == -1)
 			return (closefd(fd), 0);
 	}
@@ -136,15 +149,15 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 	/* if (i == 0)
 		prev_fd = cmd->fd[0];
 	if (!openfd(cmd))
-		return (0); */
+		return (0); *//* 
 	if (cmd->limmiter)
-		writeheredoc(cmd->limmiter);
+		writeheredoc(cmd->limmiter); */
 	pid = fork();
 	if (!pid)
 	{
 		if (cmdli->cmds[i + 1] || cmd->output)
 			dup2(cmd->fd[1], STDOUT_FILENO);
-		if (i || cmd->input)
+		if (prev_fd && (i || cmd->input || cmd->limmiter))
 			dup2(prev_fd, STDIN_FILENO);
 		closefd(cmd->fd);
 		if (!checkbuiltin(cmd))
@@ -164,6 +177,8 @@ int	cmd(t_cmdli *cmdli, int i, int prev_fd)
 	// if (i && cmdli->cmds[i + 1])
 	// 	dup2(cmd->fd[0], STDIN_FILENO);
 	close(cmd->fd[1]);
+	if (prev_fd)
+		close(prev_fd);
 	return (1);
 }
 
@@ -275,23 +290,14 @@ int	main(int argc, char **argv, char **envp)
 		{
 			if (!openfd(g_prog.cmdli->cmds[i]))
 			{
-				togg = 1;
-				printf("mishell: %s: No such file or directory",
-					g_prog.cmdli->cmds[i]->argv[0]);
+				closefd(stds);
+				while (i < g_prog.cmdli->nbcmds)
+					ft_free(g_prog.cmdli->cmds[i++]);
+				ft_free(g_prog.cmdli->cmds);
+				ft_free(g_prog.cmdli);
+				continue ;
 			}
 		}
-		if (togg)
-		{
-			closefd(stds);
-			while (i < g_prog.cmdli->nbcmds)
-				ft_free(g_prog.cmdli->cmds[i++]);
-			ft_free(g_prog.cmdli->cmds);
-			ft_free(g_prog.cmdli);
-			continue ;
-		}
-		i = -1;
-		while (++i < g_prog.cmdli->nbcmds)
-			openfd(g_prog.cmdli->cmds[i]);
 		i = 0;
 		int	prev_fd;
 		prev_fd = 0;
@@ -305,13 +311,15 @@ int	main(int argc, char **argv, char **envp)
 			}
 			else
 			{
-				if (i == 0)
+				/* if (i == 0 && !(g_prog.cmdli->cmds[i]->input || g_prog.cmdli->cmds[i]->limmiter))
+					close(g_prog.cmdli->cmds[0]->fd[0]);
+				else */ if (i == 0)
 					prev_fd = g_prog.cmdli->cmds[0]->fd[0];
 				//openfd(g_prog.cmdli->cmds[i]);
 				if (!cmd(g_prog.cmdli, i, prev_fd))
 					return (0);
-				if (i != 0)
-					close(prev_fd);
+				/* if (i != g_prog.cmdli->nbcmds - 1)
+					close(g_prog.cmdli->cmds[i]->fd[1]); */
 				prev_fd = g_prog.cmdli->cmds[i]->fd[0];
 			}
 			i++;
@@ -325,10 +333,13 @@ int	main(int argc, char **argv, char **envp)
 			int	status;
 			// pid_t pid = wait(&status);
 			waitpid(g_prog.cmdli->cmds[j]->pid, &status, 0);
-			printf("done: %d\n", g_prog.cmdli->cmds[j]->pid);
+			printf("done (%d): %d\n", j, g_prog.cmdli->cmds[j]->pid);
+			g_prog.cmdli->cmds[j]->pid = 0;
 			if (g_prog.cmdli->cmds[j]->pid == g_prog.cmdli->lastpid)
 				setstatus(status);
 		}
+		if (g_prog.interupt)
+			setstatus(g_prog.interupt);
 		i = 0;
 		dup2(stds[0], STDIN_FILENO);
 		dup2(stds[1], STDOUT_FILENO);

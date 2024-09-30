@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 14:17:48 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ int	initprog(char **envp)
 		g_prog.cwd = getcwd(NULL, 0);
 		ft_malloc_add_ptr(g_prog.cwd);
 	}
+	g_prog.heredocpid = 0;
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/29 19:57:36 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 15:02:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,12 @@ int		getredirs(t_cmdli *cmdli, t_cmd *cmd);
 
 int		checkcmd(t_cmdli *cmdli);
 int		checkfiles(t_cmdli *cmdli);
+int		checksyntax(char *str);
 
 //Signal
 
 void	sighandler(int sig);
+void	heredocsighandler(int sig);
 
 //Utils
 

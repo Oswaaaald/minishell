@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/30 12:00:29 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/09/30 12:30:26 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,6 +415,8 @@ t_cmdli	*actuallytokenize(char *line)
 	char	**splitargs;
 	int		i;
 
+	if (!checksyntax(line))
+		return (NULL);
 	ret = ft_malloc(sizeof(t_cmdli));
 	if (!ret)
 		return (NULL);
