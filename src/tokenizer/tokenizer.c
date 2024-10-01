@@ -3,88 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/30 12:30:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:43:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	expandvar(char **buff, char *str, int i)
-{
-	int		si;
-	char	*tmp;
-	char	c;
-
-	si = i;
-	str[i] = '\0';
-	if (!*buff)
-		*buff = ft_strdup(str);
-	else
-	{
-		tmp = *buff;
-		*buff = ft_strjoin(*buff, str);
-		ft_free(tmp);
-	}
-	str[i] = '$';
-	while (str[++i])
-	{
-		if (str[i] == '?' && si == i - 1)
-		{
-			i++;
-			break ;
-		}
-		if ((i == si + 1 && !(ft_isalpha(str[i]) || str[i] == '_'))
-			|| (i > 0 && !(ft_isalnum(str[i]) || str[i] == '_')))
-		{
-			if (si == i - 1)
-			{
-				tmp = *buff;
-				*buff = ft_strjoin(*buff, "$");
-				ft_free(tmp);
-				return (i - 1);
-			}
-			break ;
-		}
-	}
-	c = str[i];
-	str[i] = '\0';
-	if (ft_getenv(&str[si + 1]))
-		*buff = ft_strjoin(*buff, ft_getenv(&str[si + 1]));
-	str[i] = c;
-	return (i);
-}
-
-char	*expand(char *str)
-{
-	int		i;
-	char	*buff;
-	int		quotes[2];
-	int		last;
-
-	i = -1;
-	buff = NULL;
-	quotes[0] = 0;
-	quotes[1] = 0;
-	last = 0;
-	while (str[++i])
-	{
-		if (str[i] == '"' && !quotes[0])
-			quotes[1] = !quotes[1];
-		if (str[i] == '\'' && !quotes[1])
-			quotes[0] = !quotes[0];
-		if (str[i] == '$' && !quotes[0])
-		{
-			last = last + expandvar(&buff, &(str[last]), i - last);
-			i = last;
-		}
-	}
-	if (!buff)
-		return (ft_strdup(str));
-	return (ft_strjoin(buff, &str[last + 1]));
-}
 
 int	unfinished(char *line)
 {
@@ -125,6 +51,7 @@ int	finish(char **lineptr)
 	char	*buff;
 	char	*tmp;
 
+	g_prog.status = ST_FINISH;
 	buff = readline("> ");
 	if (!buff)
 		return (0);
@@ -135,6 +62,7 @@ int	finish(char **lineptr)
 	*lineptr = ft_strjoin(tmp, buff);
 	ft_free(tmp);
 	ft_free(buff);
+	g_prog.status = ST_IDLE;
 	return (1);
 }
 
@@ -185,20 +113,7 @@ char	*pullarg(char *str, int qu[2], int *i)
 	while (str[*i] == ' ' || str[*i] == '\t')
 		(*i)++;
 	if (!str[*i])
-		return (NULL);/* 
-
-	if (ft_strnstr(str + *i, ">>", 2) || ft_strnstr(str + *i, "<<", 2))
-	{
-		arg = ft_substr(str, *i, 2);
-		(*i) += 2;
-		return (arg);
-	}
-	else if (ft_strchr("<>", str[*i]))
-	{
-		arg = ft_substr(str, *i, 1);
-		(*i)++;
-		return (arg);
-	} */
+		return (NULL);
 	while (str[*i + j])
 	{
 		if (str[*i + j] == '"' && !qu[0])
@@ -222,11 +137,10 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 	char	*tmp;
 	t_cmd	*current_cmd;
 
-	i = 0;
-	qu[0] = 0;
-	qu[1] = 0;
+	i = -1;
+	ft_memset(qu, 0, sizeof(int) * 2);
 	current_cmd = ret->cmds[*cmdi];
-	while (arg[i])
+	while (arg[++i])
 	{
 		if (arg[i] == '"' && !qu[0])
 			qu[1] = !qu[1];
@@ -236,39 +150,12 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		{
 			(*cmdi)++;
 			current_cmd = ret->cmds[*cmdi];
-		}/* 
-		else if (!qu[0] && !qu[1] && (arg[i] == '<' || arg[i] == '>'))
-		{
-			tmp = pullarg(arg, qu, &i);
-			if (strcmp(tmp, "<") == 0)
-			{
-				current_cmd->input = tmp;
-				printf("input: %s\n", current_cmd->input);
-			}
-			else if (strcmp(tmp, ">") == 0)
-			{
-				current_cmd->output = tmp;
-				printf("output: %s\n", current_cmd->output);
-			}
-			else if (strcmp(tmp, ">>") == 0)
-			{
-				current_cmd->output = tmp;
-				current_cmd->outappend = 1;
-				printf("output: %s\n", current_cmd->output);
-				printf("append: %d\n", current_cmd->outappend);
-			}
-			else if (strcmp(tmp, "<<") == 0)
-			{
-				current_cmd->limmiter = tmp;
-				printf("limmiter: %s\n", current_cmd->limmiter);
-			}
-		} */
+		}
 		else if (arg[i] != '|')
 		{
 			tmp = pullarg(arg, qu, &i);
 			current_cmd->argv = arrayaddback(current_cmd->argv, tmp);
 		}
-		i++;
 	}
 }
 
@@ -416,7 +303,7 @@ t_cmdli	*actuallytokenize(char *line)
 	int		i;
 
 	if (!checksyntax(line))
-		return (NULL);
+		return (setstatus(2), NULL);
 	ret = ft_malloc(sizeof(t_cmdli));
 	if (!ret)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd-pather.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:47:16 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/26 17:10:10 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/10/01 17:03:19 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*pather(char *cmd)
 	char	*tmpcmd;
 	int		i;
 
-	if (ft_strchr("/.~", cmd[0]))
+	if (ft_strchr(cmd, '/'))
 		return (parsepath(cmd));
 	tmpcmd = ft_strjoin("/", cmd);
 	if (!tmpcmd)

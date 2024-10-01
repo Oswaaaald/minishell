@@ -7,7 +7,8 @@ MINI_SRC = src/mini/cd.c src/mini/echo.c src/mini/env.c src/mini/export.c src/mi
 
 PATH_SRC = src/path/cmd-pather.c src/path/path-simplifier.c
 
-TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/filer.c src/tokenizer/syntaxer.c
+TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/filer.c src/tokenizer/syntaxer.c \
+			src/tokenizer/expander.c
 
 TEST = test.c
 

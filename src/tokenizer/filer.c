@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   filer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/30 13:25:18 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 14:06:56 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ char	*getredirfromcurrent(t_cmd *cmd, int *i, int *j)
 void	setredirs(t_cmd *cmd, char *str, char *metachar)
 {
 
-	if (metachar[0] == '<' && metachar[1] != '<')
+	if ((metachar[0] == '<' && metachar[1] != '<') || (metachar[0] == '<' && metachar[1] == '>'))
 	{
 		if (cmd->input)
 			ft_free(cmd->input);

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:33:50 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	cdback(void)
 	buff = ft_strdup(ft_getenv("PWD"));
 	if (!buff)
 		return (1);
+	if (!ft_getenv("OLDPWD"))
+		return (write(STDERR_FILENO, "mishell: cd: OLDPWD not set\n", 28), 1);
 	if (chdir(ft_getenv("OLDPWD")) == -1)
 		return (perror("mishell: cd"), ft_free(buff), 1);
 	if (updatepwd(ft_getenv("OLDPWD"), buff))
@@ -84,7 +86,7 @@ int	minicd(char **args)
 		buff = parsepath(args[1]);
 	if (!buff)
 		return (0);
-	if (!ft_strncmp(buff, "/-", -1))
+	if (!ft_strncmp(buff, "-", -1))
 		return (ft_free(buff), cdback());
 	if (chdir(buff) == -1)
 		return (perror("mishell: cd"), ft_free(buff), 1);

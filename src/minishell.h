@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/30 15:02:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:02:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		minienv(char **args);
 int		miniexit(char **args);
 
 //Parsing
+char	*expand(char *str);
 char	*parsepath(char *path);
 t_cmdli	*tokenize(char *line);
 char	*pather(char *cmd);
@@ -56,7 +57,7 @@ int		checksyntax(char *str);
 //Signal
 
 void	sighandler(int sig);
-void	heredocsighandler(int sig);
+void	sigheredoc(int sig);
 
 //Utils
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/30 14:17:04 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:41:14 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdint.h>
+
+# define ST_IDLE 0
+# define ST_RUN 1
+# define ST_HEDOC 2
+# define ST_FINISH 3
 
 typedef struct s_list
 {
@@ -53,8 +58,8 @@ typedef struct s_prog
 	char	**minienv;
 	t_list	*mallocs; //<-- pottentiel de fou en sah
 	t_cmdli	*cmdli;
+	int		status;
 	int		interupt;
-	int		heredocpid;
 }	t_prog;
 
 //defined in memory.c
