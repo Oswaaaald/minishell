@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/29 20:08:49 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:14:30 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,6 @@ int	checkwritefiles(t_cmdli	*cmdli)
 		}
 	}
 	return (togg);
-}
-
-int	isdir(char *path)
-{
-	struct stat	st;
-
-	if (stat(path, &st) != 0)
-	{
-		printf("mishell: stat failed");
-		return (-1);
-	}
-	return (S_ISDIR(st.st_mode));
 }
 
 int	checkexecutables(t_cmdli *cmdli)

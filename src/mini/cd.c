@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 15:33:50 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:50:38 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,9 @@ int	updatepwd(char *new, char *old)
 	if (!tmpnew)
 		return (1);
 	tmpold = ft_strjoin("OLDPWD=", old);
-	if (!tmpold)
-		return (ft_free(tmpnew), 1);
 	if (!ft_setenv(tmpnew))
 		return (ft_free(tmpnew), 1);
-	if (!ft_setenv(tmpold))
+	if (tmpold && !ft_setenv(tmpold))
 		return (ft_free(tmpnew), ft_free(tmpold), 1);
 	return (0);
 }

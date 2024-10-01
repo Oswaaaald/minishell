@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:47:16 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 17:03:19 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:32:06 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,22 @@ char	**getpaths(char **env)
 	return (res);
 }
 
+char	*patherpart2(int i, char **paths, char *buffer, char *tmpcmd)
+{
+	while (paths[++i])
+	{
+		buffer = ft_strjoin(paths[i], tmpcmd);
+		if (!buffer)
+			return (ft_free(tmpcmd), free2d(paths), NULL);
+		if (access(buffer, X_OK) == 0)
+			return (ft_free(tmpcmd), free2d(paths), buffer);
+		ft_free(buffer);
+	}
+	ft_free(tmpcmd);
+	free2d(paths);
+	return (NULL);
+}
+
 char	*pather(char *cmd)
 {
 	char	*buffer;
@@ -50,16 +66,6 @@ char	*pather(char *cmd)
 	if (!paths)
 		return (ft_free(tmpcmd), NULL);
 	i = -1;
-	while (paths[++i])
-	{
-		buffer = ft_strjoin(paths[i], tmpcmd);
-		if (!buffer)
-			return (ft_free(tmpcmd), free2d(paths), NULL);
-		if (access(buffer, X_OK) == 0)
-			return (ft_free(tmpcmd), free2d(paths), buffer);
-		ft_free(buffer);
-	}
-	ft_free(tmpcmd);
-	free2d(paths);
-	return (NULL);
+	buffer = NULL;
+	return (patherpart2(i, paths, buffer, tmpcmd));
 }

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 12:41:14 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/02 00:01:17 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct s_cmd
 {
 	char	*path;
 	char	**argv;
-	char	**env;
 	char	*input;
 	char	*output;
 	char	*limmiter;

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:36:06 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 15:39:39 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:29:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	flagonlyn(char	*arg)
 {
 	int	i;
-	
+
 	i = 0;
 	if (arg[i] != '-')
 		return (0);

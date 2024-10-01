@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 16:02:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/02 00:20:57 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ int		minienv(char **args);
 int		miniexit(char **args);
 
 //Parsing
+
+char	*ft_readline(void);
 char	*expand(char *str);
+int		translationorwhatevahhandler(char **buff, char *str, int i);
 char	*parsepath(char *path);
 t_cmdli	*tokenize(char *line);
 char	*pather(char *cmd);
@@ -58,6 +61,15 @@ int		checksyntax(char *str);
 
 void	sighandler(int sig);
 void	sigheredoc(int sig);
+
+//Exec
+
+int		cmd(t_cmdli *cmdli, int i);
+void	cmdbuiltin(t_cmdli *cmdli, int i);
+int		exebuiltin(t_cmd *cmd);
+void	dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd);
+int		openfd(t_cmd *cmd);
+int		writeheredoc(char *lim);
 
 //Utils
 
@@ -157,5 +169,54 @@ char	*ft_strndup(char *str, int n);
  * @note Example: `stromit("heyomitwhy", 3, 4)` => `"heywhy"`
  */
 char	*stromit(char *str, int start, int len);
+
+/**
+ * @brief Closes two fd's of a int[2]
+ * @param fd The int[2] to be closed
+ * @returns Nothing
+ * @note No checks are made, just saves a line.
+ */
+void	closefd(int fd[2]);
+
+/**
+ * @brief Join's two strings while adding a character in between
+ * @param s1 The first string to be joined
+ * @param s2 The second string to be joined
+ * @param fil The character to be added in between both strings
+ * @returns A pointer to the new combined string
+ * @note returned pointer is malloc'ed
+ */
+char	*strcjoin(char *s1, char *s2, char fil);
+
+/**
+ * @brief Tranforms a string array into a linked list
+ * @param s1 The string array to be transformed
+ * @returns A pointer to the first element of the new linked list
+ */
+t_list	*arrtolst(char **arr);
+
+/**
+ * @brief Join's a linked list into a string array
+ * @param lst The first node of the linked list to be joined
+ * @returns A pointer to joined string
+ * @note returned pointer is malloc'ed
+ */
+char	*lstjoin(t_list *lst);
+
+/**
+ * @brief Check's if a string points to a directory
+ * @param path The path string to the supposed directory
+ * @returns if path is a Directory or not:
+ * - `1` Is a Directory
+ * - `0` Isn't a Directory
+ */
+int		isdir(char *path);
+
+/**
+ * @brief Free's a cmdli and its member nodes
+ * @param cmdli The cmdli to free
+ * @returns Nothing
+ */
+void	freecmdli(t_cmdli *cmdli);
 
 #endif
