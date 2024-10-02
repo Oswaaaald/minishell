@@ -1,1 +1,3 @@
 fix expander: number signifies last char of $
+
+check if syntaxer doesnt forbid a redir meta next to a pipe (cmd | > outfile cmd2)
