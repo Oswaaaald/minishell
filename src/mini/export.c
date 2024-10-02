@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/02 17:06:59 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	miniexport(char **args)
 			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
 		else
 		{
-			if (!ft_setenv(args[i]))
+			if (!ft_setenv(ft_strdup(args[i])))
 				printf("Warning: A malloc has failed");
 			continue ;
 		}

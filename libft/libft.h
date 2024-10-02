@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 12:19:35 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 00:01:17 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:04:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_prog
 	int		lastexit;
 	char	*cwd;
 	char	**minienv;
-	t_list	*mallocs; //<-- pottentiel de fou en sah
+	t_list	*mallocs;
 	t_cmdli	*cmdli;
 	int		status;
 	int		interupt;

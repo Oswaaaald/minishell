@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:43:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/09/20 19:07:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:59:10 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ int	minienv(char **args)
 		return (printf("mishell: env: too many arguments"), 1);
 	i = -1;
 	while (g_prog.minienv[++i])
-		printf("%s\n", g_prog.minienv[i]);
+	{
+		if (ft_strchr(g_prog.minienv[i], '='))
+			printf("%s\n", g_prog.minienv[i]);
+	}
 	return (1);
 }
