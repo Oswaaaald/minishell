@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntaxer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:05:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 16:27:09 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:44:59 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	putunexpect(char *str, int i)
 static int	checkredir(char *str, int *i)
 {
 	char	oldchar;
+
 	if ((str[*i] == '>' && str[*i] == str[*i + 1])
 		|| (str[*i] == '<' && ft_strchr("<>", str[*i + 1])))
 		(*i)++;
@@ -39,7 +40,7 @@ static int	checkredir(char *str, int *i)
 			printf("mishell: syntax error near unexpected token `newline'\n"),
 			0);
 	if ((ft_strchr("<>", oldchar) && ft_strchr("<>|", str[*i]))
-		|| (oldchar ==  '|' && str[*i] == '|'))
+		|| (oldchar == '|' && str[*i] == '|'))
 		return (putunexpect(str, *i), 0);
 	return (1);
 }

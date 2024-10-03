@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 14:52:15 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:44:30 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void	doexit(int n)
 	exit(n);
 }
 
-void puterror(char *str)
+void	puterror(char *str)
 {
 	write(STDERR_FILENO, "mishell: exit: ", 15);
 	write(STDERR_FILENO, str, ft_strlen(str));
-	write(STDERR_FILENO, ": numeric argument required\n", 28);	
+	write(STDERR_FILENO, ": numeric argument required\n", 28);
 }
 
 int	miniexit(char **args)

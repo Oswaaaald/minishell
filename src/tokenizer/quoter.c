@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quoter.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:18:57 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 13:20:12 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:44:57 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	remquotes(t_cmd *cmd)
 	int		i;
 	char	*tmp;
 	int		qu[2];
+
 	i = -1;
 	while (cmd->argv[++i])
 	{
