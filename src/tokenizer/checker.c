@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 22:14:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:49:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	checkreadfiles(t_cmdli *cmdli)
 	{
 		cmd = cmdli->cmds[i];
 		if (cmd->input && access(cmd->input, F_OK))
-			printf("mishell: %s: No such file or directory\n", cmd->input);
+			checkerputerror(2, cmd->input);
 		else if (cmd->input && access(cmd->input, R_OK))
-			printf("mishell: %s: Permission denied\n", cmd->input);
+			checkerputerror(1, cmd->input);
 		else
 			continue ;
 		togg = 0;
@@ -49,13 +49,15 @@ int	checkwritefiles(t_cmdli	*cmdli)
 		if (cmd->output)
 		{
 			tmpfd = open(cmd->output, O_RDWR | O_CREAT, 0777);
-			if (!tmpfd)
-			{
-				printf("mishell: %s: Permission denied\n", cmd->output);
+			if (isdir(cmd->output) && checkerputerror(3, cmd->output))
 				togg = 0;
+			else if (!tmpfd)
+			{
+				checkerputerror(1, cmd->output);
+				togg = 0;
+				continue ;
 			}
-			else
-				close(tmpfd);
+			close(tmpfd);
 		}
 	}
 	return (togg);
@@ -75,13 +77,13 @@ int	checkexecutables(t_cmdli *cmdli)
 		if (checkbuiltin(cmd))
 			continue ;
 		if (!cmd->path)
-			printf("mishell: %s: command not found\n", cmd->argv[0]);
+			checkerputerror(0, cmd->argv[0]);
 		else if (access(cmd->path, F_OK))
-			printf("mishell: %s: No such file or directory\n", cmd->argv[0]);
+			checkerputerror(2, cmd->argv[0]);
 		else if (access(cmd->path, X_OK))
-			printf("mishell: %s: Permission denied\n", cmd->argv[0]);
+			checkerputerror(1, cmd->argv[0]);
 		else if (isdir(cmd->path))
-			printf("mishell: %s: is a directory\n", cmd->argv[0]);
+			checkerputerror(1, cmd->argv[0]);
 		else
 			continue ;
 		togg = 0;

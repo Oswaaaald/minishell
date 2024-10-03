@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:45:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:27:33 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,16 +116,6 @@ t_cmdli	*tokenize(char *line)
 	int		togg;
 
 	togg = 0;
-	while (unfinished(line))
-	{
-		if (!finish(&line))
-		{
-			if (!togg)
-				ft_free(line);
-			return (NULL);
-		}
-		togg = 1;
-	}
 	if (!line)
 		return (NULL);
 	add_history(line);

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:51 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:49:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,5 +220,7 @@ int		isdir(char *path);
 void	freecmdli(t_cmdli *cmdli);
 
 void	exportputerror(int type, char c, char *s);
+
+int		checkerputerror(int type, char *s);
 
 #endif

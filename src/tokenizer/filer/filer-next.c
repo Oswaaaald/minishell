@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 22:43:02 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 23:09:36 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:53:43 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*getredirfromnext(t_cmd *cmd, int *i, int *j)
 	k = -1;
 	(*i)++;
 	if (!cmd->argv[*i] || ft_strchr("&<>()", cmd->argv[*i][0]))
-		return (printf("%s%c'", LONGSTR, cmd->argv[*i][0]), NULL);
+		return (NULL);
 	ft_memset(qu, 0, sizeof(int) * 2);
 	while (cmd->argv[*i][++k])
 	{

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:36:06 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ int	miniexit(char **args)
 	}
 	if (n)
 	{
-		printf("mishell: exit: %s: numeric argument required\n", args[1]);
+		puterror(args[1]);
 		doexit(2);
 	}
 	if (args[2])
-		return (printf("bash: exit: too many arguments\n"), 1);
+		return (write(2, "bash: exit: too many arguments\n", 31), 1);
 	doexit((char) ft_atoi(args[1]));
 	return (0);
 }

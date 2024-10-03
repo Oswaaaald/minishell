@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 22:46:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 22:58:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:53:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ char	*getredirfromcurrent(t_cmd *cmd, int *i, int *j)
 	k = -1;
 	(*j)++;
 	if (!cmd->argv[*i] || ft_strchr("&<>()", cmd->argv[*i][*j]))
-		return (printf("mishell: syntax error near unexpected token `%c'",
-				cmd->argv[*i][*j]), NULL);
+		return (NULL);
 	ft_memset(qu, 0, sizeof(int) * 2);
 	while (cmd->argv[*i][++k + *j])
 	{

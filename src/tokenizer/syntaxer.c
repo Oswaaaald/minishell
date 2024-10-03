@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:05:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:59 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:53:15 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	putunexpect(char *str, int i)
 	if ((ft_strchr(">|", str[i]) && str[i] == str[i + 1])
 		|| (str[i] == '<' && ft_strchr("<>", str[i + 1])))
 		len++;
-	write(1, "mishell: syntax error near unexpected token `", 45);
-	write(1, str + i, len);
-	write(1, "'\n", 2);
+	write(2, "mishell: syntax error near unexpected token `", 45);
+	write(2, str + i, len);
+	write(2, "'\n", 2);
 }
 
 static int	checkredir(char *str, int *i)
@@ -36,9 +36,8 @@ static int	checkredir(char *str, int *i)
 	while (str[(*i)++] && ft_strchr(" 	\n", str[*i]))
 		;
 	if (!str[*i])
-		return (
-			printf("mishell: syntax error near unexpected token `newline'\n"),
-			0);
+		return (write(2, "mishell: syntax error near ", 28),
+			write(2, "unexpected token `newline'\n", 27), 0);
 	if ((ft_strchr("<>", oldchar) && ft_strchr("<>|", str[*i]))
 		|| (oldchar == '|' && str[*i] == '|'))
 		return (putunexpect(str, *i), 0);
@@ -68,6 +67,9 @@ int	checksyntaxer(char *str, int i, int qu[2], int first)
 		if (!ft_strchr(" \t\n", str[i]))
 			first = 0;
 	}
+	if (qu[0] || qu[1])
+		return (write(2, "mishell: syntax error near unexpected token `", 45),
+			write(2, "newline'\n", 9), 0);
 	return (1);
 }
 

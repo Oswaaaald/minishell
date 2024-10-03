@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 22:12:22 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:36:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*pathexpander(char *path)
 	{
 		home = ft_getenv("HOME");
 		if (!home)
-			return (printf("mishell: Home env not set\n"), NULL);
+			return (write(2, "mishell: Home env not set\n", 26), NULL);
 		ret = ft_strjoin(home, path + 1);
 		return (ret);
 	}

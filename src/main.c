@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:49 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:34:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	main(int argc, char **argv, char **envp)
 	i = 0;
 	j = 0;
 	if (!initprog(envp))
-		return (printf("mishell: Init error\n"));
+		return (write(2, "mishell: Init error\n", 20));
 	while (1)
 	{
 		stds[0] = dup(STDIN_FILENO);
