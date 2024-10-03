@@ -3,33 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 11:42:31 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:46:32 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 19:30:10 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	nwords(char const *s, char c)
+static int	nbwords(char const *s, char c)
 {
 	int	count;
-	int	nword;
+	int	nbword;
 	int	i;
 
 	count = 0;
-	nword = 1;
+	nbword = 1;
 	i = -1;
 	while (s[++i])
 	{
-		if (s[i] != c && nword)
+		if (s[i] != c && nbword)
 		{
 			count++;
-			nword = 0;
+			nbword = 0;
 		}
-		if (s[i] == c && !nword)
-			nword = 1;
+		if (s[i] == c && !nbword)
+			nbword = 1;
 	}
 	return (count);
 }
@@ -60,20 +60,20 @@ static void	*freem(char **str, int a)
 
 static char	**split_process(char const *s, char c)
 {
-	int		nword;
+	int		nbword;
 	int		i;
 	int		a;
 	char	**res;
 
-	nword = 1;
+	nbword = 1;
 	i = -1;
 	a = -1;
-	res = (char **)ft_malloc((nwords(s, c) + 1) * sizeof(char *));
+	res = (char **)ft_malloc((nbwords(s, c) + 1) * sizeof(char *));
 	if (!res)
 		return (NULL);
 	while (s[++a])
 	{
-		if (s[a] != c && nword)
+		if (s[a] != c && nbword)
 		{
 			res[++i] = (char *)ft_malloc(wordlen(s, c, a) + 1);
 			if (!(res[i]))
@@ -81,7 +81,7 @@ static char	**split_process(char const *s, char c)
 			ft_strlcpy(res[i], s + a, wordlen(s, c, a) + 1);
 			a = a + wordlen(s, c, a) - 1;
 		}
-		nword = (s[a] == c);
+		nbword = (s[a] == c);
 	}
 	res[++i] = (void *)0;
 	return (res);

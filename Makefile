@@ -51,7 +51,7 @@ re: fclean all
 
 ${NAME}: ${OBJS}
 	@make -C ./libft bonus
-	${CC} ${CFLAGS} ${OBJS} $(HEADERS) ${LIBFT} -g3 -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.13/lib
+	${CC} ${CFLAGS} ${OBJS} -fsanitize=address $(HEADERS) ${LIBFT} -g3 -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.13/lib
 
 test: ${TESTO}
 	@make -C ./libft bonus
