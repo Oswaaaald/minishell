@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 23:32:23 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:20:36 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,3 +19,4 @@ void	*freem(char **str, int a);
 char	**splitline(char const *s);
 int		unfinished(char *line);
 int		finish(char **lineptr);
+int		remquotes(t_cmd *cmd);

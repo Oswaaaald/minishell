@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:27:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 12:53:21 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:55:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	sigheredoc(int sig)
 
 void	sighandler(int sig)
 {
+	if (sig == SIGQUIT)
+		return ;
 	g_prog.interupt = sig;
 	if (sig == SIGINT)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:04 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 21:50:38 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:46:07 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	minicd(char **args)
 		write(STDERR_FILENO, "mishell: cd: too many arguments\n", 33);
 		return (1);
 	}
+	if (!args[1] || (!args[2] && !ft_strncmp(args[1], "--", -1)))
+		buff = parsepath("~");
 	else if (args[1] && !ft_strncmp(args[1], "--", -1))
 		buff = parsepath(args[2]);
 	else

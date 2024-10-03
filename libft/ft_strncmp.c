@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 11:25:37 by fghysbre          #+#    #+#             */
-/*   Updated: 2023/10/27 14:20:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:54:38 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,7 @@ int	main(void)
 	char s2[] = "1235";
 	size_t n = -1;
 	printf("%d (%d) \n", ft_strncmp(s1, s2, n), strncmp(s1, s2, n));
+
+	"oui non 3.14"
+	fscanf("%s %s %f", &string1, &string2, &float)
 } */

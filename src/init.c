@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 01:03:16 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:56:01 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int	initprog(char **envp)
 	else
 		g_prog.cwd = ft_strdup(ft_getenv("PWD"));
 	signal(SIGINT, sighandler);
-	signal(SIGQUIT, sighandler);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 	g_prog.interupt = 0;
 	g_prog.cmdli = NULL;
 	return (1);

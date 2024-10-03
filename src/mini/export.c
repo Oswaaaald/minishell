@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 17:06:59 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:37:41 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	miniexport(char **args)
 	while (args[++i])
 	{
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
-			i++;
+			continue ;
 		if (i == 1 && args[i][0] == '-')
 			return (printf("mishell: export: -%c: invalid option\n",
 					args[i][1]), 2);

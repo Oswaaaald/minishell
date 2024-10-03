@@ -11,7 +11,8 @@ PATH_SRC = src/path/cmd-pather.c src/path/path-simplifier.c src/path/simplifier-
 
 TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/syntaxer.c \
 			src/tokenizer/expander.c src/tokenizer/checker-utils.c src/tokenizer/expander-utils.c \
-			src/tokenizer/tokenizer-cmd.c src/tokenizer/tokenizer-extra.c src/tokenizer/tokenizer-split.c
+			src/tokenizer/tokenizer-cmd.c src/tokenizer/tokenizer-extra.c src/tokenizer/tokenizer-split.c\
+			src/tokenizer/quoter.c
 
 FILER_SRC = src/tokenizer/filer/filer.c src/tokenizer/filer/filer-next.c src/tokenizer/filer/filer-current.c
 

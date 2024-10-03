@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 00:01:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:21:08 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_cmdli	*fillcmdli(char *line, t_cmdli *ret, int i)
 	{
 		if (!getredirs(ret, ret->cmds[i]))
 			return (NULL);
+		remquotes(ret->cmds[i]);
 		ret->cmds[i]->path = pather(ret->cmds[i]->argv[0]);
 	}
 	if (!checkcmd(ret))

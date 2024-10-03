@@ -1,7 +1,1 @@
-fix expander: number signifies last char of $
-
-check if syntaxer doesnt forbid a redir meta next to a pipe (cmd | > outfile cmd2)
-
-fix env having a stroke when being rn after setting an empty char
-
-make it so getenv gets escape char if there is not avlue to env or sum like that idk
+might have to update error messaging to std2
