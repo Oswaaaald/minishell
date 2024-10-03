@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 22:14:34 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 21:49:39 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:14:56 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	checkerputerror(int type, char *s)
+int	checkerputerror(int type, char *s, int ret)
 {
 	write(STDERR_FILENO, "mishell: ", 9);
 	ft_putstr_fd(s, STDERR_FILENO);
@@ -24,6 +24,10 @@ int	checkerputerror(int type, char *s)
 		write(STDERR_FILENO, ": No such file or directory\n", 28);
 	else if (type == 3)
 		write(STDERR_FILENO, ": is a directory\n", 17);
+	if ((type == 0 || type == 2) && ret)
+		return (127);
+	else if ((type == 1 || type == 3) && ret)
+		return (126);
 	return (1);
 }
 

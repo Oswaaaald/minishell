@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 21:34:22 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:40:45 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	resetloop(int stds[2])
 	close(stds[1]);
 	if (g_prog.interupt && g_prog.lastexit)
 		printf("\n");
+	signal(SIGQUIT, SIG_IGN);
 	freecmdli(g_prog.cmdli);
 }
 
@@ -118,6 +119,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		if (!openfds(stds))
 			continue ;
+		signal(SIGQUIT, sighandler);
 		if (!runprog(i, j))
 			return (0);
 		resetloop(stds);

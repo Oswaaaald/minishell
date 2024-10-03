@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:46 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:40:38 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ void	free2d(char **arr)
 	while (arr[++i])
 		ft_free(arr[i]);
 	ft_free(arr);
+}
+
+void	setbrutestatus(int stat)
+{
+	g_prog.lastexit = stat;
 }
 
 char	**strarrdup(char **arr)
@@ -66,7 +71,7 @@ int	initprog(char **envp)
 	else
 		g_prog.cwd = ft_strdup(ft_getenv("PWD"));
 	signal(SIGINT, sighandler);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, sighandler);
 	signal(SIGTSTP, SIG_IGN);
 	g_prog.interupt = 0;
 	g_prog.cmdli = NULL;

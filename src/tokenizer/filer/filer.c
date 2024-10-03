@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 23:11:11 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:21:42 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	getredirs(t_cmdli *cmdli, t_cmd *cmd)
 		if (!cmd->argv[i])
 			break ;
 	}
-	if (!checkfiles(cmdli) || !cmd->argv[0])
+	if (checkfiles(cmdli) || !cmd->argv[0])
 		return (0);
 	return (1);
 }

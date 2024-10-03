@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:27:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:54 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:41:30 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	sigheredoc(int sig)
 
 void	sighandler(int sig)
 {
-	if (sig == SIGQUIT)
-		return ;
 	g_prog.interupt = sig;
+	if (sig == SIGQUIT || sig == SIGTSTP)
+		return ;
 	if (sig == SIGINT)
 	{
 		if (g_prog.status == ST_IDLE)
@@ -36,7 +36,7 @@ void	sighandler(int sig)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
-			g_prog.lastexit = 1;
+			setbrutestatus(130);
 		}
 		else if (g_prog.status == ST_FINISH)
 		{
