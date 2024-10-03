@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:26:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 23:28:52 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 23:43:53 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,18 @@ int	nbcmds(char *line)
 {
 	int	i;
 	int	ret;
+	int	qu[2];
 
 	i = -1;
 	ret = 1;
+	ft_memset(qu, 0, sizeof(int) * 2);
 	while (line[++i])
 	{
-		if (line[i] == '|' && line [i + 1] != '|')
+		if (line[i] == '\'' && !qu[1])
+			qu[0] = !qu[0];
+		else if (line[i] == '"' && !qu[0])
+			qu[1] = !qu[1];
+		if (!qu[0] && !qu[1] && line[i] == '|' && line [i + 1] != '|')
 			ret++;
 	}
 	return (ret);
