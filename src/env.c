@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:39 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:56:45 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_setenv(char *var)
 	while (g_prog.minienv && g_prog.minienv[++i])
 	{
 		if ((ft_strchr(var, '=') && !ft_strncmp(g_prog.minienv[i], var, eq))
-			|| (!ft_strchr(var, '=') 
+			|| (!ft_strchr(var, '=')
 				&& !ft_strncmp(g_prog.minienv[i], var, ft_strlen(var))
 				&& (g_prog.minienv[i][ft_strlen(var)] == '='
 				|| g_prog.minienv[i][ft_strlen(var)] == '\0')))
