@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 12:41:19 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:20:10 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,10 @@ int	ft_setenv(char *var)
 	i = -1;
 	while (g_prog.minienv && g_prog.minienv[++i])
 	{
-		if (!ft_strncmp(g_prog.minienv[i], var, eq))
+		if ((ft_strchr(var, '=') && !ft_strncmp(g_prog.minienv[i], var, eq))
+			|| (!ft_strchr(var, '=') && !ft_strncmp(g_prog.minienv[i], var, ft_strlen(var))
+				&& (g_prog.minienv[i][ft_strlen(var)] == '='
+				|| g_prog.minienv[i][ft_strlen(var)] == '\0')))
 		{
 			ft_free(g_prog.minienv[i]);
 			g_prog.minienv[i] = var;
