@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:21:42 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 23:13:56 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int	getredirs(t_cmdli *cmdli, t_cmd *cmd)
 	i = -1;
 	while (cmd->argv[++i])
 	{
+		if (!ft_strlen(cmd->argv[i]))
+			continue ;
 		if (!getredirser(cmd, &i, qu))
 			return (0);
 		if (!cmd->argv[i])

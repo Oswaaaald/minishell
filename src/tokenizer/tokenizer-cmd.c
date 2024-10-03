@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:26:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 23:36:01 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 23:28:52 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ char	*pullarg(char *str, int qu[2], int *i)
 		return (NULL);
 	while (str[*i + j])
 	{
-		if (str[*i + j] == '"' && !qu[0])
+		if (str[*i + j] == '"' && !qu[0] && j)
 			qu[1] = !qu[1];
-		else if (str[*i + j] == '\'' && !qu[1])
+		else if (str[*i + j] == '\'' && !qu[1] && j)
 			qu[0] = !qu[0];
 		else if (!qu[0] && !qu[1] && str[*i + j] == '|')
 			break ;
