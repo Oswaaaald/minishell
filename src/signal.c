@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:27:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:41:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 00:14:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	sighandler(int sig)
 			rl_on_new_line();
 			rl_redisplay();
 			setbrutestatus(130);
+			g_prog.interupt = 0;
 		}
 		else if (g_prog.status == ST_FINISH)
 		{
