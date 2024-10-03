@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:57 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:56:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*getprompt(void)
 
 	home = ft_getenv("HOME");
 	buff = NULL;
-	if (home && !ft_strncmp(home, g_prog.cwd, ft_strlen(home)))
+	if (home && *home && !ft_strncmp(home, g_prog.cwd, ft_strlen(home)))
 	{
 		home = ft_strjoin("~", g_prog.cwd + ft_strlen(home));
 		if (!home)

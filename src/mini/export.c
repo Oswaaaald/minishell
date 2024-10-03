@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:32 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:46:17 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	miniexport(char **args)
 			continue ;
 		if (i == 1 && args[i][0] == '-')
 			return (exportputerror(0, args[i][1], NULL), 2);
-		else if (!nameisvalid(args[i]))
+		else if (!nameisvalid(args[i]) || ft_strlen(args[i]) == 0)
 			exportputerror(1, 0, args[i]);
 		else
 		{

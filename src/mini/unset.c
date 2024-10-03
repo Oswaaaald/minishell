@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:42:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:38 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:52:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ void	exportputerror(int type, char c, char *s)
 	}
 	else if (type == 1)
 	{
+		write(STDERR_FILENO, "`", 1);
 		write(STDERR_FILENO, s, ft_strlen(s));
-		write(STDERR_FILENO, ": not a valid indetifier\n", 25);
+		write(STDERR_FILENO, "': not a valid indetifier\n", 26);
 	}
 }
 
@@ -41,7 +42,7 @@ int	miniunset(char **args)
 			continue ;
 		if (i == 1 && args[i][0] == '-')
 			return (exportputerror(0, args[i][1], NULL), 2);
-		else if (!nameisvalid(args[i]))
+		else if (!nameisvalid(args[i]) || ft_strlen(args[i]) == 0)
 			exportputerror(1, 0, args[i]);
 		else if (ft_getenv(args[i]))
 		{
