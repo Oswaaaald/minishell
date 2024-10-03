@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:43:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 16:59:10 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:49:11 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	minienv(char **args)
 	int	i;
 
 	if (args[1])
-		return (printf("mishell: env: too many arguments"), 1);
+		return (write(STDERR_FILENO, "mishell: env: too many arguments\n", 33)
+			, 1);
 	i = -1;
 	while (g_prog.minienv[++i])
 	{

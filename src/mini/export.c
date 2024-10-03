@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 13:37:41 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:38:11 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,13 @@ int	miniexport(char **args)
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
 			continue ;
 		if (i == 1 && args[i][0] == '-')
-			return (printf("mishell: export: -%c: invalid option\n",
-					args[i][1]), 2);
+			return (exportputerror(0, args[i][1], NULL), 2);
 		else if (!nameisvalid(args[i]))
-			printf("mishell: export: %s: not a valid indetifier\n", args[i]);
+			exportputerror(1, 0, args[i]);
 		else
 		{
 			if (!ft_setenv(ft_strdup(args[i])))
-				printf("Warning: A malloc has failed");
+				write(STDERR_FILENO, "Warning: A malloc has failed\n", 29);
 			continue ;
 		}
 		togg = 1;
