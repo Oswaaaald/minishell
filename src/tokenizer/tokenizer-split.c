@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer-split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
+/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:30:23 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 19:29:21 by mleonet          ###   ########.fr       */
+/*   Updated: 2024/10/04 15:43:48 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	wordlen(char const *s, int ind)
 	return (count);
 }
 
-static char	**split_process(char const *s, char **res)
+static char	**split_process(t_prog *prog, char const *s, char **res)
 {
 	int	nbword;
 	int	i;
@@ -74,9 +74,9 @@ static char	**split_process(char const *s, char **res)
 	{
 		if (!ft_strchr(" \t\n", s[a]) && nbword)
 		{
-			res[++i] = (char *)ft_malloc(wordlen(s, a) + 1);
+			res[++i] = (char *)ft_malloc(prog, wordlen(s, a) + 1);
 			if (!(res[i]))
-				return (freem(res, i));
+				return (freem(prog, res, i));
 			ft_strlcpy(res[i], s + a, wordlen(s, a) + 1);
 			a = a + wordlen(s, a) - 1;
 		}
@@ -86,14 +86,14 @@ static char	**split_process(char const *s, char **res)
 	return (res);
 }
 
-char	**splitline(char const *s)
+char	**splitline(t_prog *prog, char const *s)
 {
 	char	**res;
 
 	if (!s)
 		return (NULL);
-	res = (char **)ft_malloc((nbwords(s) + 1) * sizeof(char *));
+	res = (char **)ft_malloc(prog, (nbwords(s) + 1) * sizeof(char *));
 	if (!res)
 		return (NULL);
-	return (split_process(s, res));
+	return (split_process(prog, s, res));
 }

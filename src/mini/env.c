@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:43:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:48:12 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	minienv(char **args)
+int	minienv(t_prog *prog, char **args)
 {
 	int	i;
 
@@ -20,10 +20,10 @@ int	minienv(char **args)
 		return (write(STDERR_FILENO, "mishell: env: too many arguments\n", 33)
 			, 1);
 	i = -1;
-	while (g_prog.minienv[++i])
+	while (prog->minienv[++i])
 	{
-		if (ft_strchr(g_prog.minienv[i], '='))
-			printf("%s\n", g_prog.minienv[i]);
+		if (ft_strchr(prog->minienv[i], '='))
+			printf("%s\n", prog->minienv[i]);
 	}
 	return (1);
 }

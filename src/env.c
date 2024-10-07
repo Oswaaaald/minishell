@@ -6,65 +6,65 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 21:56:45 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:21:22 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_getenv(char *s)
+char	*ft_getenv(t_prog *prog, char *s)
 {
 	int		i;
 	char	*res;
 
 	i = -1;
-	if (!g_prog.minienv)
-		return (NULL);
+	if (!prog->minienv)
+		return (printf("test\n"), NULL);
 	if (s[0] == '?' && s[1] == 0)
-		return (ft_itoa(g_prog.lastexit));
-	while (g_prog.minienv[++i])
+		return (ft_itoa(prog, g_interupt));
+	while (prog->minienv[++i])
 	{
-		if (!ft_strncmp(g_prog.minienv[i], s, ft_strlen(s))
-			&& (g_prog.minienv[i][ft_strlen(s)] == '='
-			|| g_prog.minienv[i][ft_strlen(s)] == '\0'))
+		if (!ft_strncmp(prog->minienv[i], s, ft_strlen(s))
+			&& (prog->minienv[i][ft_strlen(s)] == '='
+			|| prog->minienv[i][ft_strlen(s)] == '\0'))
 			break ;
 	}
-	if (!g_prog.minienv[i])
+	if (!prog->minienv[i])
 		return (NULL);
-	res = ft_strchr(g_prog.minienv[i], '=');
+	res = ft_strchr(prog->minienv[i], '=');
 	if (res)
 		return (++res);
-	return (ft_strchr(g_prog.minienv[i], '\0'));
+	return (ft_strchr(prog->minienv[i], '\0'));
 }
 
-int	ft_addenv(char *var)
+int	ft_addenv(t_prog *prog, char *var)
 {
 	int		i;
 	char	**res;
 
 	i = -1;
-	if (g_prog.minienv)
+	if (prog->minienv)
 	{
-		while (g_prog.minienv[++i])
+		while (prog->minienv[++i])
 			;
-		res = ft_malloc(sizeof(char **) * (i + 2));
+		res = ft_malloc(prog, sizeof(char **) * (i + 2));
 	}
 	else
-		res = ft_malloc(sizeof(char **) * (2));
+		res = ft_malloc(prog, sizeof(char **) * (2));
 	if (!res)
 		return (0);
 	i = -1;
-	while (++i >= 0 && g_prog.minienv && g_prog.minienv[i])
-		res[i] = g_prog.minienv[i];
+	while (++i >= 0 && prog->minienv && prog->minienv[i])
+		res[i] = prog->minienv[i];
 	res[i] = var;
 	res[++i] = NULL;
-	if (g_prog.minienv)
-		ft_free(g_prog.minienv);
-	g_prog.minienv = res;
+	if (prog->minienv)
+		ft_free(prog, prog->minienv);
+	prog->minienv = res;
 	return (1);
 }
 
-int	ft_setenv(char *var)
+int	ft_setenv(t_prog *prog, char *var)
 {
 	int	i;
 	int	eq;
@@ -76,55 +76,56 @@ int	ft_setenv(char *var)
 			break ;
 	}
 	i = -1;
-	while (g_prog.minienv && g_prog.minienv[++i])
+	while (prog->minienv && prog->minienv[++i])
 	{
-		if ((ft_strchr(var, '=') && !ft_strncmp(g_prog.minienv[i], var, eq))
+		if ((ft_strchr(var, '=') && !ft_strncmp(prog->minienv[i], var, eq))
 			|| (!ft_strchr(var, '=')
-				&& !ft_strncmp(g_prog.minienv[i], var, ft_strlen(var))
-				&& (g_prog.minienv[i][ft_strlen(var)] == '='
-				|| g_prog.minienv[i][ft_strlen(var)] == '\0')))
+				&& !ft_strncmp(prog->minienv[i], var, ft_strlen(var))
+				&& (prog->minienv[i][ft_strlen(var)] == '='
+				|| prog->minienv[i][ft_strlen(var)] == '\0')))
 		{
-			ft_free(g_prog.minienv[i]);
-			g_prog.minienv[i] = var;
+			ft_free(prog, prog->minienv[i]);
+			prog->minienv[i] = var;
 			return (1);
 		}
 	}
-	return (ft_addenv(var));
+	return (ft_addenv(prog, var));
 }
 
-static int	ft_remenver(char *s, int i, int tog, char **newenv)
+static int	ft_remenver(t_prog *prog, char *s, int i, char **newenv)
 {
-	while (g_prog.minienv[++i])
+	int	tog;
+
+	tog = 0;
+	while (prog->minienv[++i])
 	{
-		if (!ft_strncmp(g_prog.minienv[i], s, ft_strlen(s))
-			&& (g_prog.minienv[i][ft_strlen(s)] == '='
-			|| g_prog.minienv[i][ft_strlen(s)] == '\0'))
+		if (!ft_strncmp(prog->minienv[i], s, ft_strlen(s))
+			&& (prog->minienv[i][ft_strlen(s)] == '='
+			|| prog->minienv[i][ft_strlen(s)] == '\0'))
 		{
-			ft_free(g_prog.minienv[i]);
+			ft_free(prog, prog->minienv[i]);
 			tog = 1;
 		}
 		else
-			newenv[i - tog] = g_prog.minienv[i];
+			newenv[i - tog] = prog->minienv[i];
 	}
-	ft_free(g_prog.minienv);
+	ft_free(prog, prog->minienv);
 	newenv[i - tog] = NULL;
-	g_prog.minienv = newenv;
+	prog->minienv = newenv;
 	return (1);
 }
 
-int	ft_remenv(char *s)
+int	ft_remenv(t_prog *prog, char *s)
 {
 	char	**newenv;
 	int		i;
-	int		tog;
 
 	i = -1;
-	tog = 0;
-	while (g_prog.minienv[++i])
+	while (prog->minienv[++i])
 		;
-	newenv = (char **) ft_malloc(sizeof(char *) * i);
+	newenv = (char **) ft_malloc(prog, sizeof(char *) * i);
 	if (!newenv)
 		return (0);
 	i = -1;
-	return (ft_remenver(s, i, tog, newenv));
+	return (ft_remenver(prog, s, i, newenv));
 }

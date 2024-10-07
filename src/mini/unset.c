@@ -6,15 +6,18 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:42:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:52:22 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:29:38 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exportputerror(int type, char c, char *s)
+void	exportputerror(int cmd, int type, char c, char *s)
 {
-	write(STDERR_FILENO, "mishell: export: ", 17);
+	if (cmd == 0)
+		write(STDERR_FILENO, "mishell: export: ", 17);
+	if (cmd == 1)
+		write(STDERR_FILENO, "mishell: unset: ", 17);
 	if (type == 0)
 	{
 		write(STDERR_FILENO, "-", 1);
@@ -29,7 +32,7 @@ void	exportputerror(int type, char c, char *s)
 	}
 }
 
-int	miniunset(char **args)
+int	miniunset(t_prog *prog, char **args)
 {
 	int	i;
 	int	togg;
@@ -41,12 +44,13 @@ int	miniunset(char **args)
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
 			continue ;
 		if (i == 1 && args[i][0] == '-')
-			return (exportputerror(0, args[i][1], NULL), 2);
-		else if (!nameisvalid(args[i]) || ft_strlen(args[i]) == 0)
-			exportputerror(1, 0, args[i]);
-		else if (ft_getenv(args[i]))
+			return (exportputerror(1, 0, args[i][1], NULL), 2);
+		else if (!nameisvalid(args[i]) || ft_strlen(args[i]) == 0
+			|| ft_strchr(args[i], '='))
+			exportputerror(1, 1, 0, args[i]);
+		else if (ft_getenv(prog, args[i]))
 		{
-			if (!ft_remenv(args[i]))
+			if (!ft_remenv(prog, args[i]))
 				write(STDERR_FILENO, "Warning: A malloc has failed\n", 29);
 			continue ;
 		}

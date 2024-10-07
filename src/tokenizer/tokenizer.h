@@ -6,15 +6,15 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 21:27:54 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:35:15 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		nbcmds(char *line);
-char	**arrayaddback(char **currentarr, char *str);
-void	getcmds(t_cmdli *ret, char **args);
-void	*freem(char **str, int a);
-char	**splitline(char const *s);
-int		remquotes(t_cmd *cmd);
+char	**arrayaddback(t_prog *prog, char **currentarr, char *str);
+int		getcmds(t_prog *prog, t_cmdli *ret, char **args);
+void	*freem(t_prog *prog, char **str, int a);
+char	**splitline(t_prog *prog, char const *s);
+int		remquotes(t_prog *prog, t_cmd *cmd);

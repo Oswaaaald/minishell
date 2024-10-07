@@ -6,18 +6,18 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:55:18 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:44 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:47:00 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	freeprog(void)
+void	freeprog(t_prog *prog)
 {
 	t_list	*tmp;
 	t_list	*crnt;
 
-	crnt = g_prog.mallocs;
+	crnt = prog->mallocs;
 	while (crnt)
 	{
 		tmp = crnt->next;
@@ -29,7 +29,7 @@ void	freeprog(void)
 	rl_clear_history();
 }
 
-void	freecmdli(t_cmdli *cmdli)
+void	freecmdli(t_prog *prog, t_cmdli *cmdli)
 {
 	int		i;
 	t_cmd	*cmd;
@@ -39,20 +39,20 @@ void	freecmdli(t_cmdli *cmdli)
 	{
 		cmd = cmdli->cmds[i];
 		if (cmd->argv)
-			free2d(cmd->argv);
+			free2d(prog, cmd->argv);
 		if (cmd->input)
-			ft_free(cmd->input);
+			ft_free(prog, cmd->input);
 		if (cmd->output)
-			ft_free(cmd->output);
+			ft_free(prog, cmd->output);
 		if (cmd->limmiter)
-			ft_free(cmd->limmiter);
+			ft_free(prog, cmd->limmiter);
 		if (cmd->path)
-			ft_free(cmd->path);
-		ft_free(cmd);
+			ft_free(prog, cmd->path);
+		ft_free(prog, cmd);
 	}
-	ft_free(cmdli->cmds);
-	ft_free(cmdli);
-	g_prog.cmdli = NULL;
+	ft_free(prog, cmdli->cmds);
+	ft_free(prog, cmdli);
+	prog->cmdli = NULL;
 }
 
 void	closefd(int fd[2])

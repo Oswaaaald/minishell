@@ -6,13 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:53:24 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 22:12:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:31:43 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*arrtolst(char **arr)
+t_list	*arrtolst(t_prog *prog, char **arr)
 {
 	int		i;
 	t_list	*tmp;
@@ -27,11 +27,11 @@ t_list	*arrtolst(char **arr)
 			return (NULL);
 		ft_lstadd_back(&final, tmp);
 	}
-	ft_free(arr);
+	ft_free(prog, arr);
 	return (final);
 }
 
-char	*strcjoin(char *s1, char *s2, char fil)
+char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil)
 {
 	char	*ret;
 	int		i;
@@ -41,7 +41,7 @@ char	*strcjoin(char *s1, char *s2, char fil)
 	j = -1;
 	if (!s1 || !s2 || !fil)
 		return (NULL);
-	ret = ft_malloc(strlen(s1) + strlen(s2) + 2);
+	ret = ft_malloc(prog, ft_strlen(s1) + ft_strlen(s2) + 2);
 	if (!ret)
 		return (NULL);
 	while (s1[++i])
@@ -53,7 +53,7 @@ char	*strcjoin(char *s1, char *s2, char fil)
 	return (ret);
 }
 
-char	*pathjoin(char *s1, char *s2, int last)
+char	*pathjoin(t_prog *prog, char *s1, char *s2, int last)
 {
 	char	*ret;
 	int		i;
@@ -61,7 +61,7 @@ char	*pathjoin(char *s1, char *s2, int last)
 
 	if (s1 == NULL)
 		s1 = "/";
-	ret = ft_malloc(strlen(s1) + strlen(s2) + 1 + (last == 0));
+	ret = ft_malloc(prog, ft_strlen(s1) + ft_strlen(s2) + 1 + (last == 0));
 	i = -1;
 	j = -1;
 	while (s1[++i])
@@ -78,7 +78,7 @@ char	*pathjoin(char *s1, char *s2, int last)
 	return (ret);
 }
 
-char	*lstjoin(t_list *lst)
+char	*lstjoin(t_prog *prog, t_list *lst)
 {
 	char	*buff;
 	char	*temp;
@@ -89,13 +89,13 @@ char	*lstjoin(t_list *lst)
 	while (tmp)
 	{
 		temp = buff;
-		buff = pathjoin(buff, (char *) tmp->content, tmp->next == NULL);
+		buff = pathjoin(prog, buff, (char *) tmp->content, tmp->next == NULL);
 		if (!buff)
 			return (free(temp), NULL);
 		if (temp)
-			ft_free(temp);
+			ft_free(prog, temp);
 		tmp = tmp->next;
 	}
-	ft_lstclear(&lst, ft_free);
+	ft_lstclear(prog, &lst, ft_free);
 	return (buff);
 }

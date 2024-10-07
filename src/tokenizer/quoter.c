@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quoter.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:18:57 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:57 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:59:17 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	dothat(char *og, char *new)
 	new[j] = 0;
 }
 
-int	remquotes(t_cmd *cmd)
+int	remquotes(t_prog *prog, t_cmd *cmd)
 {
 	int		i;
 	char	*tmp;
@@ -77,11 +77,12 @@ int	remquotes(t_cmd *cmd)
 	{
 		ft_memset(qu, 0, sizeof(int) * 2);
 		tmp = cmd->argv[i];
-		cmd->argv[i] = ft_malloc(sizeof(char) * (nbchars(cmd->argv[i]) + 1));
+		cmd->argv[i] = ft_malloc(prog,
+				sizeof(char) * (nbchars(cmd->argv[i]) + 1));
 		if (!cmd->argv[i])
 			return (0);
 		dothat(tmp, cmd->argv[i]);
-		ft_free(tmp);
+		ft_free(prog, tmp);
 	}
 	return (1);
 }

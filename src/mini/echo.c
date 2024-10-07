@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:36:06 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:44:24 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:31:30 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	miniecho(char **args)
 	i--;
 	while (args[++i])
 	{
-		write(STDOUT_FILENO, args[i], strlen(args[i]));
+		write(STDOUT_FILENO, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
 			write(STDOUT_FILENO, " ", 1);
 	}

@@ -6,15 +6,15 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 21:36:06 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:44:16 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	doexit(int n)
+void	doexit(t_prog *prog, int n)
 {
-	freeprog();
+	freeprog(prog);
 	exit(n);
 }
 
@@ -25,14 +25,14 @@ void	puterror(char *str)
 	write(STDERR_FILENO, ": numeric argument required\n", 28);
 }
 
-int	miniexit(char **args)
+int	miniexit(t_prog *prog, char **args)
 {
 	int	n;
 	int	i;
 
 	printf("exit\n");
 	if (!args[1])
-		doexit(0);
+		doexit(prog, 0);
 	i = -1;
 	n = 0;
 	while (args[1][++i])
@@ -46,10 +46,10 @@ int	miniexit(char **args)
 	if (n)
 	{
 		puterror(args[1]);
-		doexit(2);
+		doexit(prog, 2);
 	}
 	if (args[2])
 		return (write(2, "bash: exit: too many arguments\n", 31), 1);
-	doexit((char) ft_atoi(args[1]));
+	doexit(prog, (char) ft_atoi(args[1]));
 	return (0);
 }

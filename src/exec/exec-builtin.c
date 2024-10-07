@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:23:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 00:41:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:19:53 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,50 +14,57 @@
 
 int	checkbuiltin(t_cmd *cmdl)
 {
-	if (!strcmp(cmdl->argv[0], "echo"))
+	if (!ft_strncmp(cmdl->argv[0], "echo", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "cd"))
+	else if (!ft_strncmp(cmdl->argv[0], "cd", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "pwd"))
+	else if (!ft_strncmp(cmdl->argv[0], "pwd", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "env"))
+	else if (!ft_strncmp(cmdl->argv[0], "env", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "export"))
+	else if (!ft_strncmp(cmdl->argv[0], "export", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "unset"))
+	else if (!ft_strncmp(cmdl->argv[0], "unset", -1))
 		return (1);
-	else if (!strcmp(cmdl->argv[0], "exit"))
+	else if (!ft_strncmp(cmdl->argv[0], "exit", -1))
 		return (1);
 	return (0);
 }
 
-int	exebuiltin(t_cmd *cmd)
+int	exebuiltin(t_prog *prog, t_cmd *cmd)
 {
-	if (!strcmp(cmd->argv[0], "echo"))
+	if (!ft_strncmp(cmd->argv[0], "echo", -1))
 		return (miniecho(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "cd"))
-		return (minicd(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "pwd"))
-		return (minipwd());
-	else if (!strcmp(cmd->argv[0], "env"))
-		return (minienv(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "export"))
-		return (miniexport(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "unset"))
-		return (miniunset(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "exit"))
-		return (miniexit(cmd->argv));
+	else if (!ft_strncmp(cmd->argv[0], "cd", -1))
+		return (minicd(prog, cmd->argv));
+	else if (!ft_strncmp(cmd->argv[0], "pwd", -1))
+		return (minipwd(prog));
+	else if (!ft_strncmp(cmd->argv[0], "env", -1))
+		return (minienv(prog, cmd->argv));
+	else if (!ft_strncmp(cmd->argv[0], "export", -1))
+		return (miniexport(prog, cmd->argv));
+	else if (!ft_strncmp(cmd->argv[0], "unset", -1))
+		return (miniunset(prog, cmd->argv));
+	else if (!ft_strncmp(cmd->argv[0], "exit", -1))
+		return (miniexit(prog, cmd->argv));
 	return (1);
 }
 
-void	cmdbuiltin(t_cmdli *cmdli, int i)
+int	cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i)
 {
 	t_cmd	*cmd;
+	int		tmp;
 
 	cmd = cmdli->cmds[i];
+	tmp = -2;
 	if (cmd->output)
-		dup2(cmd->fd[1], STDOUT_FILENO);
+		tmp = dup2(cmd->fd[1], STDOUT_FILENO);
+	if (tmp == -1)
+		return (0);
 	if (cmd->input || cmd->limmiter)
-		dup2(cmd->fd[0], STDIN_FILENO);
-	g_prog.lastexit = exebuiltin(cmd);
+		tmp = dup2(cmd->fd[0], STDIN_FILENO);
+	if (tmp == -1)
+		return (0);
+	g_interupt = exebuiltin(prog, cmd);
+	return (1);
 }

@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"libft.h": "c",
-		"signal.h": "c",
-		"history.h": "c",
-		"minishell.h": "c"
-	},
-	"javascript.memoryLimit": 8192
-}

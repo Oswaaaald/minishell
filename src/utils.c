@@ -3,63 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mleonet <mleonet@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:56:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:00:39 by mleonet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*getprompt(void)
+char	*getprompt(t_prog *prog)
 {
 	char	*home;
 	char	*buff;
 
-	home = ft_getenv("HOME");
+	home = ft_getenv(prog, "HOME");
 	buff = NULL;
-	if (home && *home && !ft_strncmp(home, g_prog.cwd, ft_strlen(home)))
+	if (home && *home && !ft_strncmp(home, prog->cwd, ft_strlen(home)))
 	{
-		home = ft_strjoin("~", g_prog.cwd + ft_strlen(home));
+		home = ft_strjoin(prog, "~", prog->cwd + ft_strlen(home));
 		if (!home)
 			return (NULL);
-		buff = ft_strjoin("\033[32;1mmishell\033[0m:\033[34;1m", home);
-		ft_free(home);
+		buff = ft_strjoin(prog, "\033[32;1mmishell\033[0m:\033[34;1m", home);
+		ft_free(prog, home);
 	}
 	else
-		buff = ft_strjoin("\033[32;1mmishell\033[0m:\033[34;1m", g_prog.cwd);
+		buff = ft_strjoin(prog,
+				"\033[32;1mmishell\033[0m:\033[34;1m", prog->cwd);
 	if (!buff)
 		return (NULL);
-	home = ft_strjoin(buff, "\033[0m$ ");
-	ft_free(buff);
+	home = ft_strjoin(prog, buff, "\033[0m$ ");
+	ft_free(prog, buff);
 	if (!home)
 		return (NULL);
 	return (home);
 }
 
-char	*ft_readline(void)
+char	*ft_readline(t_prog *prog)
 {
 	char	*ret;
 	char	*prompt;
 
-	prompt = getprompt();
+	prompt = getprompt(prog);
 	if (!prompt)
 		return (NULL);
 	ret = readline(prompt);
 	if (!ret)
 		return (NULL);
-	ft_malloc_add_ptr(ret);
-	ft_free(prompt);
+	ft_malloc_add_ptr(prog, ret);
+	ft_free(prog, prompt);
 	return (ret);
 }
 
 void	setstatus(int status)
 {
 	if (WIFEXITED(status))
-		g_prog.lastexit = WEXITSTATUS(status);
+		g_interupt = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		g_prog.lastexit = WTERMSIG(status) + 128;
+		g_interupt = WTERMSIG(status) + 128;
 }
 
 int	openfder(t_cmd *cmd, int *fd)
@@ -77,7 +78,7 @@ int	openfder(t_cmd *cmd, int *fd)
 	return (1);
 }
 
-int	openfd(t_cmd *cmd)
+int	openfd(t_prog *prog, t_cmd *cmd)
 {
 	int	*fd;
 
@@ -94,7 +95,7 @@ int	openfd(t_cmd *cmd)
 	if (cmd->limmiter)
 	{
 		close(fd[0]);
-		fd[0] = writeheredoc(cmd->limmiter);
+		fd[0] = writeheredoc(prog, cmd->limmiter);
 		if (fd[0] == -1)
 			return (closefd(fd), 0);
 	}

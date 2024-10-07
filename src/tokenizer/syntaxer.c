@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:05:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 23:07:15 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 12:08:32 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ static int	checkredir(char *str, int *i)
 		|| (str[*i] == '<' && ft_strchr("<>", str[*i + 1])))
 		(*i)++;
 	oldchar = str[*i];
-	while (str[(*i)++] && ft_strchr(" 	\n", str[*i]))
-		;
+	(*i)++;
+	while (str[*i] != 0 && ft_strchr(" 	\n", str[*i]))
+	{
+		++(*i);
+	}
 	if (!str[*i])
 		return (write(2, "mishell: syntax error near ", 28),
 			write(2, "unexpected token `newline'\n", 27), 0);

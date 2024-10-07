@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:14:32 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:32:29 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,24 @@
 # define C_OUT 4
 
 //Mini Commands
-int		minicd(char **args);
+int		minicd(t_prog *prog, char **args);
 int		miniecho(char **args);
-int		minipwd(void);
-int		miniexport(char **args);
-int		miniunset(char **args);
-int		minienv(char **args);
-int		miniexit(char **args);
+int		minipwd(t_prog *prog);
+int		miniexport(t_prog *prog, char **args);
+int		miniunset(t_prog *prog, char **args);
+int		minienv(t_prog *prog, char **args);
+int		miniexit(t_prog *prog, char **args);
 
 //Parsing
 
-char	*ft_readline(void);
-char	*expand(char *str);
-int		translationorwhatevahhandler(char **buff, char *str, int i);
-char	*parsepath(char *path);
-t_cmdli	*tokenize(char *line);
-char	*pather(char *cmd);
-int		getredirs(t_cmdli *cmdli, t_cmd *cmd);
+char	*ft_readline(t_prog *prog);
+char	*expand(t_prog *prog, char *str);
+int		translationorwhatevahhandler(t_prog *prog,
+			char **buff, char *str, int i);
+char	*parsepath(t_prog *prog, char *path);
+t_cmdli	*tokenize(t_prog *prog, char *line);
+char	*pather(t_prog *prog, char *cmd);
+int		getredirs(t_prog *prog, t_cmdli *cmdli, t_cmd *cmd);
 
 //Checker
 
@@ -64,23 +65,23 @@ void	sigheredoc(int sig);
 
 //Exec
 
-int		cmd(t_cmdli *cmdli, int i);
-void	cmdbuiltin(t_cmdli *cmdli, int i);
-int		exebuiltin(t_cmd *cmd);
-void	dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd);
-int		openfd(t_cmd *cmd);
-int		writeheredoc(char *lim);
+int		cmd(t_prog *prog, t_cmdli *cmdli, int i);
+int		cmdbuiltin(t_prog *prog, t_cmdli *cmdli, int i);
+int		exebuiltin(t_prog *prog, t_cmd *cmd);
+int		dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd);
+int		openfd(t_prog *prog, t_cmd *cmd);
+int		writeheredoc(t_prog *prog, char *lim);
 
 //Utils
 
-int		initprog(char **envp);
+int		initprog(t_prog *prog, char **envp);
 
 /**
  * @brief Free's a 2D array's children and the array itself
  * @param arr The 2D array to free
  * @returns Nothing
  */
-void	free2d(char **arr);
+void	free2d(t_prog *prog, char **arr);
 
 /**
  * @brief Returns a duplicate of a string array
@@ -88,7 +89,7 @@ void	free2d(char **arr);
  * @note The array and its children are all malloc'ed
  * @returns A duplicate of the string
  */
-char	**strarrdup(char **arr);
+char	**strarrdup(t_prog *prog, char **arr);
 
 /**
  * @brief Updates or adds a environment variable to the program's array
@@ -97,7 +98,7 @@ char	**strarrdup(char **arr);
  * @retval 1 Operation successful
  * @retval 0 Operation failed
  */
-int		ft_setenv(char *var);
+int		ft_setenv(t_prog *prog, char *var);
 
 /**
  * @brief Get's environment variable from the program's array
@@ -105,7 +106,7 @@ int		ft_setenv(char *var);
  * @note Freeing the returned pointer is not recomended, could brake everything
  * @returns The pointer to the env variable found in programs array
  */
-char	*ft_getenv(char *s);
+char	*ft_getenv(t_prog *prog, char *s);
 
 /**
  * @brief Removes a environment variable from the program's array
@@ -115,7 +116,7 @@ char	*ft_getenv(char *s);
  * @retval 1 Operation Successful
  * @retval 0 Operation failed
  */
-int		ft_remenv(char *s);
+int		ft_remenv(t_prog *prog, char *s);
 
 /**
  * @brief Checks if string has an okay name to potentially be a
@@ -139,7 +140,7 @@ void	setstatus(int status);
  * @brief Free's the program and all un-free'ed pointers found
  * @returns Nothing
  */
-void	freeprog(void);
+void	freeprog(t_prog *prog);
 
 /**
  * @brief Checks if a command is a builtin command
@@ -158,7 +159,7 @@ int		checkbuiltin(t_cmd *cmdl);
  * @note returned pointer is malloc'ed
  * @returns A pointer to the dupped str
  */
-char	*ft_strndup(char *str, int n);
+char	*ft_strndup(t_prog *prog, char *str, int n);
 
 /**
  * @brief Duplicates a string without (omitting) len bytes from start
@@ -168,7 +169,7 @@ char	*ft_strndup(char *str, int n);
  * @returns A pointer to the new str
  * @note Example: `stromit("heyomitwhy", 3, 4)` => `"heywhy"`
  */
-char	*stromit(char *str, int start, int len);
+char	*stromit(t_prog *prog, char *str, int start, int len);
 
 /**
  * @brief Closes two fd's of a int[2]
@@ -186,14 +187,14 @@ void	closefd(int fd[2]);
  * @returns A pointer to the new combined string
  * @note returned pointer is malloc'ed
  */
-char	*strcjoin(char *s1, char *s2, char fil);
+char	*strcjoin(t_prog *prog, char *s1, char *s2, char fil);
 
 /**
  * @brief Tranforms a string array into a linked list
  * @param s1 The string array to be transformed
  * @returns A pointer to the first element of the new linked list
  */
-t_list	*arrtolst(char **arr);
+t_list	*arrtolst(t_prog *prog, char **arr);
 
 /**
  * @brief Join's a linked list into a string array
@@ -201,7 +202,7 @@ t_list	*arrtolst(char **arr);
  * @returns A pointer to joined string
  * @note returned pointer is malloc'ed
  */
-char	*lstjoin(t_list *lst);
+char	*lstjoin(t_prog *prog, t_list *lst);
 
 /**
  * @brief Check's if a string points to a directory
@@ -217,12 +218,16 @@ int		isdir(char *path);
  * @param cmdli The cmdli to free
  * @returns Nothing
  */
-void	freecmdli(t_cmdli *cmdli);
+void	freecmdli(t_prog *prog, t_cmdli *cmdli);
 
-void	exportputerror(int type, char c, char *s);
+void	exportputerror(int cmd, int type, char c, char *s);
 
 int		checkerputerror(int type, char *s, int ret);
 
 void	setbrutestatus(int stat);
+
+int		getendofvar(char *str, int i, int si);
+
+void	updatequotes(int quotes[2], char c);
 
 #endif

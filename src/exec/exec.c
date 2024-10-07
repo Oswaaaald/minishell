@@ -6,45 +6,53 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/02 00:19:00 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:41:55 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd)
+int	dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd)
 {
 	t_cmd	*cmd;
+	int		tmp;
 
 	cmd = cmdli->cmds[i];
+	tmp = 0;
 	if (cmd->limmiter || cmd->input)
-		dup2(cmd->fd[0], STDIN_FILENO);
+		tmp = dup2(cmd->fd[0], STDIN_FILENO);
 	else if (i && prev_fd != -1)
-		dup2(prev_fd, STDIN_FILENO);
+		tmp = dup2(prev_fd, STDIN_FILENO);
+	if (tmp == -1)
+		return (0);
 	if (cmd->output)
-		dup2(cmd->fd[1], STDOUT_FILENO);
+		tmp = dup2(cmd->fd[1], STDOUT_FILENO);
 	else if (cmdli->cmds[i + 1])
-		dup2(pfd[1], STDOUT_FILENO);
+		tmp = dup2(pfd[1], STDOUT_FILENO);
+	if (tmp == -1)
+		return (0);
+	return (1);
 }
 
-void	cmdchild(t_cmdli *cmdli, int pipes[2], int i, int prev_fd)
+void	cmdchild(t_prog *prog, t_cmdli *cmdli, int pipes[2], int i[2])
 {
 	t_cmd	*cmd;
 
-	cmd = cmdli->cmds[i];
-	dupfds(cmdli, pipes, i, prev_fd);
+	cmd = cmdli->cmds[i[0]];
+	if (!dupfds(cmdli, pipes, i[0], i[1]))
+		exit(EXIT_FAILURE);
 	closefd(cmd->fd);
 	closefd(pipes);
 	if (!checkbuiltin(cmd))
 	{
-		if (execve(cmd->path, cmd->argv, g_prog.minienv))
+		if (execve(cmd->path, cmd->argv, prog->minienv))
 			exit(EXIT_FAILURE);
 	}
 	else
-		exit(exebuiltin(cmd));
+		exit(exebuiltin(prog, cmd));
 }
 
-int	cmd(t_cmdli *cmdli, int i)
+int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 {
 	pid_t		pid;
 	t_cmd		*cmd;
@@ -54,10 +62,13 @@ int	cmd(t_cmdli *cmdli, int i)
 	cmd = cmdli->cmds[i];
 	if (i == 0)
 		prev_fd = -1;
-	pipe(pipes);
+	if (pipe(pipes) == -1)
+		return (0);
 	pid = fork();
+	if (pid == -1)
+		return (closefd(pipes), 0);
 	if (!pid)
-		cmdchild(cmdli, pipes, i, prev_fd);
+		cmdchild(prog, cmdli, pipes, (int [2]){i, prev_fd});
 	if (!cmdli->cmds[i + 1] && pid > 0)
 		cmdli->lastpid = pid;
 	cmd->pid = pid;
@@ -68,9 +79,10 @@ int	cmd(t_cmdli *cmdli, int i)
 	return (1);
 }
 
-void	hdchild(char *lim, int fd[2])
+void	hdchild(t_prog *prog, char *lim, int fd[2])
 {
 	char	*buff;
+	char	*tmp;
 
 	close(fd[0]);
 	signal(SIGINT, sigheredoc);
@@ -79,17 +91,21 @@ void	hdchild(char *lim, int fd[2])
 		buff = readline("> ");
 		if (!buff)
 			exit(EXIT_FAILURE);
-		if (strcmp(buff, lim) == 0)
+		tmp = expand(prog, buff);
+		if (!tmp)
+			exit(EXIT_FAILURE);
+		if (ft_strncmp(buff, lim, -1) == 0)
 			break ;
-		write(fd[1], buff, strlen(buff));
+		ft_free(prog, buff);
+		write(fd[1], tmp, ft_strlen(tmp));
 		write(fd[1], "\n", 1);
-		ft_free(buff);
+		ft_free(prog, tmp);
 	}
 	close(fd[1]);
 	exit(EXIT_SUCCESS);
 }
 
-int	writeheredoc(char *lim)
+int	writeheredoc(t_prog *prog, char *lim)
 {
 	int		fd[2];
 	int		ret;
@@ -98,15 +114,15 @@ int	writeheredoc(char *lim)
 	if (pipe(fd) == -1)
 		return (-1);
 	ret = 0;
-	g_prog.status = ST_HEDOC;
+	g_interupt = ST_HEDOC;
 	pid = fork();
 	if (pid == -1)
 		return (-1);
 	if (pid == 0)
-		hdchild(lim, fd);
+		hdchild(prog, lim, fd);
 	close(fd[1]);
 	wait(&ret);
-	g_prog.status = ST_IDLE;
+	g_interupt = ST_IDLE;
 	if (ret)
 		return (-1);
 	return (fd[0]);

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:24:51 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:34:30 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,18 @@ int	openredir(t_cmd *cmd)
 	return (1);
 }
 
-int	malloccmdli(t_cmdli *ret, int i)
+int	malloccmdli(t_prog *prog, t_cmdli *ret, int i)
 {
 	i = 0;
 	while (i < ret->nbcmds)
 	{
-		ret->cmds[i] = ft_malloc(sizeof(t_cmd));
+		ret->cmds[i] = ft_malloc(prog, sizeof(t_cmd));
 		if (!ret->cmds[i])
 		{
 			while (i-- > 0)
-				ft_free(ret->cmds[i]);
-			ft_free(ret->cmds);
-			ft_free(ret);
+				ft_free(prog, ret->cmds[i]);
+			ft_free(prog, ret->cmds);
+			ft_free(prog, ret);
 			return (0);
 		}
 		ret->cmds[i]->argv = NULL;
@@ -65,26 +65,27 @@ int	malloccmdli(t_cmdli *ret, int i)
 	return (1);
 }
 
-t_cmdli	*fillcmdli(char *line, t_cmdli *ret, int i)
+t_cmdli	*fillcmdli(t_prog *prog, char *line, t_cmdli *ret, int i)
 {
 	char	**splitargs;
 	int		tmp;
 
-	splitargs = splitline(line);
+	splitargs = splitline(prog, line);
 	if (!*splitargs)
 	{
 		ret->nbcmds = 0;
-		return (ft_free(ret->cmds[0]), ret);
+		return (ft_free(prog, ret->cmds[0]), ret);
 	}
-	getcmds(ret, splitargs);
-	free2d(splitargs);
+	if (!getcmds(prog, ret, splitargs))
+		return (freecmdli(prog, ret), NULL);
+	free2d(prog, splitargs);
 	i = -1;
 	while (ret->cmds[++i])
 	{
-		if (!getredirs(ret, ret->cmds[i]))
+		if (!getredirs(prog, ret, ret->cmds[i]))
 			return (setbrutestatus(1), NULL);
-		remquotes(ret->cmds[i]);
-		ret->cmds[i]->path = pather(ret->cmds[i]->argv[0]);
+		remquotes(prog, ret->cmds[i]);
+		ret->cmds[i]->path = pather(prog, ret->cmds[i]->argv[0]);
 	}
 	tmp = checkcmd(ret);
 	if (tmp)
@@ -92,26 +93,26 @@ t_cmdli	*fillcmdli(char *line, t_cmdli *ret, int i)
 	return (ret);
 }
 
-t_cmdli	*actuallytokenize(char *line)
+t_cmdli	*actuallytokenize(t_prog *prog, char *line)
 {
 	t_cmdli	*ret;
 	int		i;
 
 	if (!checksyntax(line))
 		return (setbrutestatus(2), NULL);
-	ret = ft_malloc(sizeof(t_cmdli));
+	ret = ft_malloc(prog, sizeof(t_cmdli));
 	if (!ret)
 		return (NULL);
 	ret->nbcmds = nbcmds(line);
-	ret->cmds = ft_malloc(sizeof(t_cmd *) * (ret->nbcmds + 1));
+	ret->cmds = ft_malloc(prog, sizeof(t_cmd *) * (ret->nbcmds + 1));
 	if (!ret->cmds)
-		return (ft_free(ret), NULL);
+		return (ft_free(prog, ret), NULL);
 	i = 0;
-	malloccmdli(ret, i);
-	return (fillcmdli(line, ret, i));
+	malloccmdli(prog, ret, i);
+	return (fillcmdli(prog, line, ret, i));
 }
 
-t_cmdli	*tokenize(char *line)
+t_cmdli	*tokenize(t_prog *prog, char *line)
 {
 	char	*eline;
 	t_cmdli	*ret;
@@ -121,10 +122,10 @@ t_cmdli	*tokenize(char *line)
 	if (!line)
 		return (NULL);
 	add_history(line);
-	eline = expand(line);
-	ret = actuallytokenize(eline);
-	ft_free(eline);
+	eline = expand(prog, line);
+	ret = actuallytokenize(prog, eline);
+	ft_free(prog, eline);
 	if (!togg)
-		ft_free(line);
+		ft_free(prog, line);
 	return (ret);
 }

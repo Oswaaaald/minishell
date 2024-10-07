@@ -6,40 +6,35 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:42:21 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/01 22:31:28 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:48:32 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	getendofvar(char *str, int i, int si)
+void	updatequotes(int quotes[2], char c)
 {
-	while (str[++i])
-	{
-		if (str[i] == '?' && si == i - 1)
-		{
-			i++;
-			break ;
-		}
-		if ((i == si + 1 && !(ft_isalpha(str[i]) || str[i] == '_'))
-			|| (i > 0 && !(ft_isalnum(str[i]) || str[i] == '_')))
-			break ;
-	}
-	return (i);
+	if (c == '"' && !quotes[0])
+		quotes[1] = !quotes[1];
+	if (c == '\'' && !quotes[1])
+		quotes[0] = !quotes[0];
 }
 
-int	expandvarer(char c, char *str, int i[2], char **buff)
+int	expandvarer(t_prog *prog, char *str, int i[2], char **buff)
 {
+	char	c;
+
+	c = str[i[0]];
 	if (i[1] == i[0] - 1 && ft_isdigit(str[i[0]]))
 		return (i[0] + 1);
 	str[i[0]] = '\0';
-	if (ft_getenv(&str[i[1] + 1]))
-		*buff = ft_strjoin(*buff, ft_getenv(&str[i[1] + 1]));
+	if (ft_getenv(prog, &str[i[1] + 1]))
+		*buff = ft_strjoin(prog, *buff, ft_getenv(prog, &str[i[1] + 1]));
 	str[i[0]] = c;
 	return (i[0]);
 }
 
-int	expandvar(char **buff, char *str, int i)
+int	expandvar(t_prog *prog, char **buff, char *str, int i)
 {
 	int		si;
 	char	*tmp;
@@ -48,12 +43,12 @@ int	expandvar(char **buff, char *str, int i)
 	si = i;
 	str[i] = '\0';
 	if (!*buff)
-		*buff = ft_strdup(str);
+		*buff = ft_strdup(prog, str);
 	else
 	{
 		tmp = *buff;
-		*buff = ft_strjoin(*buff, str);
-		ft_free(tmp);
+		*buff = ft_strjoin(prog, *buff, str);
+		ft_free(prog, tmp);
 	}
 	str[i] = '$';
 	i = getendofvar(str, i, si);
@@ -61,43 +56,42 @@ int	expandvar(char **buff, char *str, int i)
 	if (si == i - 1 && !ft_isdigit(str[i]))
 	{
 		tmp = *buff;
-		*buff = ft_strjoin(*buff, "$");
-		ft_free(tmp);
+		*buff = ft_strjoin(prog, *buff, "$");
+		ft_free(prog, tmp);
 		return (i);
 	}
-	return (expandvarer(c, str, (int [2]){i, si}, buff));
+	return (expandvarer(prog, str, (int [2]){i, si}, buff));
 }
 
-char	*expander(char *str, int i, int last, char *buff)
+char	*expander(t_prog *prog, char *str, int last, char *buff)
 {
 	int	quotes[2];
+	int	i;
 
+	i = -1;
 	ft_memset(quotes, 0, sizeof(int) * 2);
 	while (str[++i])
 	{
-		if (str[i] == '"' && !quotes[0])
-			quotes[1] = !quotes[1];
-		if (str[i] == '\'' && !quotes[1])
-			quotes[0] = !quotes[0];
+		updatequotes(quotes, str[i]);
 		if (str[i] == '$' && ft_strchr("\"'", str[i + 1]) && str[i + 1] != 0)
 		{
 			if (!quotes[0] && !quotes[1])
-				last = last + translationorwhatevahhandler(&buff,
+				last = last + translationorwhatevahhandler(prog, &buff,
 						str + last, i - last);
 			continue ;
 		}
 		if (str[i] == '$' && !quotes[0])
 		{
-			last = last + expandvar(&buff, &(str[last]), i - last);
+			last = last + expandvar(prog, &buff, &(str[last]), i - last);
 			i = last - 1;
 		}
 	}
 	if (!buff)
-		return (ft_strdup(str));
-	return (ft_strjoin(buff, &str[last]));
+		return (ft_strdup(prog, str));
+	return (ft_strjoin(prog, buff, &str[last]));
 }
 
-char	*expand(char *str)
+char	*expand(t_prog *prog, char *str)
 {
 	int		i;
 	char	*buff;
@@ -106,5 +100,5 @@ char	*expand(char *str)
 	i = -1;
 	buff = NULL;
 	last = 0;
-	return (expander(str, i, last, buff));
+	return (expander(prog, str, last, buff));
 }

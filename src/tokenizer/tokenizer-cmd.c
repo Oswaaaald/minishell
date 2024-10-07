@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 23:26:01 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 23:43:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:33:43 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	nbcmds(char *line)
 	return (ret);
 }
 
-char	**arrayaddback(char **currentarr, char *str)
+char	**arrayaddback(t_prog *prog, char **currentarr, char *str)
 {
 	char	**retarr;
 	int		i;
@@ -41,7 +41,7 @@ char	**arrayaddback(char **currentarr, char *str)
 	i = 0;
 	while (currentarr && currentarr[i])
 		i++;
-	retarr = (char **) ft_malloc(sizeof(char *) * (i + 2));
+	retarr = (char **) ft_malloc(prog, sizeof(char *) * (i + 2));
 	if (!retarr)
 		return (NULL);
 	i = 0;
@@ -52,11 +52,11 @@ char	**arrayaddback(char **currentarr, char *str)
 	}
 	retarr[i] = str;
 	retarr[i + 1] = NULL;
-	ft_free(currentarr);
+	ft_free(prog, currentarr);
 	return (retarr);
 }
 
-char	*pullarg(char *str, int qu[2], int *i)
+char	*pullarg(t_prog *prog, char *str, int qu[2], int *i)
 {
 	int		j;
 	char	*arg;
@@ -76,12 +76,12 @@ char	*pullarg(char *str, int qu[2], int *i)
 			break ;
 		j++;
 	}
-	arg = ft_substr(str, *i, j);
+	arg = ft_substr(prog, str, *i, j);
 	*i += j - 1;
 	return (arg);
 }
 
-void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
+int	arghandle(t_prog *prog, t_cmdli *ret, char *arg, int *cmdi)
 {
 	int		i;
 	int		qu[2];
@@ -93,10 +93,7 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 	current_cmd = ret->cmds[*cmdi];
 	while (arg[++i])
 	{
-		if (arg[i] == '"' && !qu[0])
-			qu[1] = !qu[1];
-		else if (arg[i] == '\'' && !qu[1])
-			qu[0] = !qu[0];
+		updatequotes(qu, arg[i]);
 		if (!qu[0] && !qu[1] && arg[i] == '|')
 		{
 			(*cmdi)++;
@@ -104,13 +101,16 @@ void	arghandle(t_cmdli *ret, char *arg, int *cmdi)
 		}
 		else if (arg[i] != '|')
 		{
-			tmp = pullarg(arg, qu, &i);
-			current_cmd->argv = arrayaddback(current_cmd->argv, tmp);
+			tmp = pullarg(prog, arg, qu, &i);
+			if (!tmp)
+				return (0);
+			current_cmd->argv = arrayaddback(prog, current_cmd->argv, tmp);
 		}
 	}
+	return (1);
 }
 
-void	getcmds(t_cmdli *ret, char **args)
+int	getcmds(t_prog *prog, t_cmdli *ret, char **args)
 {
 	int		i;
 	int		cmdi;
@@ -119,7 +119,9 @@ void	getcmds(t_cmdli *ret, char **args)
 	cmdi = 0;
 	while (args[i])
 	{
-		arghandle(ret, args[i], &cmdi);
+		if (!arghandle(prog, ret, args[i], &cmdi))
+			return (0);
 		i++;
 	}
+	return (1);
 }

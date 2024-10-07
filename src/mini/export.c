@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 22:46:17 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:51:42 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ void	putdeclare(char *s)
 	write(STDOUT_FILENO, "\n", 1);
 }
 
-void	expshowall(void)
+void	expshowall(t_prog *prog)
 {
 	int		i;
 	char	**envdup;
 
 	i = -1;
-	envdup = strarrdup(g_prog.minienv);
+	envdup = strarrdup(prog, prog->minienv);
 	if (!envdup)
 		return ;
 	envdup = strarrsort(envdup);
@@ -90,13 +90,13 @@ int	nameisvalid(char *s)
 	return (1);
 }
 
-int	miniexport(char **args)
+int	miniexport(t_prog *prog, char **args)
 {
 	int	i;
 	int	togg;
 
 	if (!args[1])
-		return (expshowall(), 0);
+		return (expshowall(prog), 0);
 	i = 0;
 	togg = 0;
 	while (args[++i])
@@ -104,12 +104,12 @@ int	miniexport(char **args)
 		if (i == 1 && !ft_strncmp(args[i], "--", -1))
 			continue ;
 		if (i == 1 && args[i][0] == '-')
-			return (exportputerror(0, args[i][1], NULL), 2);
+			return (exportputerror(0, 0, args[i][1], NULL), 2);
 		else if (!nameisvalid(args[i]) || ft_strlen(args[i]) == 0)
-			exportputerror(1, 0, args[i]);
+			exportputerror(0, 1, 0, args[i]);
 		else
 		{
-			if (!ft_setenv(ft_strdup(args[i])))
+			if (!ft_setenv(prog, ft_strdup(prog, args[i])))
 				write(STDERR_FILENO, "Warning: A malloc has failed\n", 29);
 			continue ;
 		}

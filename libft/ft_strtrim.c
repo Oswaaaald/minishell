@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 10:50:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/03 16:47:08 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:38:07 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	getlen(char *start, char const *s1, char const *set)
 	return (len);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(t_prog *prog, char const *s1, char const *set)
 {
 	char	*res;
 	char	*start;
@@ -38,8 +38,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 		start++;
 	len = getlen(start, s1, set);
 	if (len < 1)
-		return (ft_strdup(""));
-	res = (char *)ft_malloc((len + 1) * sizeof(char));
+		return (ft_strdup(prog, ""));
+	res = (char *)ft_malloc(prog, (len + 1) * sizeof(char));
 	if (!res)
 		return ((void *)0);
 	i = 0;
