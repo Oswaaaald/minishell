@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:20:38 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:41:03 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	runprog(t_prog *prog, int i, int j)
 	int	status;
 
 	i = 0;
-	prog->status = ST_RUN;
 	while (i < prog->cmdli->nbcmds)
 	{
 		if (checkbuiltin(prog->cmdli->cmds[i])
@@ -73,11 +72,11 @@ int	runprog(t_prog *prog, int i, int j)
 		else
 			status = cmd(prog, prog->cmdli, i);
 		if (!status)
-			return (0);
+			return (1);
 		i++;
 	}
 	j = -1;
-	while (++j < i)
+	while (++j < i && !(checkbuiltin(prog->cmdli->cmds[0]) && prog->cmdli->nbcmds == 1))
 	{
 		waitpid(prog->cmdli->cmds[j]->pid, &status, 0);
 		if (prog->cmdli->cmds[j]->pid == prog->cmdli->lastpid)

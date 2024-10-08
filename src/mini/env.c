@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:43:17 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/04 12:48:12 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:38:07 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ int	minienv(t_prog *prog, char **args)
 		if (ft_strchr(prog->minienv[i], '='))
 			printf("%s\n", prog->minienv[i]);
 	}
-	return (1);
+	return (0);
 }

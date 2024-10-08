@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:34:30 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:04:06 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,18 +114,21 @@ t_cmdli	*actuallytokenize(t_prog *prog, char *line)
 
 t_cmdli	*tokenize(t_prog *prog, char *line)
 {
-	char	*eline;
 	t_cmdli	*ret;
-	int		togg;
+	int		i;
 
-	togg = 0;
+	i = -1;
 	if (!line)
 		return (NULL);
 	add_history(line);
-	eline = expand(prog, line);
-	ret = actuallytokenize(prog, eline);
-	ft_free(prog, eline);
-	if (!togg)
-		ft_free(prog, line);
+	ret = actuallytokenize(prog, line);
+	if (!ret)
+		return (ft_free(prog, line), NULL);
+	while (ret->cmds[++i])
+	{
+		if (!expandcmd(prog, ret->cmds[i]))
+			return (ft_free(prog, line), freecmdli(prog, ret), NULL);
+	}
+	ft_free(prog, line);
 	return (ret);
 }

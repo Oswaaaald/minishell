@@ -6,11 +6,12 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 22:31:14 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 13:51:45 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:59:26 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "tokenizer.h"
 
 int	translationorwhatevahhandler(t_prog *prog, char **buff, char *str, int i)
 {
@@ -43,4 +44,28 @@ int	getendofvar(char *str, int i, int si)
 			break ;
 	}
 	return (i);
+}
+
+void	updatestr(t_prog *prog, int *status, char **str, char *new)
+{
+	char	*tmp;
+
+	if (new == NULL)
+	{
+		*status = -2;
+		return ;
+	}
+	tmp = *str;
+	*str = new;
+	ft_free(prog, tmp);
+}
+
+char	*expandstr(t_prog *prog, char *str)
+{
+	int		last;
+	char	*buff;
+
+	last = 0;
+	buff = NULL;
+	return (expander(prog, str, last, buff));
 }

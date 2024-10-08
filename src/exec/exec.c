@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:41:55 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:59:50 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	hdchild(t_prog *prog, char *lim, int fd[2])
 		buff = readline("> ");
 		if (!buff)
 			exit(EXIT_FAILURE);
-		tmp = expand(prog, buff);
+		tmp = expandstr(prog, buff);
 		if (!tmp)
 			exit(EXIT_FAILURE);
 		if (ft_strncmp(buff, lim, -1) == 0)
@@ -122,7 +122,6 @@ int	writeheredoc(t_prog *prog, char *lim)
 		hdchild(prog, lim, fd);
 	close(fd[1]);
 	wait(&ret);
-	g_interupt = ST_IDLE;
 	if (ret)
 		return (-1);
 	return (fd[0]);

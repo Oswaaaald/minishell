@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:32:29 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:57:28 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ int		miniexit(t_prog *prog, char **args);
 //Parsing
 
 char	*ft_readline(t_prog *prog);
-char	*expand(t_prog *prog, char *str);
+int		expandcmd(t_prog *prog, t_cmd *cmd);
+char	*expandstr(t_prog *prog, char *str);
 int		translationorwhatevahhandler(t_prog *prog,
 			char **buff, char *str, int i);
 char	*parsepath(t_prog *prog, char *path);
@@ -229,5 +230,7 @@ void	setbrutestatus(int stat);
 int		getendofvar(char *str, int i, int si);
 
 void	updatequotes(int quotes[2], char c);
+
+void	updatestr(t_prog *prog, int *status, char **str, char *new);
 
 #endif

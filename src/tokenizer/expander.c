@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:42:21 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 13:48:32 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:00:01 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 {
 	int		si;
 	char	*tmp;
-	char	c;
+	//char	c;
 
 	si = i;
 	str[i] = '\0';
@@ -52,7 +52,7 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 	}
 	str[i] = '$';
 	i = getendofvar(str, i, si);
-	c = str[i];
+	//c = str[i];
 	if (si == i - 1 && !ft_isdigit(str[i]))
 	{
 		tmp = *buff;
@@ -91,7 +91,7 @@ char	*expander(t_prog *prog, char *str, int last, char *buff)
 	return (ft_strjoin(prog, buff, &str[last]));
 }
 
-char	*expand(t_prog *prog, char *str)
+int	expandcmd(t_prog *prog, t_cmd *cmd)
 {
 	int		i;
 	char	*buff;
@@ -100,5 +100,19 @@ char	*expand(t_prog *prog, char *str)
 	i = -1;
 	buff = NULL;
 	last = 0;
-	return (expander(prog, str, last, buff));
+	while (i != -2 && cmd->argv[++i])
+		updatestr(prog, &i, &cmd->argv[i],
+			expander(prog, cmd->argv[i], last, buff));
+	if (cmd->limmiter)
+		updatestr(prog, &i, &cmd->limmiter,
+			expander(prog, cmd->limmiter, last, buff));
+	if (cmd->input)
+		updatestr(prog, &i, &cmd->input,
+			expander(prog, cmd->input, last, buff));
+	if (cmd->output)
+		updatestr(prog, &i, &cmd->output,
+			expander(prog, cmd->output, last, buff));
+	if (i == -2)
+		return (0);
+	return (1);
 }

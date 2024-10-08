@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:44:16 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:26:09 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,41 @@ void	puterror(char *str)
 	write(STDERR_FILENO, ": numeric argument required\n", 28);
 }
 
+static int	getsign(int i)
+{
+	if (i == 0)
+		return (-1);
+	return (1);
+}
+
+int	isoverflow(char	*str)
+{
+	long long int	res;
+	int				i;
+	int				sign;
+	long long int	temp;
+
+	i = -1;
+	res = 0;
+	sign = 1;
+	while ((str[++i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		sign = (str[i] == '+');
+		i++;
+	}
+	while (ft_isdigit(str[i]))
+	{
+		temp = res;
+		res = (res * 10) + getsign(sign) * (str[i] - 48);
+		if ((res > temp && sign == 0) || (res < temp && sign == 1))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	miniexit(t_prog *prog, char **args)
 {
 	int	n;
@@ -37,13 +72,11 @@ int	miniexit(t_prog *prog, char **args)
 	n = 0;
 	while (args[1][++i])
 	{
-		if (i == 0 && (args[1][i] != '+' && args[1][i] != '-' &&
-			!ft_isdigit(args[1][i])))
-			n = 1;
-		else if (i > 0 && !ft_isdigit(args[1][i]))
+		if ((i == 0 && (args[1][i] != '+' && args[1][i] != '-' &&
+			!ft_isdigit(args[1][i]))) || (i > 0 && !ft_isdigit(args[1][i])))
 			n = 1;
 	}
-	if (n)
+	if (n || isoverflow(args[1]))
 	{
 		puterror(args[1]);
 		doexit(prog, 2);

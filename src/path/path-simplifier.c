@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 11:19:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/04 14:52:55 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:26:52 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*parsepath(t_prog *prog, char *path)
 	char	**paths;
 	t_list	*pathlst;
 	t_list	*tmp;
-	t_list	*buf;
+	//t_list	*buf;
 
 	if (!ft_strncmp(path, "-", -1))
 		return (ft_strdup(prog, "-"));
@@ -99,6 +99,6 @@ char	*parsepath(t_prog *prog, char *path)
 	if (!pathlst)
 		return (ft_free(prog, path), free2d(prog, paths), NULL);
 	tmp = pathlst;
-	buf = NULL;
+	//buf = NULL;
 	return (parsepather(prog, tmp, pathlst, path));
 }
