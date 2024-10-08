@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 16:59:50 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:58:45 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	hdchild(t_prog *prog, char *lim, int fd[2])
 	{
 		buff = readline("> ");
 		if (!buff)
-			exit(EXIT_FAILURE);
+			exit(EXIT_SUCCESS);
 		tmp = expandstr(prog, buff);
 		if (!tmp)
 			exit(EXIT_FAILURE);

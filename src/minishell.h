@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 16:57:28 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:20:58 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		writeheredoc(t_prog *prog, char *lim);
 
 //Utils
 
-int		initprog(t_prog *prog, char **envp);
+int		initprog(t_prog *prog, char **envp, int stds[2]);
 
 /**
  * @brief Free's a 2D array's children and the array itself

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 14:53:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:11:09 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	openfd(t_prog *prog, t_cmd *cmd)
 		close(fd[0]);
 		fd[0] = writeheredoc(prog, cmd->limmiter);
 		if (fd[0] == -1)
-			return (printf("recieved signal"), closefd(fd), 0);
+			return (closefd(fd), 0);
 	}
 	return (openfder(cmd, fd));
 }

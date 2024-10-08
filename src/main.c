@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 14:41:03 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:58:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	getcmdli(t_prog *prog)
 	}
 }
 
-int	openfds(t_prog *prog, int stds[2])
+int	openfds(t_prog *prog)
 {
 	int	i;
 	int	togg;
@@ -45,7 +45,6 @@ int	openfds(t_prog *prog, int stds[2])
 	{
 		if (!openfd(prog, prog->cmdli->cmds[i]))
 		{
-			closefd(stds);
 			while (i < prog->cmdli->nbcmds)
 				ft_free(prog, prog->cmdli->cmds[i++]);
 			ft_free(prog, prog->cmdli->cmds);
@@ -54,8 +53,6 @@ int	openfds(t_prog *prog, int stds[2])
 			break ;
 		}
 	}
-	if (!togg)
-		g_interupt = -1;
 	return (!togg);
 }
 
@@ -89,28 +86,23 @@ int	runprog(t_prog *prog, int i, int j)
 int	resetloop(t_prog *prog, int stds[2])
 {
 	prog->status = ST_IDLE;
-	if (g_interupt != -3)
-	{
-		if (dup2(stds[0], STDIN_FILENO) == -1)
-			return (0);
-		if (dup2(stds[1], STDOUT_FILENO) == -1)
-			return (0);
-		close(stds[0]);
-		close(stds[1]);
-	}
-	else
-		g_interupt = 0;
+	if (dup2(stds[0], STDIN_FILENO) == -1)
+		return (printf("%d\n", stds[0]), 0);
+	if (dup2(stds[1], STDOUT_FILENO) == -1)
+		return (0);
+	close(stds[0]);
+	close(stds[1]);
+	if (g_interupt == 130 || g_interupt == 131)
+		printf("\n");
+	signal(SIGQUIT, SIG_IGN);
+	if (prog->cmdli)
+		freecmdli(prog, prog->cmdli);
 	stds[0] = dup(STDIN_FILENO);
 	if (stds[0] == -1)
 		return (0);
 	stds[1] = dup(STDOUT_FILENO);
 	if (stds[1] == -1)
 		return (0);
-	if (g_interupt == 130 || g_interupt == 131)
-		printf("\n");
-	signal(SIGQUIT, SIG_IGN);
-	if (prog->cmdli)
-		freecmdli(prog, prog->cmdli);
 	return (1);
 }
 
@@ -125,18 +117,18 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	i = 0;
 	j = 0;
-	if (!initprog(&prog, envp))
+	if (!initprog(&prog, envp, stds))
 		return (write(2, "mishell: Init error\n", 20));
 	while (1)
 	{
-		if (!resetloop(&prog, stds))
-			return (freeprog(&prog), 0);
 		if (!getcmdli(&prog))
 			return (0);
-		if (!openfds(&prog, stds))
+		if (!openfds(&prog))
 			continue ;
 		signal(SIGQUIT, sighandler);
 		if (!runprog(&prog, i, j))
+			return (freeprog(&prog), 0);
+		if (!resetloop(&prog, stds))
 			return (freeprog(&prog), 0);
 	}
 	return (0);

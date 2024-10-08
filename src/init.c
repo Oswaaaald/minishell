@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 15:47:58 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:19:45 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	updateshlvl(t_prog *prog)
 	return (ft_free(prog, buff), 1);
 }
 
-int	initprog(t_prog *prog, char **envp)
+int	initprog(t_prog *prog, char **envp, int stds[2])
 {
 	prog->mallocs = NULL;
 	if (!*envp)
@@ -87,6 +87,12 @@ int	initprog(t_prog *prog, char **envp)
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
+	stds[0] = dup(STDIN_FILENO);
+	if (stds[0] == -1)
+		return (0);
+	stds[1] = dup(STDOUT_FILENO);
+	if (stds[1] == -1)
+		return (0);
 	g_interupt = -3;
 	prog->cmdli = NULL;
 	return (1);

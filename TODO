@@ -1,6 +1,4 @@
-error parsing = 258 mais return 2 (faire a 19 pour check)
-souci signaux heredoc sigint et ctrl+d qui quitte le programme
-export dans le cas ou une var existe avec un contenue et un autre export est appele avec la var sans contenue elle ne doit pas effeacer le contenue existant
+error export dans le cas ou une var existe avec un contenue et un autre export est appele avec la var sans contenue elle ne doit pas effeacer le contenue existant
 dans le cas de env -i un "test" apparait (reste de debbug?)
 reddirection dans le cas de plusieur sourcd de lecture le here_doc si non final, n'est pas execute alors qu'il devrait et tout les fichiers de sortiers ne sont pas creer
 si ls se trouve a la fin d'un enchainement de pipe apres une commande errone il ne s'execute pas alors qu'il devrait
