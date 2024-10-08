@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 13:41:22 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 23:17:17 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	getredirser(t_prog *prog, t_cmd *cmd, int *i, int qu[2])
 	return (1);
 }
 
-int	getredirs(t_prog *prog, t_cmdli *cmdli, t_cmd *cmd)
+int	getredirs(t_prog *prog, t_cmd *cmd)
 {
 	int	qu[2];
 	int	i;
@@ -115,7 +115,7 @@ int	getredirs(t_prog *prog, t_cmdli *cmdli, t_cmd *cmd)
 		if (!cmd->argv[i])
 			break ;
 	}
-	if (checkfiles(cmdli) || !cmd->argv[0])
+	if (!cmd->argv[0])
 		return (0);
 	return (1);
 }

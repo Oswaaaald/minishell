@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:38:09 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 14:51:42 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 23:28:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,8 @@ int	miniexport(t_prog *prog, char **args)
 	togg = 0;
 	while (args[++i])
 	{
-		if (i == 1 && !ft_strncmp(args[i], "--", -1))
+		if ((i == 1 && !ft_strncmp(args[i], "--", -1))
+			|| exportspecialcase(prog, args[i]))
 			continue ;
 		if (i == 1 && args[i][0] == '-')
 			return (exportputerror(0, 0, args[i][1], NULL), 2);

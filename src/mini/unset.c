@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:42:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 13:29:38 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 23:27:31 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ void	exportputerror(int cmd, int type, char c, char *s)
 		write(STDERR_FILENO, s, ft_strlen(s));
 		write(STDERR_FILENO, "': not a valid indetifier\n", 26);
 	}
+}
+
+int	exportspecialcase(t_prog *prog, char *str)
+{
+	char	*tmp;
+
+	if (ft_strchr(str, '='))
+		return (0);
+	tmp = ft_getenv(prog, str);
+	if (!tmp)
+		return (0);
+	return (1);
 }
 
 int	miniunset(t_prog *prog, char **args)

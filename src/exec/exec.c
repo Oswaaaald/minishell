@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:58:45 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 23:16:33 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,12 @@ int	dupfds(t_cmdli *cmdli, int pfd[2], int i, int prev_fd)
 void	cmdchild(t_prog *prog, t_cmdli *cmdli, int pipes[2], int i[2])
 {
 	t_cmd	*cmd;
+	int		tmp;
 
 	cmd = cmdli->cmds[i[0]];
+	tmp = checkcmd(cmd);
+	if (tmp)
+		exit(tmp);
 	if (!dupfds(cmdli, pipes, i[0], i[1]))
 		exit(EXIT_FAILURE);
 	closefd(cmd->fd);

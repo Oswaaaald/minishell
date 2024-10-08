@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:20:58 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/08 23:28:39 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int		translationorwhatevahhandler(t_prog *prog,
 char	*parsepath(t_prog *prog, char *path);
 t_cmdli	*tokenize(t_prog *prog, char *line);
 char	*pather(t_prog *prog, char *cmd);
-int		getredirs(t_prog *prog, t_cmdli *cmdli, t_cmd *cmd);
+int		getredirs(t_prog *prog, t_cmd *cmd);
 
 //Checker
 
-int		checkcmd(t_cmdli *cmdli);
-int		checkfiles(t_cmdli *cmdli);
+int		checkcmd(t_cmd *cmd);
+int		checkfiles(t_cmd *cmd);
 int		checksyntax(char *str);
 
 //Signal
@@ -232,5 +232,7 @@ int		getendofvar(char *str, int i, int si);
 void	updatequotes(int quotes[2], char c);
 
 void	updatestr(t_prog *prog, int *status, char **str, char *new);
+
+int		exportspecialcase(t_prog *prog, char *str);
 
 #endif
