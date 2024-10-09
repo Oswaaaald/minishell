@@ -1,6 +1,5 @@
 error export dans le cas ou une var existe avec un contenue et un autre export est appele avec la var sans contenue elle ne doit pas effeacer le contenue existant
-reddirection dans le cas de plusieur sourcd de lecture le here_doc si non final, n'est pas execute alors qu'il devrait et tout les fichiers de sortiers ne sont pas creer
-dans le cas de beaaaaauuuuuuuuuuuuucoup de pipe, a un certain moment le projet exit (quid de si cella doit etre gerer) (home pc to powerfull to test that)
+reddirection dans le cas de plusieur sourcd de lecture le here_doc si non final, n'est pas execute alors qu'il devrait et tout les fichiers de sortiers ne sont pas creerdans le cas de beaaaaauuuuuuuuuuuuucoup de pipe, a un certain moment le projet exit (quid de si cella doit etre gerer) (home pc to powerfull to test that)
 
 
 reparer quand redir dans un inexistant

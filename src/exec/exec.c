@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:16:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:37:12 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ int	cmd(t_prog *prog, t_cmdli *cmdli, int i)
 		return (0);
 	pid = fork();
 	if (pid == -1)
-		return (closefd(pipes), 0);
+		return (write(STDERR_FILENO,
+				"mishell: fork: Resource temporarily unavailable\n", 48),
+			closefd(pipes), 0);
 	if (!pid)
 		cmdchild(prog, cmdli, pipes, (int [2]){i, prev_fd});
 	if (!cmdli->cmds[i + 1] && pid > 0)
