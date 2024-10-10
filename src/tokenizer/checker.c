@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:17:06 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:54:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int	checkcmd(t_cmd *cmd)
 {
 	int	status;
 
+	if (checkfiles(cmd))
+		return (1);
 	status = checkexecutables(cmd);
 	if (status)
 		return (status);
-	if (checkfiles(cmd))
-		return (1);
 	return (0);
 }

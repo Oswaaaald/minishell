@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 18:20:27 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:16:33 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:08:18 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	cmdchild(t_prog *prog, t_cmdli *cmdli, int pipes[2], int i[2])
 	int		tmp;
 
 	cmd = cmdli->cmds[i[0]];
+	if (!cmd->argv[0])
+		exit(EXIT_SUCCESS);
 	tmp = checkcmd(cmd);
 	if (tmp)
 		exit(tmp);

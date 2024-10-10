@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:19:45 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/09 23:00:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	initprog(t_prog *prog, char **envp, int stds[2])
 	stds[1] = dup(STDOUT_FILENO);
 	if (stds[1] == -1)
 		return (0);
-	g_interupt = -3;
+	g_interupt = 0;
 	prog->cmdli = NULL;
 	return (1);
 }

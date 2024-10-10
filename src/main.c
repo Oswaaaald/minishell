@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:58:02 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/09 23:09:27 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,28 +32,6 @@ int	getcmdli(t_prog *prog)
 			continue ;
 		return (1);
 	}
-}
-
-int	openfds(t_prog *prog)
-{
-	int	i;
-	int	togg;
-
-	i = -1;
-	togg = 0;
-	while (++i < prog->cmdli->nbcmds)
-	{
-		if (!openfd(prog, prog->cmdli->cmds[i]))
-		{
-			while (i < prog->cmdli->nbcmds)
-				ft_free(prog, prog->cmdli->cmds[i++]);
-			ft_free(prog, prog->cmdli->cmds);
-			ft_free(prog, prog->cmdli);
-			togg = 1;
-			break ;
-		}
-	}
-	return (!togg);
 }
 
 int	runprog(t_prog *prog, int i, int j)
@@ -123,8 +101,6 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (!getcmdli(&prog))
 			return (0);
-		if (!openfds(&prog))
-			continue ;
 		signal(SIGQUIT, sighandler);
 		if (!runprog(&prog, i, j))
 			return (freeprog(&prog), 0);

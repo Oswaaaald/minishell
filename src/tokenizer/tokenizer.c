@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:17:57 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:06:18 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	malloccmdli(t_prog *prog, t_cmdli *ret, int i)
 		ret->cmds[i]->limmiter = NULL;
 		ret->cmds[i]->outappend = 0;
 		ret->cmds[i]->path = NULL;
-		ft_memset(ret->cmds[i]->fd, 0, sizeof(int) * 2);
+		ft_memset(ret->cmds[i]->fd, -1, sizeof(int) * 2);
 		ret->cmds[i]->pid = 0;
 		i++;
 	}
@@ -84,7 +84,8 @@ t_cmdli	*fillcmdli(t_prog *prog, char *line, t_cmdli *ret, int i)
 		if (!getredirs(prog, ret->cmds[i]))
 			return (setbrutestatus(1), NULL);
 		remquotes(prog, ret->cmds[i]);
-		ret->cmds[i]->path = pather(prog, ret->cmds[i]->argv[0]);
+		if (ret->cmds[i]->argv[0])
+			ret->cmds[i]->path = pather(prog, ret->cmds[i]->argv[0]);
 	}
 	return (ret);
 }

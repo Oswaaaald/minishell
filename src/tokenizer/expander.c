@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:42:21 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:00:01 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:59:37 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ int	expandcmd(t_prog *prog, t_cmd *cmd)
 	i = -1;
 	buff = NULL;
 	last = 0;
+	if (!cmd->argv)
+		return (1);
 	while (i != -2 && cmd->argv[++i])
 		updatestr(prog, &i, &cmd->argv[i],
 			expander(prog, cmd->argv[i], last, buff));

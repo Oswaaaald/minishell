@@ -6,11 +6,13 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 17:11:09 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:55:59 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#define PRBASE "\001\033[32;1m\002mishell\001\033[0m\002:\001\033[34;1m\002"
 
 char	*getprompt(t_prog *prog)
 {
@@ -24,15 +26,14 @@ char	*getprompt(t_prog *prog)
 		home = ft_strjoin(prog, "~", prog->cwd + ft_strlen(home));
 		if (!home)
 			return (NULL);
-		buff = ft_strjoin(prog, "\033[32;1mmishell\033[0m:\033[34;1m", home);
+		buff = ft_strjoin(prog, PRBASE, home);
 		ft_free(prog, home);
 	}
 	else
-		buff = ft_strjoin(prog,
-				"\033[32;1mmishell\033[0m:\033[34;1m", prog->cwd);
+		buff = ft_strjoin(prog, PRBASE, prog->cwd);
 	if (!buff)
 		return (NULL);
-	home = ft_strjoin(prog, buff, "\033[0m$ ");
+	home = ft_strjoin(prog, buff, "\001\033[0m\002$ ");
 	ft_free(prog, buff);
 	if (!home)
 		return (NULL);

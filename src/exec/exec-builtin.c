@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:23:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/07 16:19:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:07:07 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	checkbuiltin(t_cmd *cmdl)
 {
+	if (!cmdl->argv[0])
+		return (0);
 	if (!ft_strncmp(cmdl->argv[0], "echo", -1))
 		return (1);
 	else if (!ft_strncmp(cmdl->argv[0], "cd", -1))

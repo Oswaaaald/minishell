@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:58:39 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:17:17 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:01:57 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	setredirser(t_prog *prog, t_cmd *cmd, char *str, char *metachar)
 		ft_free(prog, cmd->output);
 	cmd->output = str;
 	if (metachar[1] == '>')
-		cmd->outappend = 1;
+		openoutput(cmd, str, 1);
 	else
-		cmd->outappend = 0;
+		openoutput(cmd, str, 0);
 }
 
 void	setredirs(t_prog *prog, t_cmd *cmd, char *str, char *metachar)
@@ -32,22 +32,17 @@ void	setredirs(t_prog *prog, t_cmd *cmd, char *str, char *metachar)
 		if (cmd->input)
 			ft_free(prog, cmd->input);
 		cmd->input = str;
-		if (cmd->limmiter)
-		{
-			ft_free(prog, cmd->limmiter);
-			cmd->limmiter = NULL;
-		}
+		if (metachar[1] == '>')
+			openinput(cmd, str, 1);
+		else
+			openinput(cmd, str, 0);
 	}
 	else if (metachar[0] == '<' && metachar[1] == '<')
 	{
 		if (cmd->limmiter)
 			ft_free(prog, cmd->limmiter);
 		cmd->limmiter = str;
-		if (cmd->input)
-		{
-			ft_free(prog, cmd->input);
-			cmd->input = NULL;
-		}
+		openhd(prog, cmd, str);
 	}
 	else if (metachar[0] == '>')
 		setredirser(prog, cmd, str, metachar);
@@ -115,7 +110,5 @@ int	getredirs(t_prog *prog, t_cmd *cmd)
 		if (!cmd->argv[i])
 			break ;
 	}
-	if (!cmd->argv[0])
-		return (0);
 	return (1);
 }
