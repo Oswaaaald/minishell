@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 14:26:09 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:25:19 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int	miniexit(t_prog *prog, char **args)
 	n = 0;
 	while (args[1][++i])
 	{
-		if ((i == 0 && (args[1][i] != '+' && args[1][i] != '-' &&
-			!ft_isdigit(args[1][i]))) || (i > 0 && !ft_isdigit(args[1][i])))
+		if ((i == 0 && (args[1][i] != '+' && args[1][i] != '-'
+			&& !ft_isdigit(args[1][i]))) || (i > 0 && !ft_isdigit(args[1][i])))
 			n = 1;
 	}
 	if (n || isoverflow(args[1]))

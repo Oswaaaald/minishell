@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 15:49:51 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 23:28:39 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:23:24 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,5 +234,7 @@ void	updatequotes(int quotes[2], char c);
 void	updatestr(t_prog *prog, int *status, char **str, char *new);
 
 int		exportspecialcase(t_prog *prog, char *str);
+
+int		openstds(int stds[2]);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:49:58 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/09 23:00:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:24:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,7 @@ int	initprog(t_prog *prog, char **envp, int stds[2])
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
-	stds[0] = dup(STDIN_FILENO);
-	if (stds[0] == -1)
-		return (0);
-	stds[1] = dup(STDOUT_FILENO);
-	if (stds[1] == -1)
+	if (!openstds(stds))
 		return (0);
 	g_interupt = 0;
 	prog->cmdli = NULL;

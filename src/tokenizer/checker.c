@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:24:11 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 13:54:02 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:26:03 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	checkreadfiles(t_cmd *cmd)
 {
 	if (cmd->input && access(cmd->input, F_OK))
-		return(checkerputerror(2, cmd->input, 0), 0);
+		return (checkerputerror(2, cmd->input, 0), 0);
 	else if (cmd->input && access(cmd->input, R_OK))
-		return(checkerputerror(1, cmd->input, 0), 0);
+		return (checkerputerror(1, cmd->input, 0), 0);
 	return (1);
 }
 

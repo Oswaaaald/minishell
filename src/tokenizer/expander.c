@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 15:42:21 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 13:59:37 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:25:36 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 {
 	int		si;
 	char	*tmp;
-	//char	c;
 
 	si = i;
 	str[i] = '\0';
@@ -52,7 +51,6 @@ int	expandvar(t_prog *prog, char **buff, char *str, int i)
 	}
 	str[i] = '$';
 	i = getendofvar(str, i, si);
-	//c = str[i];
 	if (si == i - 1 && !ft_isdigit(str[i]))
 	{
 		tmp = *buff;

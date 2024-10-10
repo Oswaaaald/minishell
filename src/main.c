@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 15:16:54 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:26:25 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	runprog(t_prog *prog, int i, int j)
 		i++;
 	}
 	j = -1;
-	while (++j < i && !(checkbuiltin(prog->cmdli->cmds[0]) && prog->cmdli->nbcmds == 1))
+	while (++j < i && !(checkbuiltin(prog->cmdli->cmds[0])
+			&& prog->cmdli->nbcmds == 1))
 	{
 		waitpid(prog->cmdli->cmds[j]->pid, &status, 0);
 		if (prog->cmdli->cmds[j]->pid == prog->cmdli->lastpid)

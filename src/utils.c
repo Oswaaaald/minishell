@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/09 22:55:59 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:26:53 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,41 +64,13 @@ void	setstatus(int status)
 		g_interupt = WTERMSIG(status) + 128;
 }
 
-int	openfder(t_cmd *cmd, int *fd)
+int	openstds(int stds[2])
 {
-	if (cmd->output)
-	{
-		close(fd[1]);
-		if (cmd->outappend)
-			fd[1] = open(cmd->output, O_RDWR | O_CREAT | O_APPEND, 0777);
-		else
-			fd[1] = open(cmd->output, O_RDWR | O_CREAT | O_TRUNC, 0777);
-		if (fd[1] == -1)
-			return (closefd(fd), 0);
-	}
-	return (1);
-}
-
-int	openfd(t_prog *prog, t_cmd *cmd)
-{
-	int	*fd;
-
-	fd = cmd->fd;
-	if (pipe(fd) == -1)
+	stds[0] = dup(STDIN_FILENO);
+	if (stds[0] == -1)
 		return (0);
-	if (cmd->input)
-	{
-		close(fd[0]);
-		fd[0] = open(cmd->input, O_RDONLY, 0777);
-		if (fd[0] == -1)
-			return (closefd(fd), 0);
-	}
-	if (cmd->limmiter)
-	{
-		close(fd[0]);
-		fd[0] = writeheredoc(prog, cmd->limmiter);
-		if (fd[0] == -1)
-			return (closefd(fd), 0);
-	}
-	return (openfder(cmd, fd));
+	stds[1] = dup(STDOUT_FILENO);
+	if (stds[1] == -1)
+		return (0);
+	return (1);
 }
