@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/09 23:09:27 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:16:54 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	runprog(t_prog *prog, int i, int j)
 	int	status;
 
 	i = 0;
+	g_interupt = -1;
 	while (i < prog->cmdli->nbcmds)
 	{
 		if (checkbuiltin(prog->cmdli->cmds[i])
