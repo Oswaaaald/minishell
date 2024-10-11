@@ -17,11 +17,7 @@ TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/synt
 FILER_SRC = src/tokenizer/filer/filer.c src/tokenizer/filer/filer-next.c src/tokenizer/filer/filer-current.c \
 			src/tokenizer/filer/filer-open.c
 
-EXEC_SRC = src/exec/exec.c src/exec/exec-builtin.c
-
-TEST = test.c
-
-TESTO = ${TEST:.c=.o}
+EXEC_SRC = src/exec/exec.c src/exec/exec-builtin.C
 
 HEADERS = -I ./src/ -I ~/.brew/Cellar/readline/8.2.13/include
 
@@ -52,6 +48,6 @@ re: fclean all
 
 ${NAME}: ${OBJS}
 	@make -C ./libft bonus
-	${CC} ${CFLAGS} -fsanitize=address ${OBJS} $(HEADERS) ${LIBFT} -g3 -O3 -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.13/lib
+	${CC} ${CFLAGS} ${OBJS} $(HEADERS) ${LIBFT} -g3 -O3 -o ${NAME} -lreadline -L ~/.brew/Cellar/readline/8.2.13/lib
 
 .PHONY: all clean fclean re
