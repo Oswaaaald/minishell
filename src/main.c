@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 15:42:03 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 15:26:25 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/11 12:23:13 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	getcmdli(t_prog *prog)
 		line = ft_readline(prog);
 		if (!line)
 			return (printf("exit\n"), freeprog(prog), 0);
-		if (!*line)
+		if (!*line || !onlyspace(line))
 		{
 			if (line)
 				ft_free(prog, line);

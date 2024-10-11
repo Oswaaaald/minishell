@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 00:06:53 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 15:26:53 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/11 12:24:42 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,17 @@ int	openstds(int stds[2])
 	if (stds[1] == -1)
 		return (0);
 	return (1);
+}
+
+int	onlyspace(char	*s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (!ft_strchr(" \n	", s[i]))
+			return (1);
+	}
+	return (0);
 }
