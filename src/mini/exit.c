@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 23:57:07 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 15:25:19 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:06:02 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	miniexit(t_prog *prog, char **args)
 	if (n || isoverflow(args[1]))
 	{
 		puterror(args[1]);
-		doexit(prog, 2);
+		doexit(prog, 255);
 	}
 	if (args[2])
 		return (write(2, "bash: exit: too many arguments\n", 31), 1);
