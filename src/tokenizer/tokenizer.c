@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 11:49:56 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/10 14:06:18 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:39:04 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ t_cmdli	*fillcmdli(t_prog *prog, char *line, t_cmdli *ret, int i)
 	{
 		if (!getredirs(prog, ret->cmds[i]))
 			return (setbrutestatus(1), NULL);
-		remquotes(prog, ret->cmds[i]);
 		if (ret->cmds[i]->argv[0])
 			ret->cmds[i]->path = pather(prog, ret->cmds[i]->argv[0]);
 	}
@@ -125,6 +124,7 @@ t_cmdli	*tokenize(t_prog *prog, char *line)
 	{
 		if (!expandcmd(prog, ret->cmds[i]))
 			return (ft_free(prog, line), freecmdli(prog, ret), NULL);
+		remquotes(prog, ret->cmds[i]);
 	}
 	ft_free(prog, line);
 	return (ret);
