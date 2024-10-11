@@ -17,7 +17,7 @@ TOKEN_SRC = src/tokenizer/tokenizer.c src/tokenizer/checker.c src/tokenizer/synt
 FILER_SRC = src/tokenizer/filer/filer.c src/tokenizer/filer/filer-next.c src/tokenizer/filer/filer-current.c \
 			src/tokenizer/filer/filer-open.c
 
-EXEC_SRC = src/exec/exec.c src/exec/exec-builtin.C
+EXEC_SRC = src/exec/exec.c src/exec/exec-builtin.c
 
 HEADERS = -I ./src/ -I ~/.brew/Cellar/readline/8.2.13/include
 
