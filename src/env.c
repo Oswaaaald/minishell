@@ -6,7 +6,7 @@
 /*   By: fghysbre <fghysbre@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:54 by fghysbre          #+#    #+#             */
-/*   Updated: 2024/10/08 18:06:26 by fghysbre         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:08:36 by fghysbre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_getenv(t_prog *prog, char *s)
 	char	*res;
 
 	i = -1;
+	if (!prog->minienv)
+		return (NULL);
 	if (s[0] == '?' && s[1] == 0)
 		return (ft_itoa(prog, g_interupt));
 	while (prog->minienv[++i])
